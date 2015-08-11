@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/deadlyicon/reactatron/issues"
   },
-  "homepage": "https://github.com/deadlyicon/reactatron#readme"
+  "homepage": "https://github.com/deadlyicon/reactatron#readme",
+  "dependencies": {
+    "react": "^0.13.3"
+  }
 }

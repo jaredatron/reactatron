@@ -1,20 +1,32 @@
 React = require 'react'
+Location = require './Location'
 
-RootNode = require './RootNode'
-
-
+# RootNode = require './RootNode'
 
 class ReactatronApp
-  constructor: ->
-    null
+  constructor: (options) ->
+    @location = new Location
+    Object.assign(this, options)
+
+  getProps: ->
+    path:   @location.path
+    params: @location.params
 
   start: ->
-    React.render(RootNode)
+    if @rootComponent
+      throw new Error('already started', this)
+    window.addEventListener 'popstate', @location.update
+    @DOMNode ||= document.body
+    @rootComponent = @RootComponent(@getProps())
+    React.render(@rootComponent, @DOMNode)
+
+    this
 
 
   stop: ->
-
-    45
-
+    @DOMNode.innerHTML = ''
+    delete @rootComponent
+    window.removeEventListener 'popstate', @location.update
+    this
 
 module.exports = ReactatronApp

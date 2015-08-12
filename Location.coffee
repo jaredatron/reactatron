@@ -1,10 +1,11 @@
+require 'stdlib/Object.bindAll'
 EventEmitter = require 'eventemitter3'
 assign = require 'object-assign'
 
 class Location extends EventEmitter
   constructor: (location=window.location) ->
     @location = location
-    @update = @update.bind(this)
+    Object.bindAll(this)
     @update()
 
 Location.prototype.update = ->

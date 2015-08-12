@@ -29,15 +29,21 @@ class Router
     return ->
       return ->
         console.log('SHOULD REDRIECET', path, params)
-        React.DOM.div(null, "redirecting to: #{path}")
+        # React.DOM.div(null, "redirecting to: #{path}")
+        RedirectComponent(path: path, params: params)
 
 
 RedirectComponent = React.createFactory React.createClass
   displayName: 'ReactatronRedirect'
+  propTypes:
+    path: React.PropTypes.string.isRequired
+    params: React.PropTypes.object.isRequired
   contextTypes:
-    location: React.PropTypes.string.isRequired
+    setPath: React.PropTypes.func.isRequired
+  componentDidMount: ->
+    @context.setPath(@props.path, @props.params)
   render: ->
-    React.DOM.div(null, "redirecting to: #{@context.location.path}")
+    React.DOM.div(null, "redirecting to: #{@props.path}")
 
 module.exports = Router
 

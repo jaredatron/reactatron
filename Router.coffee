@@ -1,4 +1,5 @@
 React = require 'react'
+RedirectComponent = require './RedirectComponent'
 
 #
 # Usage:
@@ -33,17 +34,6 @@ class Router
         RedirectComponent(path: path, params: params)
 
 
-RedirectComponent = React.createFactory React.createClass
-  displayName: 'ReactatronRedirect'
-  propTypes:
-    path: React.PropTypes.string.isRequired
-    params: React.PropTypes.object.isRequired
-  contextTypes:
-    setPath: React.PropTypes.func.isRequired
-  componentDidMount: ->
-    @context.setPath(@props.path, @props.params)
-  render: ->
-    React.DOM.div(null, "redirecting to: #{@props.path}")
 
 module.exports = Router
 

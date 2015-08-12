@@ -9,6 +9,7 @@ module.exports = component 'Root',
     page:         React.PropTypes.func.isRequired
 
     locationFor:  React.PropTypes.func.isRequired
+    setLocation:  React.PropTypes.func.isRequired
     setPath:      React.PropTypes.func.isRequired
     setParams:    React.PropTypes.func.isRequired
     updateParams: React.PropTypes.func.isRequired
@@ -17,6 +18,7 @@ module.exports = component 'Root',
   childContextTypes:
     path:         React.PropTypes.string
     params:       React.PropTypes.object
+    setLocation:  React.PropTypes.func
     locationFor:  React.PropTypes.func
     setPath:      React.PropTypes.func
     setParams:    React.PropTypes.func
@@ -25,6 +27,7 @@ module.exports = component 'Root',
   getChildContext: ->
     path:         @props.path
     params:       @props.params
+    setLocation:  @props.setLocation
     locationFor:  @props.locationFor
     setPath:      @props.setPath
     setParams:    @props.setParams

@@ -1,6 +1,8 @@
 module.exports = {
-  VERSION: '0.1.1'
+  VERSION: '0.1.1',
 
-  App:      require('./App'),
-  RootNode: require('./RootNode'),
+  App:            require('./App'),
+  RootComponent:  require('./RootComponent'),
+  component:      require('./component'),
+  DOM:            require('./DOM'),
 }

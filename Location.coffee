@@ -1,4 +1,4 @@
-require 'stdlib/Object.bindAll'
+require 'stdlibjs/Object.bindAll'
 EventEmitter = require 'eventemitter3'
 assign = require 'object-assign'
 

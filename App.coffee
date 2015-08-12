@@ -33,10 +33,10 @@ class ReactatronApp
     path:         route.path
     params:       route.params
     page:         route.getComponent()
-    locationFor:  location.for
-    setPath:      location.setPath
-    setParams:    location.setParams
-    updateParams: location.updateParams
+    locationFor:  @location.for
+    setPath:      @location.setPath
+    setParams:    @location.setParams
+    updateParams: @location.updateParams
 
   start: ->
     if @rootComponent
@@ -45,7 +45,6 @@ class ReactatronApp
     @DOMNode ||= document.body
     @rootComponent = @RootComponent(@getProps())
     React.render(@rootComponent, @DOMNode)
-
     this
 
 

@@ -1,7 +1,5 @@
 component = require './component'
 
-URI = require 'uri-js'
-
 module.exports = component 'RootComponent',
 
   propTypes:
@@ -33,33 +31,6 @@ module.exports = component 'RootComponent',
     setParams:    @props.setParams
     updateParams: @props.updateParams
 
-  componentDidMount: ->
-    # intercept all link clicks
-    # force relative links to use pushState
-    document.addEventListener('click', @onClick)
-
-  componentWillUnmount: ->
-    document.removeEventListener('click', @onClick)
-
-  onClick: (event) ->
-    return unless event
-    return unless target = event.target
-    return unless target.nodeName == 'A'
-    uri = parseURI(target.href)
-    return if uri.origin != location.origin
-    event.preventDefault()
-    console.log('PUSHSTATE', target.href, uri)
-    @props.setLocation(uri.asRelative)
 
   render: ->
     @props.page()
-
-
-parseURI = (href) ->
-  uri = URI.parse(href)
-  uri.origin = uri.scheme+'://'+uri.host
-  uri.asRelative = href.replace(uri.origin,'')
-  uri
-
-
-

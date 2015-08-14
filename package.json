@@ -21,7 +21,8 @@
     "coffee-script": "^1.9.3",
     "eventemitter3": "^1.1.1",
     "object-assign": "^3.0.0",
+    "react": "^0.13.3",
     "stdlibjs": "0.0.x",
-    "react": "^0.13.3"
+    "uri-js": "^2.1.1"
   }
 }

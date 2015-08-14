@@ -1,5 +1,6 @@
 React = require 'react'
 
 module.exports =
-  propTypes:
-    App: React.PropTypes.object.isRequired
+
+  getInitialState: ->
+    poop: 45

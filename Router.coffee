@@ -17,8 +17,8 @@ class Router
   map: (spec) ->
     spec.call(this)
 
-  match: (expression, getComponent) ->
-    @routes.push new Route(expression, getComponent)
+  match: (expression, page) ->
+    @routes.push new Route(expression, page)
 
   pageFor: (path, params) ->
     for route in @routes
@@ -29,8 +29,6 @@ class Router
   redirectTo: (path, params={}) ->
     return ->
       return ->
-        console.log('SHOULD REDRIECET', path, params)
-        # React.DOM.div(null, "redirecting to: #{path}")
         RedirectComponent(path: path, params: params)
 
 
@@ -42,9 +40,9 @@ module.exports = Router
 # private
 
 class Route
-  constructor: (expression, getComponent) ->
+  constructor: (expression, page) ->
     @expression = expression
-    @getComponent  = getComponent
+    @page  = page
     parseExpression.call(this, expression)
 
   match: (path, params) ->

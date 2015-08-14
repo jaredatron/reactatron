@@ -1,28 +1,28 @@
-React = require 'react'
 component = require './component'
 
-module.exports = component 'Root',
+URI = require 'uri-js'
+
+module.exports = component 'RootComponent',
 
   propTypes:
-    path:         React.PropTypes.string.isRequired
-    params:       React.PropTypes.object.isRequired
-    page:         React.PropTypes.func.isRequired
+    path:         component.PropTypes.string.isRequired
+    params:       component.PropTypes.object.isRequired
+    page:         component.PropTypes.func.isRequired
 
-    locationFor:  React.PropTypes.func.isRequired
-    setLocation:  React.PropTypes.func.isRequired
-    setPath:      React.PropTypes.func.isRequired
-    setParams:    React.PropTypes.func.isRequired
-    updateParams: React.PropTypes.func.isRequired
-
+    locationFor:  component.PropTypes.func.isRequired
+    setLocation:  component.PropTypes.func.isRequired
+    setPath:      component.PropTypes.func.isRequired
+    setParams:    component.PropTypes.func.isRequired
+    updateParams: component.PropTypes.func.isRequired
 
   childContextTypes:
-    path:         React.PropTypes.string
-    params:       React.PropTypes.object
-    setLocation:  React.PropTypes.func
-    locationFor:  React.PropTypes.func
-    setPath:      React.PropTypes.func
-    setParams:    React.PropTypes.func
-    updateParams: React.PropTypes.func
+    path:         component.PropTypes.string
+    params:       component.PropTypes.object
+    setLocation:  component.PropTypes.func
+    locationFor:  component.PropTypes.func
+    setPath:      component.PropTypes.func
+    setParams:    component.PropTypes.func
+    updateParams: component.PropTypes.func
 
   getChildContext: ->
     path:         @props.path
@@ -33,5 +33,33 @@ module.exports = component 'Root',
     setParams:    @props.setParams
     updateParams: @props.updateParams
 
+  componentDidMount: ->
+    # intercept all link clicks
+    # force relative links to use pushState
+    document.addEventListener('click', @onClick)
+
+  componentWillUnmount: ->
+    document.removeEventListener('click', @onClick)
+
+  onClick: (event) ->
+    return unless event
+    return unless target = event.target
+    return unless target.nodeName == 'A'
+    uri = parseURI(target.href)
+    return if uri.origin != location.origin
+    event.preventDefault()
+    console.log('PUSHSTATE', target.href, uri)
+    @props.setLocation(uri.asRelative)
+
   render: ->
     @props.page()
+
+
+parseURI = (href) ->
+  uri = URI.parse(href)
+  uri.origin = uri.scheme+'://'+uri.host
+  uri.asRelative = href.replace(uri.origin,'')
+  uri
+
+
+

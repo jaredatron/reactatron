@@ -41,12 +41,6 @@ module.exports = Location
 
 # private
 
-update = ->
-  Location.path   = location.pathname
-  Location.params = searchToObject(location.search)
-  Location.emit('change')
-
-
 searchToObject = (search) ->
   params = {}
   search = search.substring(search.indexOf('?') + 1, search.length);
@@ -78,5 +72,3 @@ objectToQueryString = (params) ->
 objectToSearch = (params) ->
   search = objectToQueryString(params)
   if search.length == 0 then '' else '?'+search
-
-

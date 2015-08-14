@@ -1,13 +1,13 @@
+require 'stdlibjs/Object.bindAll'
 React = require 'react'
 BaseMixin = require './BaseMixin'
 Location = require './Location'
 RootComponent = require './RootComponent'
 Router = require './Router'
 
-# RootNode = require './RootNode'
-
 class ReactatronApp
   constructor: ->
+    Object.bindAll(this)
     @location = new Location
     @RootComponent = RootComponent
     @router = new Router()
@@ -16,20 +16,29 @@ class ReactatronApp
     route = @router.pageFor(@location.path, @location.params)
     path:         route.path
     params:       route.params
-    page:         route.getComponent()
+    page:         route.page
     locationFor:  @location.for
     setLocation:  @location.set
     setPath:      @location.setPath
     setParams:    @location.setParams
     updateParams: @location.updateParams
 
+  rerender: ->
+    console.info('rerender')
+    @rootComponent.setProps(@getProps())
+
   start: ->
     if @rootComponent
       throw new Error('already started', this)
     window.addEventListener 'popstate', @location.update
     @DOMNode ||= document.body
-    @rootComponent = @RootComponent(@getProps())
-    React.render(@rootComponent, @DOMNode)
+    @rootComponent = React.render(
+      @RootComponent(@getProps()),
+      @DOMNode
+    )
+
+    @location.on('change', @rerender)
+
     this
 
 

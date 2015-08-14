@@ -28,8 +28,7 @@ class Router
 
   redirectTo: (path, params={}) ->
     return ->
-      return ->
-        RedirectComponent(path: path, params: params)
+      RedirectComponent(path: path, params: params)
 
 
 

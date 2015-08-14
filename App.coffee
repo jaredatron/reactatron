@@ -16,7 +16,7 @@ class ReactatronApp
     route = @router.pageFor(@location.path, @location.params)
     path:         route.path
     params:       route.params
-    page:         route.page
+    page:         route.getPage()
     locationFor:  @location.for
     setLocation:  @location.set
     setPath:      @location.setPath
@@ -27,24 +27,26 @@ class ReactatronApp
     console.info('rerender')
     @rootComponent.setProps(@getProps())
 
+  getDOMNode: ->
+    document.body
+
   start: ->
     if @rootComponent
       throw new Error('already started', this)
     window.addEventListener 'popstate', @location.update
-    @DOMNode ||= document.body
     @rootComponent = React.render(
       @RootComponent(@getProps()),
-      @DOMNode
+      @DOMNode = @getDOMNode()
     )
-
     @location.on('change', @rerender)
-
     this
 
 
   stop: ->
     @DOMNode.innerHTML = ''
     delete @rootComponent
+    delete @DOMNode
+    @location.off('change', @rerender)
     window.removeEventListener 'popstate', @location.update
     this
 

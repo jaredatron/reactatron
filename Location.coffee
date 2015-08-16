@@ -1,40 +1,48 @@
 require 'stdlibjs/Object.bindAll'
-EventEmitter = require 'eventemitter3'
 assign = require 'object-assign'
 
-class Location extends EventEmitter
-  constructor: (location=window.location) ->
-    @location = location
+class Location
+
+  location: location
+
+  constructor: (events) ->
     Object.bindAll(this)
+    @events = events
     @update()
 
-Location.prototype.update = ->
-  @path   = @location.pathname
-  @params = searchToObject(@location.search)
-  @emit('change')
+  start: ->
+    window.addEventListener 'popstate', @update
 
-Location.prototype.for = (path=@path, params=@params) ->
-  path ||= ''
-  path = '/'+path if path[0] != '/'
-  "#{path}#{objectToSearch(params)}"
+  stop: ->
+    window.removeEventListener 'popstate', @update
+
+  update: ->
+    @path   = @location.pathname
+    @params = searchToObject(@location.search)
+    @events.emit('location:change')
+
+  for: (path=@path, params=@params) ->
+    path ||= ''
+    path = '/'+path if path[0] != '/'
+    "#{path}#{objectToSearch(params)}"
 
 
-Location.prototype.set = (value, replace) ->
-  value = "/#{value}" unless value[0] == '/'
-  if replace
-    history.replaceState({}, document.title, value)
-  else
-    history.pushState({}, document.title, value)
-  @update()
+  set: (value, replace) ->
+    value = "/#{value}" unless value[0] == '/'
+    if replace
+      history.replaceState({}, document.title, value)
+    else
+      history.pushState({}, document.title, value)
+    @update()
 
-Location.prototype.setPath = (path, replace) ->
-  @set(@for(path), replace)
+  setPath: (path, replace) ->
+    @set(@for(path), replace)
 
-Location.prototype.setParams = (params, replace) ->
-  @set(@for(null, params), replace)
+  setParams: (params, replace) ->
+    @set(@for(null, params), replace)
 
-Location.prototype.updateParams = (params, replace) ->
-  @setParams(assign({}, @params, params), replace)
+  updateParams: (params, replace) ->
+    @setParams(assign({}, @params, params), replace)
 
 
 module.exports = Location

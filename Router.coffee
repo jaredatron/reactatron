@@ -1,3 +1,4 @@
+require 'stdlibjs/Object.bindAll'
 React = require 'react'
 RedirectComponent = require './RedirectComponent'
 
@@ -10,9 +11,9 @@ RedirectComponent = require './RedirectComponent'
 #
 
 class Router
-  constructor: (spec) ->
+  constructor: () ->
+    Object.bindAll(this)
     @routes = []
-    @map(spec) if spec
 
   map: (spec) ->
     spec.call(this)

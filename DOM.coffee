@@ -1,3 +1,4 @@
+require 'stdlibjs/Object.clone'
 React = require 'react'
 component = require './component'
 DOM = Object.create(React.DOM)

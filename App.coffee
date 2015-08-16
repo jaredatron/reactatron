@@ -1,16 +1,35 @@
 require 'stdlibjs/Object.bindAll'
 React = require 'react'
 BaseMixin = require './BaseMixin'
+Events = require './Events'
 Location = require './Location'
 RootComponent = require './RootComponent'
 Router = require './Router'
+Session = require './Session'
 
 class ReactatronApp
+
+  RootComponent: RootComponent
+
   constructor: ->
     Object.bindAll(this)
-    @location = new Location
-    @RootComponent = RootComponent
-    @router = new Router()
+    @events = new Events
+    {@on,@off,@emit} = @events
+    @data = new DataStore
+    {@get,@set} = @data
+
+    @router = new Router
+
+    @location = new Location(@events)
+    @session = new Session(@events)
+
+    @on('location:change', @rerender)
+
+  state: {}
+  setState: (newState) ->
+    Object.assign(@state, newState)
+
+
 
   getProps: ->
     route = @router.pageFor(@location.path, @location.params)
@@ -25,7 +44,8 @@ class ReactatronApp
 
   rerender: ->
     console.info('rerender')
-    @rootComponent.setProps(@getProps())
+    if !@rootComponent? then return
+    @rootComponent.setProps(@state)
 
   getDOMNode: ->
     document.body
@@ -33,12 +53,11 @@ class ReactatronApp
   start: ->
     if @rootComponent
       throw new Error('already started', this)
-    window.addEventListener 'popstate', @location.update
+    @location.start()
     @rootComponent = React.render(
-      @RootComponent(@getProps()),
+      @RootComponent(@state),
       @DOMNode = @getDOMNode()
     )
-    @location.on('change', @rerender)
     this
 
 
@@ -46,8 +65,7 @@ class ReactatronApp
     @DOMNode.innerHTML = ''
     delete @rootComponent
     delete @DOMNode
-    @location.off('change', @rerender)
-    window.removeEventListener 'popstate', @location.update
+    @location.stop()
     this
 
 module.exports = ReactatronApp

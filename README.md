@@ -15,16 +15,123 @@
 - maybe we prevent components from being defined dynanically because we know start/stop state
 
 
+## Arcitecture
+
+
+#### component
+
+
+
+#### App
+
+- starts and stops the global listeners like popstate
+- initializes the state of the app
+- do we need some sort of "plugin" system here?
+
+
+#### State
+
+
+- state is just a big plan object
+- IT IS NOT state a string key, value store !!!!!
+
+
+
+- this is given to the page component
+  - which should pull the data it needs and also register a handler
+- all of its top level values are available
+- um... stores state?
+- lets you know when state changes
+- lets you ask for the values of keys and get the current valye and updates, via callback and imediate return
+
+```coffee
+
+keys = [
+  'current_user.first_name',
+  'current_user.last_name',
+]
+
+state.get keys, (values) ->
+  {first_name, last_name} = values
+  # or better yet
+  @setState(values)
+
+
+component 'FilesPage',
+
+  getInitialState: ->
+    data = App.tellMeWhenChange(
+
+    )
+    @setState(data)
+
+  render: ->
+    {first_name, last_name} = App.state.current_user
+    h1(null, "Welcome back #{first_name} #{last_name}")
+
+
+
+
+```
+
+### The Cycle
+
+##### First render
+
+
+```coffee
+
+render: ->
+
+  DataQuery
+    keys:
+      'current_user.first_name'
+      'current_user.last_name'
+    loading: ->
+
+    loaded: (values) ->
+
+    error: (error) ->
+
+
+
+DataQuery = component
+  propTypes:
+    keys: queryKeySet
+
+
+
+  render: ->
+
+
+```
+
+
+
+#### React Tree
+
+
+
+#### Actions
+
+
 
 ```js
-App = Reactatron.createApp()
+ReactatronApp = require('reactatron/App')
+App = new ReactatronApp
+
+App.router.map ->
+  @match '/', @redirectTo '/transfers'
+
 App.start()
 App.stop()
-App.path
-App.params
-App.setPath(path)
-App.setParams(params)
-App.setLocation(path, params)
+
+@context.path
+@context.params
+@context.setPath(path)
+@context.setParams(params)
+@context.setLocation(path, params)
+
 App.on 'location:change',  @onLocationChange
 App.off 'location:change', @onLocationChange
 App.routes ->
@@ -38,3 +145,7 @@ App.component 'MagicButton',
 
 There needs to be an internal way, other than the app the user create, to set the location
 or not create apps?
+
+
+
+

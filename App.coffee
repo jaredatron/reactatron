@@ -15,8 +15,8 @@ class ReactatronApp
     Object.bindAll(this)
     @events = new Events
     {@on,@off,@emit} = @events
-    @data = new DataStore
-    {@get,@set} = @data
+    # @data = new DataStore
+    # {@get,@set} = @data
 
     @router = new Router
 
@@ -28,7 +28,6 @@ class ReactatronApp
   state: {}
   setState: (newState) ->
     Object.assign(@state, newState)
-
 
 
   getProps: ->

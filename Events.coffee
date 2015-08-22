@@ -2,38 +2,30 @@ require 'stdlibjs/Object.bindAll'
 require 'stdlibjs/Array.wrap'
 require 'stdlibjs/Array#remove'
 
-# EventEmitter = require 'eventemitter3'
-# class Events extends EventEmitter
-
 class Events
   constructor: ->
     Object.bindAll(this)
-    @subscriptions = {}
+    @subscriptions = []
 
   sub: (events, handler) ->
     events = Array.wrap(events)
     for event in events
-      handlers = @subscriptions[event] ||= []
-      handlers.push(handler)
+      @subscriptions.push [event, handler]
     this
 
   unsub: (events, handler) ->
     events = Array.wrap(events)
-    for event in events
-      handlers = @subscriptions[event]
-      if handlers
-        handlers.remove(handler)
-      if handlers.length == 0
-        delete @subscriptions[event]
+    @subscriptions = @subscriptions.filter (subscription) ->
+      for event in events
+        if event == subscription[0] && handler == subscription[1]
+          return false
+      return true
     this
 
   pub: (event, payload) ->
-    handlers = @subscriptions[event]
-    if handlers
-      for handler in handlers
-        handler(event, payload)
+    for subscription in @subscriptions
+      if event == subscription[0]
+        subscription[1](event, payload)
     this
-
-
 
 module.exports = Events

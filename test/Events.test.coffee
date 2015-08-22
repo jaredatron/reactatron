@@ -7,36 +7,82 @@ describe 'Events', ->
     events = new Events
 
 
+  it 'simple pub sub', ->
+    counter = new Counter
+
+    expect(counter.value).to.be(0)
+
+    events.sub 'jump', counter
+
+    events.pub 'jump'
+    expect(counter.value).to.be(1)
+
+    events.pub 'jump'
+    expect(counter.value).to.be(2)
+
+    events.pub 'jump'
+    expect(counter.value).to.be(3)
+
+    events.unsub 'jump', counter
+
+    events.pub 'jump'
+    expect(counter.value).to.be(3)
+
+  it 'partial unsub', ->
+    counter = new Counter
+
+    expect(counter.value).to.be(0)
+
+    events.sub ['jump','leap'], counter
+
+    events.pub 'jump'
+    expect(counter.value).to.be(1)
+
+    events.pub 'leap'
+    expect(counter.value).to.be(2)
+
+    events.unsub 'leap', counter
+
+    events.pub 'jump'
+    expect(counter.value).to.be(3)
+
+    events.pub 'leap'
+    expect(counter.value).to.be(3)
+
+  it 'double subscriptions', ->
+    counter = new Counter
+
+    expect(counter.value).to.be(0)
+
+    events.sub 'jump', counter
+    events.sub 'jump', counter
+
+    events.pub 'jump'
+    expect(counter.value).to.be(2)
+
+    events.unsub 'jump', counter
+
+    events.pub 'jump'
+    expect(counter.value).to.be(2)
 
 
-  it 'pub sub', ->
+  it 'RegExp subscriptions', ->
+    counter = new Counter
 
-    handler1 = CountingHandler()
-    handler2 = CountingHandler()
-    handler3 = CountingHandler()
-    handler4 = CountingHandler()
+    events.sub /^jump|leap$/, counter
 
-    events.sub 'jump', handler1
-    events.sub 'jump', handler2
+    expect( counter.value ).to.be(0)
 
-    events.pub 'jump', 14
+    events.pub('fall')
+    expect( counter.value ).to.be(0)
 
-    expect(handler1.calls).to.eql([['jump', 14]])
-    expect(handler1.callCount).to.be(1)
-    expect(handler2.callCount).to.be(1)
-    expect(handler3.callCount).to.be(0)
-    expect(handler4.callCount).to.be(0)
+    events.pub('jump')
+    expect( counter.value ).to.be(1)
 
-    events.unsub 'jump', handler2
+    events.pub('leap')
+    expect( counter.value ).to.be(2)
 
-    events.pub 'jump', 15
+    events.unsub /^jump|leap$/, counter
 
-    expect(handler1.callCount).to.be(2)
-    expect(handler2.callCount).to.be(1)
-    expect(handler3.callCount).to.be(0)
-    expect(handler4.callCount).to.be(0)
-
-
-    # events.unsub 'jump', handler1
-    # expect( events.subscriptions.jump ).to.eql( [handler3] )
-    # expect( 'jump' of events.subscriptions ).to.be(false)
+    events.pub('leap')
+    expect( counter.value ).to.be(2)

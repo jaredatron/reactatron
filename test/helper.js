@@ -11,3 +11,12 @@ CountingHandler = function(){
   countingHandler.callCount = 0;
   return countingHandler;
 };
+
+
+Counter = function(){
+  var counter = function(){
+    counter.value++;
+  }
+  counter.value = 0;
+  return counter;
+};

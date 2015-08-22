@@ -1,6 +1,7 @@
 require 'stdlibjs/Object.bindAll'
 require 'stdlibjs/Array.wrap'
 require 'stdlibjs/Array#remove'
+isString = require 'stdlibjs/isString'
 
 class Events
   constructor: ->
@@ -17,15 +18,21 @@ class Events
     events = Array.wrap(events)
     @subscriptions = @subscriptions.filter (subscription) ->
       for event in events
-        if event == subscription[0] && handler == subscription[1]
+        if event.toString() == subscription[0].toString() && handler == subscription[1]
           return false
       return true
     this
 
   pub: (event, payload) ->
     for subscription in @subscriptions
-      if event == subscription[0]
-        subscription[1](event, payload)
+      [eventExpression, handler] = subscription
+
+      if (
+          (isString(eventExpression) && event == eventExpression) ||
+          (eventExpression instanceof RegExp && eventExpression.test(event))
+        )
+        handler(event, payload)
+
     this
 
 module.exports = Events

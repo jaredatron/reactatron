@@ -5,5 +5,5 @@ module.exports =
   rerender: ->
     @forceUpdate()
 
-  getInitialState: ->
-    poop: 45
+  app: ->
+    @context.app

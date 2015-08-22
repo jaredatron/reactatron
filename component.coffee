@@ -1,5 +1,5 @@
 React = require 'react'
-# BaseMixin = require './BaseMixin'
+BaseMixin = require './BaseMixin'
 
 
 component = (name, spec) ->
@@ -8,8 +8,8 @@ component = (name, spec) ->
     name = null
   spec ||= {}
   spec.displayName = name if name?
-  # spec.mixins ||= []
-  # spec.mixins = [BaseMixin].concat(spec.mixins)
+  spec.mixins ||= []
+  spec.mixins = [BaseMixin].concat(spec.mixins)
 
   # possibly process alternate API here
 

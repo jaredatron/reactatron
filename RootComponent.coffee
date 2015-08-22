@@ -1,36 +1,27 @@
 component = require './component'
 
+{div} = require './DOM'
+
 module.exports = component 'RootComponent',
 
   propTypes:
-    path:         component.PropTypes.string.isRequired
-    params:       component.PropTypes.object.isRequired
-    page:         component.PropTypes.func.isRequired
-
-    locationFor:  component.PropTypes.func.isRequired
-    setLocation:  component.PropTypes.func.isRequired
-    setPath:      component.PropTypes.func.isRequired
-    setParams:    component.PropTypes.func.isRequired
-    updateParams: component.PropTypes.func.isRequired
+    app: component.PropTypes.object.isRequired
 
   childContextTypes:
-    path:         component.PropTypes.string
-    params:       component.PropTypes.object
-    setLocation:  component.PropTypes.func
-    locationFor:  component.PropTypes.func
-    setPath:      component.PropTypes.func
-    setParams:    component.PropTypes.func
-    updateParams: component.PropTypes.func
+    app: component.PropTypes.object
 
   getChildContext: ->
-    path:         @props.path
-    params:       @props.params
-    setLocation:  @props.setLocation
-    locationFor:  @props.locationFor
-    setPath:      @props.setPath
-    setParams:    @props.setParams
-    updateParams: @props.updateParams
-
+    app:         @props.app
 
   render: ->
-    @props.page()
+    app = @props.app
+    location = app.get('location')
+
+    div null,
+      'hello'
+      JSON.stringify(location)
+    # route = app.router.pageFor(location.path, location.params)
+    # {path, params}= route
+    # page = route.getPage()
+    # page
+    #   path: path

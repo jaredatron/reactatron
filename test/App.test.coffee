@@ -2,11 +2,17 @@ App = require '../App'
 
 describe 'App', ->
 
-  app = storeData = null
+  app = storeData = location = document = null
   beforeEach ->
     storeData = {}
+    location = {}
+    document = {body: null}
     app = new App
       storeData: storeData
+      location: location
+      document: document
+
+    app.render = new Counter
 
   it 'pub sub', ->
 
@@ -39,4 +45,26 @@ describe 'App', ->
       [ 'store:change:current_user', undefined ],
     ])
 
-    console.log(events)
+
+  describe '#render', ->
+    # we need to pull in the react test tools for this one
+    xit 'should render the rootComponent', ->
+      app.render()
+      expect(app.rootComponent).to.be.eql({})
+
+
+  describe '#start', ->
+
+    class TestPlugin
+      start: ->
+
+      stop: ->
+
+    it 'should start the plugins and render', ->
+      testPlugin =
+        start: new Counter
+        stop: new Counter
+      app.plugins.push testPlugin
+      app.start()
+      expect(testPlugin.start.value).to.be(1)
+

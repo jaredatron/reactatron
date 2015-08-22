@@ -29,10 +29,6 @@ module.exports = component 'QueryStateMachine',
     query:  React.PropTypes.array.isRequired
     render: React.PropTypes.func.isRequired
 
-  # this should be in the base class
-  rerender: ->
-    @forceUpdate()
-
   componentDidMount: ->
     @app.watch(@props.query, @rerender)
 

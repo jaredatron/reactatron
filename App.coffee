@@ -1,62 +1,64 @@
 require 'stdlibjs/Object.bindAll'
 
-Events = require './Events'
-Store = require './Store'
-# Location = require './Location'
-RootComponent = require './RootComponent'
-Router = require './Router'
-# Session = require './Session'
+React = require 'react'
 
 class ReactatronApp
 
-  RootComponent: RootComponent
+  document: global.document
+  location: global.location
+
+
+  Events:        require './Events'
+  Store:         require './Store'
+  Location:      require './Location'
+  RootComponent: require './RootComponent'
+  Router:        require './Router'
 
   constructor: (options={}) ->
     # Object.bindAll(this)
-    @events = new Events
+    Object.assign(this, options)
+
+    @document = options.document if 'document' of options
+    @location =
+
+
+    @events = new @Events
     {@sub,@unsub,@pub} = @events
-    @store = new Store(@events, options.storeData)
+    @store = new @Store(@events, options.storeData)
     {@get,@set,@del} = @store
 
-    # @router = new Router
+    @router = new @Router
 
-    # @location = new Location(@events)
-    # @session = new Session(@events)
+    @plugins = []
 
-    # @on('location:change', @rerender)
+    # @location = new Location(this)
 
-  state: {}
-  setState: (newState) ->
-    Object.assign(@state, newState)
+  # getProps: ->
+  #   route = @router.pageFor(@location.path, @location.params)
+  #   path:         route.path
+  #   params:       route.params
+  #   page:         route.getPage()
+  #   locationFor:  @location.for
+  #   setLocation:  @location.set
 
-
-  getProps: ->
-    route = @router.pageFor(@location.path, @location.params)
-    path:         route.path
-    params:       route.params
-    page:         route.getPage()
-    locationFor:  @location.for
-    setLocation:  @location.set
-    setPath:      @location.setPath
-    setParams:    @location.setParams
-    updateParams: @location.updateParams
-
-  rerender: ->
-    console.info('rerender')
-    if !@rootComponent? then return
-    @rootComponent.setProps(@state)
+  #   setPath:      @location.setPath
+  #   setParams:    @location.setParams
+  #   updateParams: @location.updateParams
 
   getDOMNode: ->
-    document.body
+    @document.body
+
+  render: ->
+    @rootComponent = React.render(
+      @RootComponent(app: this),
+      @DOMNode = @getDOMNode()
+    )
 
   start: ->
     if @rootComponent
       throw new Error('already started', this)
-    @location.start()
-    @rootComponent = React.render(
-      @RootComponent(@state),
-      @DOMNode = @getDOMNode()
-    )
+    @plugins.forEach (plugin) -> plugin.start()
+    @render()
     this
 
 
@@ -64,7 +66,8 @@ class ReactatronApp
     @DOMNode.innerHTML = ''
     delete @rootComponent
     delete @DOMNode
-    @location.stop()
+    @plugins.forEach (plugin) -> plugin.start()
     this
 
 module.exports = ReactatronApp
+

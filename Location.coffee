@@ -1,15 +1,15 @@
 require 'stdlibjs/Object.bindAll'
 assign = require 'object-assign'
 
-location = @location || null
+location = @location || {pathname: '/', search: ''}
 
 class Location
 
   location: location
 
-  constructor: (events) ->
+  constructor: (app) ->
     Object.bindAll(this)
-    @events = events
+    @app = app
     @update()
 
   start: ->
@@ -21,7 +21,7 @@ class Location
   update: ->
     @path   = @location.pathname
     @params = searchToObject(@location.search)
-    @events.emit('location:change')
+    @app.pub('location:change')
 
   for: (path=@path, params=@params) ->
     path ||= ''

@@ -1,5 +1,4 @@
 require 'stdlibjs/Object.bindAll'
-React = require 'react'
 RedirectComponent = require './RedirectComponent'
 
 #

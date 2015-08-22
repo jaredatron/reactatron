@@ -2,13 +2,12 @@ Events = require '../Events'
 
 describe 'Events', ->
 
-  events = null
+  events = counter = null
   beforeEach ->
     events = new Events
-
+    counter = new Counter
 
   it 'simple pub sub', ->
-    counter = new Counter
 
     expect(counter.value).to.be(0)
 
@@ -29,7 +28,6 @@ describe 'Events', ->
     expect(counter.value).to.be(3)
 
   it 'partial unsub', ->
-    counter = new Counter
 
     expect(counter.value).to.be(0)
 
@@ -50,7 +48,6 @@ describe 'Events', ->
     expect(counter.value).to.be(3)
 
   it 'double subscriptions', ->
-    counter = new Counter
 
     expect(counter.value).to.be(0)
 
@@ -67,7 +64,6 @@ describe 'Events', ->
 
 
   it 'RegExp subscriptions', ->
-    counter = new Counter
 
     events.sub /^jump|leap$/, counter
 
@@ -86,3 +82,12 @@ describe 'Events', ->
 
     events.pub('leap')
     expect( counter.value ).to.be(2)
+
+  it 'glob subscriptions', ->
+    events.sub /.*/, counter
+
+    events.pub 'a'
+    events.pub 'b'
+    events.pub 'c'
+
+    expect( counter.value ).to.be(3)

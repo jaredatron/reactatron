@@ -10,8 +10,9 @@ RedirectComponent = require './RedirectComponent'
 #
 
 class Router
-  constructor: () ->
+  constructor: (app) ->
     Object.bindAll(this)
+    @app = app
     @routes = []
 
   map: (spec) ->
@@ -46,6 +47,7 @@ class Route
     parseExpression.call(this, expression)
 
   match: (path, params) ->
+    debugger if typeof path != 'string'
     parts = path.match(@regexp)
     return false unless parts
     parts.shift()

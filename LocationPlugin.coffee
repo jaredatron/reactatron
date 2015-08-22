@@ -1,5 +1,3 @@
-Location = require './Location'
-
 class LocationPlugin
 
   window: global.window

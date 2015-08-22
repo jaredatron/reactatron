@@ -4,7 +4,7 @@ React         = require 'react'
 Events        = require './Events'
 Store         = require './Store'
 RootComponent = require './RootComponent'
-# Router        = require './Router'
+Router        = require './Router'
 
 class ReactatronApp
 
@@ -19,6 +19,7 @@ class ReactatronApp
     @store = new Store(@events)
     {@get,@set,@del} = @store
 
+    @router = new Router(this)
 
     @plugins = []
 

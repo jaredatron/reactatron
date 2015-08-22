@@ -21,12 +21,9 @@ module.exports = component 'RootComponent',
   render: ->
     app = @props.app
     location = app.get('location')
-
-    div null,
-      'hello'
-      JSON.stringify(location)
-    # route = app.router.pageFor(location.path, location.params)
-    # {path, params}= route
-    # page = route.getPage()
-    # page
-    #   path: path
+    route = app.router.pageFor(location.path, location.params)
+    {path, params} = route
+    page = route.getPage()
+    page
+      path: path
+      params: params

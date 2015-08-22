@@ -4,6 +4,7 @@ React         = require 'react'
 Events        = require './Events'
 Store         = require './Store'
 RootComponent = require './RootComponent'
+LocationPlugin = require('./LocationPlugin')
 Router        = require './Router'
 
 class ReactatronApp
@@ -12,6 +13,7 @@ class ReactatronApp
 
   constructor: ->
     Object.bindAll(this)
+    @plugins = []
 
     @events = new Events
     {@sub,@unsub,@pub} = @events
@@ -19,9 +21,10 @@ class ReactatronApp
     @store = new Store(@events)
     {@get,@set,@del} = @store
 
+    @registerPlugin new LocationPlugin({})
+
     @router = new Router(this)
 
-    @plugins = []
 
   registerPlugin: (plugin) ->
     plugin.app = this

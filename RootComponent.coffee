@@ -15,6 +15,7 @@ module.exports = component 'RootComponent',
 
   componentDidMount: ->
     @props.app.sub 'store:change:location', @rerender
+
   componentWillUnmount: ->
     @props.app.unsub 'store:change:location', @rerender
 

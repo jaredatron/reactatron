@@ -2,9 +2,10 @@ class LocationPlugin
 
   window: global.window
 
-  constructor: (app) ->
+  constructor: (app, options={}) ->
     Object.bindAll(this)
     @app = app
+    @update()
 
   start: ->
     @window.addEventListener 'popstate', @update

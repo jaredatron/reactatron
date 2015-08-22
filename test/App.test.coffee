@@ -2,17 +2,12 @@ App = require '../App'
 
 describe 'App', ->
 
-  app = storeData = location = document = null
+  app = data = null
   beforeEach ->
-    storeData = {}
-    location = {}
-    document = {body: null}
     app = new App
-      storeData: storeData
-      location: location
-      document: document
-
-    app.render = new Counter
+    app.document = {body: {}}
+    app.store.data = data = {}
+    app.render = new CallLogger
 
   it 'pub sub', ->
 

@@ -12,18 +12,15 @@ class ReactatronApp
   document: global.document
 
   constructor: (options={}) ->
-    # Object.bindAll(this)
-    Object.assign(this, options)
-
-
+    Object.bindAll(this)
     @events = new Events
     {@sub,@unsub,@pub} = @events
     @store = new Store(@events, options.storeData)
     {@get,@set,@del} = @store
-
-    # @router = new Router
-
     @plugins = []
+
+  registerPlugin: (Plugin, options={}) ->
+    @plugins.push new Plugin(this, options)
 
     # @location = new Location(this)
 

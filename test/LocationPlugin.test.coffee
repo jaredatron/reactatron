@@ -17,7 +17,7 @@ describe 'LocationPlugin', ->
     app = {
       set: new CallLogger
     }
-    locationPlugin = new LocationPlugin(app)
+    locationPlugin = new LocationPlugin(app, {})
 
   it 'start and stop should add and remove evner listeners', ->
     expect(locationPlugin.window.addEventListener.calls).to.eql([])
@@ -34,13 +34,14 @@ describe 'LocationPlugin', ->
 
     it 'should set "location"', ->
 
-      expect(app.set.calls).to.eql([])
-      locationPlugin.update()
       expect(app.set.calls).to.eql([
         ['location', {path: '/', params: {}}]
       ])
-
-      app.set.reset()
+      locationPlugin.update()
+      expect(app.set.calls).to.eql([
+        ['location', {path: '/', params: {}}],
+        ['location', {path: '/', params: {}}]
+      ])
 
       LocationPlugin.prototype.window.location = {
         pathname: '/login',
@@ -49,6 +50,8 @@ describe 'LocationPlugin', ->
 
       locationPlugin.update()
       expect(app.set.calls).to.eql([
+        ['location', {path: '/', params: {}}],
+        ['location', {path: '/', params: {}}]
         ['location', {path: '/login', params: {
           password: '12345god',
           username: 'Julia+Sanders'

@@ -3,7 +3,7 @@ require 'stdlibjs/Array#remove'
 
 isArray = require 'stdlibjs/isArray'
 
-localStorage = @localStorage || {}
+
 
 toArray = (object) ->
   if isArray(object) then object else [object]
@@ -18,17 +18,21 @@ toArray = (object) ->
 #
 module.exports = class Store
 
-  constructor: (events, data=localStorage) ->
+  data: global.localStorage
+
+  constructor: (events) ->
     Object.bindAll(this)
     @events = events
-    @data = data
     @subscriptions = {}
+
+  prefix: 'Reactatron'
 
   #
   # @private
   #
   #
   _get: (key) ->
+    key = "#{@prefix}/#{key}"
     JSON.parse(@data[key]) if key of @data
 
   #
@@ -36,7 +40,7 @@ module.exports = class Store
   #
   #
   _set: (key, value) ->
-    @data[key] = JSON.stringify(value)
+    @data["#{@prefix}/#{key}"] = JSON.stringify(value)
     @events.pub("store:change:#{key}")
 
 

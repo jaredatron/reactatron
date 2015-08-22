@@ -3,7 +3,7 @@ require 'stdlibjs/Object.bindAll'
 React         = require 'react'
 Events        = require './Events'
 Store         = require './Store'
-RootComponent = require './RootComponent'
+# RootComponent = require './RootComponent'
 LocationPlugin = require('./LocationPlugin')
 Router        = require './Router'
 
@@ -23,7 +23,7 @@ class ReactatronApp
 
     @registerPlugin new LocationPlugin({})
 
-    @router = new Router(this)
+    # @router = new Router(this)
 
 
   registerPlugin: (plugin) ->
@@ -49,10 +49,10 @@ class ReactatronApp
   getDOMNode: ->
     @document.body
 
-  RootComponent: RootComponent
+  # RootComponent: RootComponent
   render: ->
     @rootComponent = React.render(
-      @RootComponent(app: this),
+      @Component(app: this),
       @DOMNode = @getDOMNode()
     )
 

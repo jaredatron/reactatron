@@ -12,18 +12,18 @@ class LocationPlugin
 
   start: ->
     @window.addEventListener 'popstate', @update
-    this
+    @app
 
   stop: ->
     @window.removeEventListener 'popstate', @update
-    this
+    @app
 
   update: ->
     @app.set 'location', {
       path:   @window.location.pathname
       params: searchToObject(@window.location.search)
     }
-    this
+    @app
 
   for: (path, params) ->
     location = @app.get('location')
@@ -39,19 +39,19 @@ class LocationPlugin
     else
       history.pushState({}, document.title, value)
     @update()
-    this
+    @app
 
   setPath: (path, replace) ->
     @set(@for(path), replace)
-    this
+    @app
 
   setParams: (params, replace) ->
     @set(@for(null, params), replace)
-    this
+    @app
 
   updateParams: (params, replace) ->
     @setParams(assign({}, @params, params), replace)
-    this
+    @app
 
 
 

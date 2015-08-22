@@ -20,11 +20,7 @@ module.exports = component 'RootComponent',
     @props.app.unsub 'store:change:location', @rerender
 
   render: ->
-    app = @props.app
-    location = app.get('location')
-    route = app.router.pageFor(location.path, location.params)
-    {path, params} = route
-    page = route.getPage()
+    {path, params, page} = @props.app.router()
     page
       path: path
       params: params

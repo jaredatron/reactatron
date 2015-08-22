@@ -36,7 +36,6 @@ describe 'App', ->
     expect( app.get('current_user') ).to.eql(current_user)
     expect( app.get('current_user') ).to.not.be(current_user)
     expect( events ).to.eql([
-      [ 'store:change', 'current_user' ],
       [ 'store:change:current_user', undefined ],
     ])
 

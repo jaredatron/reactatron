@@ -11,7 +11,12 @@ module.exports = component 'RootComponent',
     app: component.PropTypes.object
 
   getChildContext: ->
-    app:         @props.app
+    app: @props.app
+
+  componentDidMount: ->
+    @props.app.sub 'store:change:location', @rerender
+  componentWillUnmount: ->
+    @props.app.unsub 'store:change:location', @rerender
 
   render: ->
     app = @props.app

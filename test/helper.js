@@ -7,8 +7,12 @@ CallLogger = function(){
     callLogger.calls.push([].slice.call(arguments));
     callLogger.callCount = callLogger.calls.length;
   };
-  callLogger.calls = [];
-  callLogger.callCount = 0;
+  callLogger.reset = function(){
+    callLogger.calls = [];
+    callLogger.callCount = 0;
+  };
+  callLogger.reset();
+
   return callLogger;
 };
 

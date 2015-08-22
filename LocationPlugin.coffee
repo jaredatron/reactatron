@@ -1,18 +1,36 @@
 class LocationPlugin
 
-  location: global.location
   window: global.window
 
-  constructor: (options={}) ->
-    Object.assign(this, options)
+  constructor: (app) ->
+    Object.bindAll(this)
+    @app = app
 
   start: ->
-    window.addEventListener 'popstate', @update
+    @window.addEventListener 'popstate', @update
 
   stop: ->
-    window.removeEventListener 'popstate', @update
+    @window.removeEventListener 'popstate', @update
 
   update: ->
-    console.log('LocationPlugin update')
+    @app.set 'location', {
+      path: @window.location.pathname
+      params: searchToObject(@window.location.search)
+    }
 
 module.exports = LocationPlugin
+
+
+searchToObject = (search) ->
+  params = {}
+  search = search.substring(search.indexOf('?') + 1, search.length);
+  return {} if search.length == 0
+  search.split(/&+/).forEach (param) ->
+    [key, value] = param.split('=')
+    key = decodeURIComponent(key)
+    if value?
+      value = decodeURIComponent(value)
+    else
+      value = true
+    params[key] = value
+  params

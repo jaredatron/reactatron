@@ -3,7 +3,6 @@ require 'stdlibjs/Object.bindAll'
 React         = require 'react'
 Events        = require './Events'
 Store         = require './Store'
-Location      = require './Location'
 RootComponent = require './RootComponent'
 # Router        = require './Router'
 
@@ -11,12 +10,16 @@ class ReactatronApp
 
   document: global.document
 
-  constructor: (options={}) ->
+  constructor: ->
     Object.bindAll(this)
+
     @events = new Events
     {@sub,@unsub,@pub} = @events
-    @store = new Store(@events, options.storeData)
+
+    @store = new Store(@events)
     {@get,@set,@del} = @store
+
+
     @plugins = []
 
   registerPlugin: (Plugin, options={}) ->

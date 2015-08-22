@@ -37,7 +37,6 @@ module.exports = class Store
   #
   _set: (key, value) ->
     @data[key] = JSON.stringify(value)
-    @events.pub('store:change', key)
     @events.pub("store:change:#{key}")
 
 

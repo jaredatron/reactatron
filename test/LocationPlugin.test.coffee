@@ -19,6 +19,16 @@ describe 'LocationPlugin', ->
     }
     locationPlugin = new LocationPlugin(app, {})
 
+  it 'init', ->
+    expect( app.locationFor ).to.be( locationPlugin.for )
+    expect( app.setLocation ).to.be( locationPlugin.set )
+    expect( app.setPath     ).to.be( locationPlugin.setPath )
+    expect( app.setParams   ).to.be( locationPlugin.setParams )
+    expect( app.locationFor ).to.be( locationPlugin.for )
+    expect(app.set.calls).to.eql([
+      ['location', {path: '/', params: {}}]
+    ])
+
   it 'start and stop should add and remove evner listeners', ->
     expect(locationPlugin.window.addEventListener.calls).to.eql([])
     expect(locationPlugin.window.removeEventListener.calls).to.eql([])
@@ -57,3 +67,7 @@ describe 'LocationPlugin', ->
           username: 'Julia+Sanders'
         }}]
       ])
+
+
+  describe '#for', ->
+    it 'should generate location strings'

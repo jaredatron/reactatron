@@ -1,30 +1,29 @@
 require 'stdlibjs/Object.bindAll'
-React = require 'react'
-BaseMixin = require './BaseMixin'
+
 Events = require './Events'
-Location = require './Location'
+Store = require './Store'
+# Location = require './Location'
 RootComponent = require './RootComponent'
 Router = require './Router'
-Session = require './Session'
-Store = require './Store'
+# Session = require './Session'
 
 class ReactatronApp
 
   RootComponent: RootComponent
 
-  constructor: ->
-    Object.bindAll(this)
+  constructor: (options={}) ->
+    # Object.bindAll(this)
     @events = new Events
-    {@sub,@ubsub,@emit} = @events
-    @store = new Store(@events)
-    {@get,@set,@unset,@sub,@unsub} = @store
+    {@sub,@unsub,@pub} = @events
+    @store = new Store(@events, options.storeData)
+    {@get,@set,@del} = @store
 
-    @router = new Router
+    # @router = new Router
 
-    @location = new Location(@events)
-    @session = new Session(@events)
+    # @location = new Location(@events)
+    # @session = new Session(@events)
 
-    @on('location:change', @rerender)
+    # @on('location:change', @rerender)
 
   state: {}
   setState: (newState) ->

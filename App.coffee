@@ -10,10 +10,6 @@ RootComponent = require './RootComponent'
 class ReactatronApp
 
   document: global.document
-  location: global.location
-
-
-
 
   constructor: (options={}) ->
     # Object.bindAll(this)
@@ -46,6 +42,7 @@ class ReactatronApp
   getDOMNode: ->
     @document.body
 
+  RootComponent: RootComponent
   render: ->
     @rootComponent = React.render(
       @RootComponent(app: this),

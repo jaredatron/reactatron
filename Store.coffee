@@ -18,9 +18,10 @@ toArray = (object) ->
 #
 module.exports = class Store
 
-  constructor: (options={}) ->
+  constructor: (events) ->
     Object.bindAll(this)
-    @data = options.data || localStorage
+    @events = events
+    @data = localStorage
     @subscriptions = {}
 
   #
@@ -36,7 +37,8 @@ module.exports = class Store
   #
   _set: (key, value) ->
     @data[key] = JSON.stringify(value)
-    @_emit(key)
+    @events.emit('store:change', key)
+    @events.emit("store:change:key")
 
   #
   # @private
@@ -44,16 +46,6 @@ module.exports = class Store
   #
   _unset: (key) ->
     delete @data[key]
-
-  #
-  # @private
-  #
-  #
-  _emit: (key) ->
-    handlers = @subscriptions[key] || []
-    for handler in handlers
-      handler(key)
-
 
 
   #
@@ -87,35 +79,9 @@ module.exports = class Store
   #   store.unset ['a', 'b']
 
   #
-  unset: (keys) ->
+  del: (keys) ->
     @_unset(key) for key in toArray(keys)
-
-  #
-  # @example
-  #
-  #   handler = (key, value) ->
-  #     console.log(key, value)
-  #
-  #   store.sub ['a', 'b'], handler
-  #
-  sub: (keys, handler) ->
-    for key in toArray(keys)
-      handlers = @subscriptions[key] ||= []
-      handlers.push(handler)
     this
-
-  #
-  # @example
-  #
-  #   store.unsub ['a', 'b'], handler
-  #
-  unsub: (keys, handler) ->
-    for key in toArray(keys)
-      handlers = @subscriptions[key] ||= []
-      handlers.remove(handler)
-    this
-
-
 
 
 

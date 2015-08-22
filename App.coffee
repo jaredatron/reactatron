@@ -1,6 +1,11 @@
 require 'stdlibjs/Object.bindAll'
 
-React = require 'react'
+React         = require 'react'
+Events        = require './Events'
+Store         = require './Store'
+Location      = require './Location'
+RootComponent = require './RootComponent'
+# Router        = require './Router'
 
 class ReactatronApp
 
@@ -8,26 +13,19 @@ class ReactatronApp
   location: global.location
 
 
-  Events:        require './Events'
-  Store:         require './Store'
-  Location:      require './Location'
-  RootComponent: require './RootComponent'
-  Router:        require './Router'
+
 
   constructor: (options={}) ->
     # Object.bindAll(this)
     Object.assign(this, options)
 
-    @document = options.document if 'document' of options
-    @location =
 
-
-    @events = new @Events
+    @events = new Events
     {@sub,@unsub,@pub} = @events
-    @store = new @Store(@events, options.storeData)
+    @store = new Store(@events, options.storeData)
     {@get,@set,@del} = @store
 
-    @router = new @Router
+    # @router = new Router
 
     @plugins = []
 
@@ -61,12 +59,11 @@ class ReactatronApp
     @render()
     this
 
-
   stop: ->
-    @DOMNode.innerHTML = ''
+    # @DOMNode.innerHTML = ''
     delete @rootComponent
     delete @DOMNode
-    @plugins.forEach (plugin) -> plugin.start()
+    @plugins.forEach (plugin) -> plugin.stop()
     this
 
 module.exports = ReactatronApp

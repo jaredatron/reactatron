@@ -52,19 +52,16 @@ describe 'App', ->
       app.render()
       expect(app.rootComponent).to.be.eql({})
 
+  it 'should start and stop the plugins', ->
+    testPlugin =
+      start: new Counter
+      stop: new Counter
+    app.plugins.push testPlugin
+    app.start()
+    expect(testPlugin.start.value).to.be(1)
+    app.stop()
+    expect(testPlugin.stop.value).to.be(1)
 
-  describe '#start', ->
 
-    class TestPlugin
-      start: ->
-
-      stop: ->
-
-    it 'should start the plugins and render', ->
-      testPlugin =
-        start: new Counter
-        stop: new Counter
-      app.plugins.push testPlugin
-      app.start()
-      expect(testPlugin.start.value).to.be(1)
-
+  describe '#stop', ->
+    it 'should delete rootComponent and DOMNode'

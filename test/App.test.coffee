@@ -59,3 +59,7 @@ describe 'App', ->
 
   describe '#stop', ->
     it 'should delete rootComponent and DOMNode'
+
+
+  describe '#registerPlugin', ->
+    it 'should app its self to the app property of its target and then add it to the plugins array'

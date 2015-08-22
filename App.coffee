@@ -22,8 +22,11 @@ class ReactatronApp
 
     @plugins = []
 
-  registerPlugin: (Plugin, options={}) ->
-    @plugins.push new Plugin(this, options)
+  registerPlugin: (plugin) ->
+    plugin.app = this
+    plugin.init() if plugin.init?
+    @plugins.push plugin
+    this
 
     # @location = new Location(this)
 

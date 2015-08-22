@@ -4,13 +4,12 @@ class LocationPlugin
 
   window: global.window
 
-  constructor: (app, options={}) ->
+  init: ->
     Object.bindAll(this)
-    @app = app
-    app.locationFor = @for
-    app.setLocation = @set
-    app.setPath = @setPath
-    app.setParams = @setParams
+    @app.locationFor = @for
+    @app.setLocation = @set
+    @app.setPath = @setPath
+    @app.setParams = @setParams
     @update()
 
   start: ->

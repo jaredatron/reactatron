@@ -17,7 +17,9 @@ describe 'LocationPlugin', ->
     app = {
       set: new CallLogger
     }
-    locationPlugin = new LocationPlugin(app, {})
+    locationPlugin = new LocationPlugin({})
+    locationPlugin.app = app
+    locationPlugin.init()
 
   it 'init', ->
     expect( app.locationFor ).to.be( locationPlugin.for )

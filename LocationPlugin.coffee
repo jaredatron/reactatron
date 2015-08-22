@@ -1,6 +1,7 @@
 class LocationPlugin
 
-  window: global.window
+  constructor: (options) ->
+    @window = options.window
 
   init: ->
     Object.bindAll(this)

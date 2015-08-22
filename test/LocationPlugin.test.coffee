@@ -2,22 +2,15 @@ LocationPlugin = require '../LocationPlugin'
 
 describe 'LocationPlugin', ->
 
-  locationPlugin = app = null
+  locationPlugin = app = window = null
 
   beforeEach ->
-    LocationPlugin.prototype.window = {
-      addEventListener: new CallLogger
-      removeEventListener: new CallLogger
-      location: {
-        pathname: '/',
-        search: '',
-      }
-    }
+    window = new FakeWindow;
 
     app = {
       set: new CallLogger
     }
-    locationPlugin = new LocationPlugin({})
+    locationPlugin = new LocationPlugin( window: window )
     locationPlugin.app = app
     locationPlugin.init()
 
@@ -55,7 +48,7 @@ describe 'LocationPlugin', ->
         ['location', {path: '/', params: {}}]
       ])
 
-      LocationPlugin.prototype.window.location = {
+      locationPlugin.window.location = {
         pathname: '/login',
         search: '?username=Julia+Sanders&password=12345god',
       }

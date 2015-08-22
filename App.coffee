@@ -9,19 +9,19 @@ Router        = require './Router'
 
 class ReactatronApp
 
-  document: global.document
+  constructor: (options={}) ->
+    options.window ||= global.window
 
-  constructor: ->
     Object.bindAll(this)
     @plugins = []
 
     @events = new Events
     {@sub,@unsub,@pub} = @events
 
-    @store = new Store(@events)
+    @store = new Store(events: @events)
     {@get,@set,@del} = @store
 
-    @registerPlugin new LocationPlugin({})
+    @registerPlugin new LocationPlugin( window: options.window )
 
     # @router = new Router(this)
 
@@ -47,7 +47,7 @@ class ReactatronApp
   #   updateParams: @location.updateParams
 
   getDOMNode: ->
-    @document.body
+    document.body
 
   # RootComponent: RootComponent
   render: ->

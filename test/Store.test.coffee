@@ -8,7 +8,7 @@ describe 'Store', ->
       pub: new CallLogger
     }
 
-    store = new Store(events)
+    store = new Store(events: events)
     store.data = data = {}
 
   it 'should CRUD complex objects', ->

@@ -1,6 +1,26 @@
 global.expect = require('expect.js')
 
 
+// window = this
+// location = {
+//   pathname: '/',
+//   search: '',
+// }
+// document = {}
+// document.body = {'BODY': true}
+
+
+FakeWindow = function(){
+  return {
+    location: {
+      pathname: '/',
+      search: '',
+    },
+    addEventListener: new CallLogger,
+    removeEventListener: new CallLogger,
+  };
+};
+
 
 CallLogger = function(){
   var callLogger = function(){

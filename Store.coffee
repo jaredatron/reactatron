@@ -18,11 +18,11 @@ toArray = (object) ->
 #
 module.exports = class Store
 
-  data: global.localStorage
+  data: global.localStorage || {}
 
-  constructor: (events) ->
+  constructor: (options={}) ->
     Object.bindAll(this)
-    @events = events
+    @events = options.events
     @subscriptions = {}
 
   prefix: 'Reactatron'
@@ -49,7 +49,7 @@ module.exports = class Store
   #
   #
   _unset: (key) ->
-    delete @data[key]
+    delete @data["#{@prefix}/#{key}"]
 
 
   #

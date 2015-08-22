@@ -5,6 +5,9 @@ describe 'App', ->
   app = data = null
   beforeEach ->
     app = new App
+      window: new FakeWindow
+
+    console.log('--->', app.plugins)
     app.document = {body: {}}
     app.store.data = data = {}
     app.render = new CallLogger

@@ -1,6 +1,8 @@
 require 'stdlibjs/Object.bindAll'
 assign = require 'object-assign'
 
+location = @location || null
+
 class Location
 
   location: location

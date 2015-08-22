@@ -18,10 +18,10 @@ toArray = (object) ->
 #
 module.exports = class Store
 
-  constructor: (events) ->
+  constructor: (events, data=localStorage) ->
     Object.bindAll(this)
     @events = events
-    @data = localStorage
+    @data = data
     @subscriptions = {}
 
   #
@@ -37,8 +37,9 @@ module.exports = class Store
   #
   _set: (key, value) ->
     @data[key] = JSON.stringify(value)
-    @events.emit('store:change', key)
-    @events.emit("store:change:key")
+    @events.pub('store:change', key)
+    @events.pub("store:change:#{key}")
+
 
   #
   # @private

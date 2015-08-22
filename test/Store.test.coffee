@@ -4,10 +4,9 @@ describe 'Store', ->
 
   events = data = store = null
   beforeEach ->
-    events = {}
-    events.emit = (event, payload) ->
-      events.emit.calls.push([event,payload])
-    events.emit.calls = []
+    events = {
+      pub: new CallLogger
+    }
 
     store = new Store(events)
     store.data = data = {}
@@ -18,12 +17,12 @@ describe 'Store', ->
     expect(store.data).to.be(data)
 
     expect( store.get('a')     ).to.be(undefined)
-    expect( events.emit.calls ).to.eql([])
+    expect( events.pub.calls ).to.eql([])
 
     expect( store.set('a','b') ).to.be(store)
-    expect( events.emit.calls ).to.eql([
+    expect( events.pub.calls ).to.eql([
       ["store:change","a"],
-      ["store:change:key",undefined]
+      ["store:change:a"]
     ])
     expect( store.get('a')     ).to.equal('b')
     expect( store.del('a')     ).to.be(store)

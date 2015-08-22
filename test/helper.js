@@ -2,14 +2,14 @@ global.expect = require('expect.js')
 
 
 
-CountingHandler = function(){
-  var countingHandler = function(){
-    countingHandler.calls.push([].slice.call(arguments));
-    countingHandler.callCount = countingHandler.calls.length;
+CallLogger = function(){
+  var callLogger = function(){
+    callLogger.calls.push([].slice.call(arguments));
+    callLogger.callCount = callLogger.calls.length;
   };
-  countingHandler.calls = [];
-  countingHandler.callCount = 0;
-  return countingHandler;
+  callLogger.calls = [];
+  callLogger.callCount = 0;
+  return callLogger;
 };
 
 

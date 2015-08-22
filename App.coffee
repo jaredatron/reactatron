@@ -15,8 +15,8 @@ class ReactatronApp
     Object.bindAll(this)
     @events = new Events
     {@on,@off,@emit} = @events
-    # @data = new DataStore
-    # {@get,@set} = @data
+    @store = new Store
+    {@get,@set,@sub,@unsub} = @store
 
     @router = new Router
 

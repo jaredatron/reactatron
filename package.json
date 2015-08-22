@@ -24,5 +24,8 @@
     "react": "^0.13.3",
     "stdlibjs": "0.0.x",
     "uri-js": "^2.1.1"
+  },
+  "devDependencies": {
+    "expect.js": "^0.3.1"
   }
 }

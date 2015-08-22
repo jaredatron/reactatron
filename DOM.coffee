@@ -16,7 +16,7 @@ DOM.a = component 'a (reactatron)',
     return unless uri.isSameOrigin
     event.preventDefault()
     console.log('a.onClick', target.href)
-    @context.setLocation(uri.asRelative)
+    @app.setLocation(uri.asRelative)
     return
 
   render: ->

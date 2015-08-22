@@ -48,4 +48,29 @@ describe 'Store', ->
 
   it 'subscriptions', ->
 
-    store.sub()
+    keys = ['a','b','c']
+
+    handler = ->
+      handler.calls.push(arguments)
+    handler.calls = []
+
+    store.sub(keys, handler)
+
+    expect(handler.calls.length).to.be(0)
+
+    store._emit('a')
+    expect(handler.calls.length).to.be(1)
+
+    store.set('a', 'pear')
+    store.set('a', 'apple')
+    store.set('a', 'peach')
+    expect(handler.calls.length).to.be(4)
+
+    expect( store.get('a') ).to.eql('peach')
+    expect(handler.calls.length).to.be(4)
+
+    store.unsub('a', handler)
+    expect(handler.calls.length).to.be(4)
+
+    store.set('a', {a:false})
+    expect(handler.calls.length).to.be(4)

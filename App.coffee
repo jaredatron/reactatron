@@ -6,6 +6,7 @@ Location = require './Location'
 RootComponent = require './RootComponent'
 Router = require './Router'
 Session = require './Session'
+Store = require './Store'
 
 class ReactatronApp
 

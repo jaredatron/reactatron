@@ -1,9 +1,21 @@
 require 'stdlibjs/Object.bindAll'
 require 'stdlibjs/Array#remove'
+
 isArray = require 'stdlibjs/isArray'
 
 localStorage = @localStorage || {}
 
+toArray = (object) ->
+  if isArray(object) then object else [object]
+
+
+#
+# @example
+#
+#   store = new Store
+#
+#   store = new Store data: {}
+#
 module.exports = class Store
 
   constructor: (options={}) ->
@@ -11,53 +23,101 @@ module.exports = class Store
     @data = options.data || localStorage
     @subscriptions = {}
 
+  #
+  # @private
+  #
+  #
+  _get: (key) ->
+    JSON.parse(@data[key]) if key of @data
+
+  #
+  # @private
+  #
+  #
+  _set: (key, value) ->
+    @data[key] = JSON.stringify(value)
+    @_emit(key)
+
+  #
+  # @private
+  #
+  #
+  _unset: (key) ->
+    delete @data[key]
+
+  #
+  # @private
+  #
+  #
+  _emit: (key) ->
+    handlers = @subscriptions[key] || []
+    for handler in handlers
+      handler(key)
+
+
+
+  #
+  # @example
+  #
+  #   store.get ['a','b']
+  #
   get: (keys) ->
     if isArray(keys)
-      results = {}
-      for key, index in keys
-        result = @data[key]
-        results[index] = results[key] = Store.get(@data, key)
-      results
+      keys.map (key) -> @_get(key)
     else
-      Store.get(@data, keys)
+      @_get(keys)
 
 
-  set: (key, value) ->
+  #
+  # @example
+  #
+  #   store.set a:1, b:2
+  #
+  set: (pairs) ->
     if arguments.length == 2
-      Store.set(@data, key, value)
+      @_set(arguments[0], arguments[1])
     else
-      for k, v of key
-        Store.set(@data, k, v)
+      for key, value of pairs
+        @_set(key, value)
     this
 
-  unset: (keys) ->
-    Store.unset(@data, key) for key in KEYS(keys)
+  #
+  # @example
+  #
+  #   store.unset ['a', 'b']
 
+  #
+  unset: (keys) ->
+    @_unset(key) for key in toArray(keys)
+
+  #
+  # @example
+  #
+  #   handler = (key, value) ->
+  #     console.log(key, value)
+  #
+  #   store.sub ['a', 'b'], handler
+  #
   sub: (keys, handler) ->
-    for key in KEYS(keys)
+    for key in toArray(keys)
       handlers = @subscriptions[key] ||= []
       handlers.push(handler)
     this
 
-
+  #
+  # @example
+  #
+  #   store.unsub ['a', 'b'], handler
+  #
   unsub: (keys, handler) ->
-    for key in KEYS(keys)
+    for key in toArray(keys)
       handlers = @subscriptions[key] ||= []
-      handlers.remove()
+      handlers.remove(handler)
     this
 
 
 
-KEYS = (keys) ->
-  if isArray(keys) then keys else [keys]
 
 
 
-Store.get = (data, key) ->
-  JSON.parse(data[key]) if key of data
 
-Store.set = (data, key, value) ->
-  data[key] = JSON.stringify(value)
-
-Store.unset = (data, key) ->
-  delete data[key]

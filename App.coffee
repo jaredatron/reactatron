@@ -4,6 +4,7 @@ React         = require 'react'
 Events        = require './Events'
 Store         = require './Store'
 LocationPlugin = require('./LocationPlugin')
+WindowSizePlugin = require('./WindowSizePlugin')
 Router        = require './Router'
 
 class ReactatronApp
@@ -21,8 +22,8 @@ class ReactatronApp
     {@get,@set,@del} = @store
 
     @registerPlugin new LocationPlugin( window: options.window )
-    # we will need this tobe responsive
-    # @registerPlugin new WindowSize( window: options.window ) # :D
+    # we need this to be responsive
+    @registerPlugin new WindowSizePlugin( window: options.window ) # :D
 
   registerPlugin: (plugin) ->
     plugin.app = this

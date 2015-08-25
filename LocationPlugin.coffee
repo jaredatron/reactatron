@@ -1,4 +1,4 @@
-class LocationPlugin
+module.exports = class LocationPlugin
 
   constructor: (options) ->
     @window = options.window
@@ -56,7 +56,6 @@ class LocationPlugin
 
 
 
-module.exports = LocationPlugin
 
 
 searchToObject = (search) ->

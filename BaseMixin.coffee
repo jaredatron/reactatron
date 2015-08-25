@@ -31,8 +31,7 @@ module.exports =
     for key in @_dataBindings
       @app.unsub "store:change:#{key}", @rerender
 
-
   cloneProps: ->
     props = Object.clone(@props)
-    props.style = Styles(props.style)
-    props.className = Classnames(props.className)
+    props.style = Object.assign({}, @defaultStyle || {}, @props.style || {})
+    props

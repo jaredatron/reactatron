@@ -55,8 +55,8 @@ ensureProps = (args) ->
   if React.isValidElement(args[0])
     args.unshift({})
 
-  props = args[0]
-  props.style ||= {}
+  props = Object.clone(args[0])
+  props.style = if props.style then Object.clone(props.style) else {}
   args
 
 

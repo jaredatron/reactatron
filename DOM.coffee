@@ -1,7 +1,6 @@
 require 'stdlibjs/Object.clone'
 React = require 'react'
 component = require './component'
-componentApiProxy = require './componentApiProxy'
 
 DOM = {}
 

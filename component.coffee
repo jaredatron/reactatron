@@ -1,23 +1,102 @@
 React = require 'react'
 BaseMixin = require './BaseMixin'
+isFunction = require 'stdlibjs/isFunction'
+isString = require 'stdlibjs/isString'
 
+###
 
-component = (name, spec) ->
-  if ('string' != typeof name)
-    spec = name
+component 'Button',
+  render: ->
+    …
+
+oneoff = component
+  render: ->
+    …
+
+wrapper = component (props) ->
+  …
+
+###
+module.exports = (arg1, arg2) ->
+  if isFunction(arg1)
+    return componentWrapper(arg1)
+
+  if isString(arg1)
+    name = arg1
+    spec = arg2
+  else
     name = null
-  spec ||= {}
+    spec = arg1
+
   spec.displayName = name if name?
   spec.mixins ||= []
   spec.mixins = [BaseMixin].concat(spec.mixins)
+  reactClass = React.createClass(spec)
+  component = componentWrapper React.createFactory(reactClass)
+  component.reactClass = reactClass
+  component
 
-  # possibly process alternate API here
+module.exports.PropTypes = React.PropTypes
 
-  component = React.createClass(spec)
-  componentFactory = React.createFactory(component)
-  componentFactory.component = component
-  componentFactory
 
-component.PropTypes = React.PropTypes
+# keeps a consistant api of the props being optional
+#
+# Button(onClick: @onClick, 'hello')
+# Button('hello')
+#
+componentWrapper = (wrapper) ->
+  ->
+    wrapper.apply(null, ensureProps(arguments))
 
-module.exports = component
+ensureProps = (args) ->
+  args = [].slice.call(args)
+  if args[0] == null || args[0] == undefined
+    args[0] = {}
+  if React.isValidElement(args[0])
+    args.unshift({})
+
+  props = args[0]
+  props.style ||= {}
+  args
+
+
+
+
+
+# resolveProps = (args) ->
+#   props = {}
+#   for argument in args
+#     if isProps(arguments)
+#       # I dont think we want to merge props here
+#       # we def do want to set style and className
+#       mergeProps(props, argument)
+#     else
+#       addChildren(props, argument)
+#   props
+
+# mergeProps = (props, newProps) ->
+#   for p in newProps
+#     switch p
+#       when 'style'
+#         props.style ||= {}
+#         # todo make a style class here
+#         Object.assign(props.style, newProps.style)
+#       when 'className'
+#         props.className ||= ''
+#         props.className + ' ' + (newProps.className||'')
+#       else
+#         props[p] = newProps[p]
+
+# addChildren = (props, children) ->
+#   props.children ||= []
+#   if !isArray(props.children)
+#     props.children = [props.children]
+#   if !isArray(children)
+#     children = [children]
+#   props.children = props.children.concat(children)
+
+
+# isProps = (argument) ->
+#   !isArray(argument) && !React.isValidElement(argument)
+
+# module.exports = componentWrapper

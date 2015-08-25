@@ -1,7 +1,14 @@
 require 'stdlibjs/Object.clone'
 React = require 'react'
 component = require './component'
-DOM = Object.create(React.DOM)
+componentApiProxy = require './componentApiProxy'
+
+DOM = {}
+
+for key, value of React.DOM
+  DOM[key] = component(value)
+
+
 
 DOM.a = component 'a (reactatron)',
 

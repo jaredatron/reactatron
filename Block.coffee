@@ -1,13 +1,13 @@
 component = require './component'
 Box = require './Box'
 
-module.exports = component 'Block',
+DEFAULT_STYLE = {
+  display: 'inline-flex'
+  flexWrap: 'wrap'
+  alignItems: 'flex-start'
+  alignContent: 'flex-start'
+}
 
-  defaultStyle:
-    display: 'inline-flex'
-    flexWrap: 'wrap'
-    alignItems: 'flex-start'
-    alignContent: 'flex-start'
-
-  render: ->
-    Box(@cloneProps())
+module.exports = component (props, children...) ->
+  props.style = Object.assign({}, DEFAULT_STYLE, props.style || {})
+  Box(props, children...)

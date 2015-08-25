@@ -38,29 +38,14 @@ module.exports = (arg1, arg2) ->
 
 module.exports.PropTypes = React.PropTypes
 
-
-# keeps a consistant api of the props being optional
-#
-# Button(onClick: @onClick, 'hello')
-# Button('hello')
-#
 componentWrapper = (wrapper) ->
   ->
-    wrapper.apply(null, ensureProps(arguments))
+    wrapper.apply(null, cloneProps(arguments))
 
-ensureProps = (args) ->
-  args = [].slice.call(args)
-  switch
-    when args[0] == null || args[0] == undefined
-      args[0] = {}
-    when React.isValidElement(args[0])
-      args.unshift({})
-    when Object.type(args[0]) != 'Object'
-      args.unshift({})
-    else
-
-  props = Object.clone(args[0])
-  props.style = if props.style then Object.clone(props.style) else {}
+cloneProps = (args) ->
+  props = Object.clone(args[0] || {})
+  props.style = Object.clone(props.style) if props.style?
+  args[0] = props
   args
 
 

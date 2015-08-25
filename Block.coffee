@@ -6,6 +6,8 @@ DEFAULT_STYLE = {
   flexWrap: 'wrap'
   alignItems: 'flex-start'
   alignContent: 'flex-start'
+  flexGrow: 0
+  flexShrink: 0
 }
 
 module.exports = component (props, children...) ->

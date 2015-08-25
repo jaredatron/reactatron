@@ -12,6 +12,8 @@ DEFAULT_STYLE = {
 
 module.exports = component (props, children...) ->
   style = props.style = Object.assign({}, DEFAULT_STYLE, props.style || {})
+  # TODO stop doing this :S
+  # We need to stop doing this or move it to the front, at the end will cause over-writes
   style.flexGrow   = props.grow      if props.grow?
   style.flexShrink = props.shrink    if props.shrink?
   style.minWidth   = props.minWidth  if props.minWidth?

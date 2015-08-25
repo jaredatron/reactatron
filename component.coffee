@@ -50,10 +50,14 @@ componentWrapper = (wrapper) ->
 
 ensureProps = (args) ->
   args = [].slice.call(args)
-  if args[0] == null || args[0] == undefined
-    args[0] = {}
-  if React.isValidElement(args[0])
-    args.unshift({})
+  switch
+    when args[0] == null || args[0] == undefined
+      args[0] = {}
+    when React.isValidElement(args[0])
+      args.unshift({})
+    when Object.type(args[0]) != 'Object'
+      args.unshift({})
+    else
 
   props = Object.clone(args[0])
   props.style = if props.style then Object.clone(props.style) else {}

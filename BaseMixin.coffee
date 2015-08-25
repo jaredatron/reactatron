@@ -33,5 +33,10 @@ module.exports =
 
   cloneProps: ->
     props = Object.clone(@props)
-    props.style = Object.assign({}, @defaultStyle || {}, @props.style || {})
+    props.style = Object.assign(
+      {},
+      @defaultStyle || {},
+      @props.style || {},
+      @enforcedStyle || {},
+    )
     props

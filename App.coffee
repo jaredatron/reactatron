@@ -3,7 +3,6 @@ require 'stdlibjs/Object.bindAll'
 React         = require 'react'
 Events        = require './Events'
 Store         = require './Store'
-# RootComponent = require './RootComponent'
 LocationPlugin = require('./LocationPlugin')
 Router        = require './Router'
 
@@ -22,9 +21,8 @@ class ReactatronApp
     {@get,@set,@del} = @store
 
     @registerPlugin new LocationPlugin( window: options.window )
-
-    # @router = new Router(this)
-
+    # we will need this tobe responsive
+    # @registerPlugin new WindowSize( window: options.window ) # :D
 
   registerPlugin: (plugin) ->
     plugin.app = this
@@ -32,27 +30,12 @@ class ReactatronApp
     @plugins.push plugin
     this
 
-    # @location = new Location(this)
-
-  # getProps: ->
-  #   route = @router.pageFor(@location.path, @location.params)
-  #   path:         route.path
-  #   params:       route.params
-  #   page:         route.getPage()
-  #   locationFor:  @location.for
-  #   setLocation:  @location.set
-
-  #   setPath:      @location.setPath
-  #   setParams:    @location.setParams
-  #   updateParams: @location.updateParams
-
   getDOMNode: ->
     document.body
 
-  # RootComponent: RootComponent
   render: ->
     @rootComponent = React.render(
-      @Component(app: this),
+      RootComponent(app: this, Component: @Component),
       @DOMNode = @getDOMNode()
     )
 
@@ -72,3 +55,20 @@ class ReactatronApp
 
 module.exports = ReactatronApp
 
+
+
+RootComponent = React.createFactory React.createClass
+  displayName: 'ReactatronApp'
+
+  propTypes:
+    app: React.PropTypes.instanceOf(ReactatronApp).isRequired
+    Component: React.PropTypes.func.isRequired
+
+  childContextTypes:
+    app: React.PropTypes.instanceOf(ReactatronApp)
+
+  getChildContext: ->
+    app: @props.app
+
+  render: ->
+    @props.Component()

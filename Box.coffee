@@ -4,8 +4,8 @@ component = require './component'
 module.exports = component 'Box',
 
   propTypes:
-    alignItems: component.PropTypes.string
-    grow: component.PropTypes.string
+    alignItems: component.PropTypes.any
+    grow: component.PropTypes.any
 
   defaultStyle:
     display: 'block'
@@ -13,18 +13,17 @@ module.exports = component 'Box',
     margin: 0
     padding: 0
     overflow: 'hidden'
+    # flexShrink: 0
 
   render: ->
     props = @cloneProps()
     style = props.style
 
-    if @props.grow
-      style.flexGrow = @props.grow
-
-
-    style.alignItems = switch @props.alignItems
-      when 'start' then 'flex-start'
-      when 'end'   then 'flex-end'
-      else @props.alignItems
+    style.flexGrow   = @props.grow      if @props.grow?
+    style.flexShrink = @props.shrink    if @props.shrink?
+    style.minWidth   = @props.minWidth  if @props.minWidth?
+    style.overflowY  = @props.overflowY if @props.overflowY?
+    style.overflowX  = @props.overflowX if @props.overflowX?
+    style.overflow   = @props.overflow  if @props.overflow?
 
     div(props)

@@ -10,6 +10,8 @@ DEFAULT_STYLE = {
   # flexShrink: 0
 }
 
+# PROPS_TO_STYLE['minWidth', 'overflowY', 'overflowX', 'overflow']
+
 module.exports = component (props, children...) ->
   style = props.style = Object.assign({}, DEFAULT_STYLE, props.style || {})
   # TODO stop doing this :S
@@ -20,4 +22,5 @@ module.exports = component (props, children...) ->
   style.overflowY  = props.overflowY if props.overflowY?
   style.overflowX  = props.overflowX if props.overflowX?
   style.overflow   = props.overflow  if props.overflow?
+  # Object.assign(style, Object.slice(props, PROPS_TO_STYLE))
   div(props, children...)

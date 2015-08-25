@@ -34,5 +34,7 @@ module.exports =
   # app: ->
   #   @context.app
 
-  magicQueryThing: (spec) ->
-    spec.keys
+  cloneProps: ->
+    props = Object.clone(@props)
+    props.style = Styles(props.style)
+    props.className = Classnames(props.className)

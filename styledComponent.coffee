@@ -1,4 +1,4 @@
-createComponent = require './component'
+component = require './component'
 Style = require './Style'
 
 ###
@@ -6,32 +6,30 @@ Style = require './Style'
 Box = styledComponent 'Box', div,
   display: 'inline-block'
 
-Block = styledComponent 'Block', box,
-  displayL 'inline-block'
 
 ###
-module.exports = (name, component, style) ->
-  if component.isStyledComponent
-    # subclass styled component
-    newComponent = createComponent name, (props) ->
-      props.style = newComponent.style.merge(props.style)
-      newComponent.targetComponent(props)
-    newComponent.style = component.style.merge(style)
-    newComponent.targetComponent = component.targetComponent
-  else
-    # root styled component
-    newComponent = createComponent name, (props) ->
-      props.style = newComponent.style.merge(props.style)
-      props.component = newComponent.targetComponent
-      StyleComponent.call(null, props)
-    newComponent.targetComponent = component
-    newComponent.style = new Style(style)
+module.exports = (name, targetComponent, style) ->
+  extendStyledComponent.apply(
+    {style: new Style, targetComponent: targetComponent},
+    [name, style],
+  )
 
-  newComponent.isStyledComponent = true
-  newComponent
+extendStyledComponent = (name, style) ->
+  style = @style.merge(style)
+  targetComponent = @targetComponent
+  styledComponent = component name, (props) ->
+    props.style = style.merge(props.style)
+    props.component = targetComponent
+    StyleComponent.call(null, props)
+  styledComponent.isStyledComponent = true
+  styledComponent.style = style
+  styledComponent.targetComponent = targetComponent
+  styledComponent.extendStyledComponent = extendStyledComponent
+  styledComponent
 
 
-StyleComponent = createComponent 'Style',
+
+StyleComponent = component 'Style',
 
   getDefaultProps: ->
     style: {}

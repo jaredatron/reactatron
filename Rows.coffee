@@ -1,7 +1,6 @@
-styledComponent = require './styledComponent'
 Box = require './Box'
 
-module.exports = styledComponent 'Rows', Box,
+module.exports = Box.extendStyledComponent 'Rows',
   display: 'inline-flex'
   alignItems: 'stretch'
   alignContent: 'stretch'

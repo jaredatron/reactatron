@@ -11,7 +11,6 @@ class Events
   sub: (events, handler) ->
     events = Array.wrap(events)
     for event in events
-      console.log('SUB', event, handler)
       @subscriptions.push [event, handler]
     this
 
@@ -20,7 +19,6 @@ class Events
     @subscriptions = @subscriptions.filter (subscription) ->
       for event in events
         if event.toString() == subscription[0].toString() && handler == subscription[1]
-          console.log('UNSUB', event, handler)
           return false
       return true
     this

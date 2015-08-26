@@ -23,6 +23,7 @@ module.exports =
   getInitialState: ->
     @_dataBindings = []
     @app = @context.app || @props.app
+    {}
 
   componentWillUnmount: ->
     for key in @_dataBindings

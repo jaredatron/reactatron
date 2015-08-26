@@ -13,7 +13,15 @@ module.exports = class ResponsiveSizePlugin
   constructor: (options) ->
     Object.bindAll(this)
     @window = options.window
-    @widths = options.widths || [768, 992, 1200]
+    @widths = options.widths || [480, 768, 992, 1200]
+
+
+# 480px
+# 767px
+# 768px
+# 992px
+# 1199px
+# 1200px
 
   init: ->
     @update()

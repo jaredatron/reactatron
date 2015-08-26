@@ -34,6 +34,7 @@ module.exports = (arg1, arg2) ->
   reactClass = React.createClass(spec)
   component = componentWrapper React.createFactory(reactClass)
   component.reactClass = reactClass
+  component.style
   component
 
 module.exports.PropTypes = React.PropTypes

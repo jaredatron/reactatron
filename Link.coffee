@@ -11,10 +11,16 @@ module.exports = component 'Link',
       event.preventDefault() if event?
       @app.setLocation(uri.asRelative)
 
+  defaultStyle:
+    color: 'inherit'
+    textDecoration: 'none'
+
   render: ->
-    props = Object.clone(@props)
-    props.onClick = @onClick
-    props.href = @app.locationFor(@props.path, @props.params)
+    props = @cloneProps()
+    if !props.href?
+      props.href = @app.locationFor(@props.path, @props.params)
+      props.onClick = @onClick
+
     React.createElement('a', props)
 
 # hopefully this is all the uri parsing we'll ever need to do.

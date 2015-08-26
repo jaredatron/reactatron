@@ -3,18 +3,19 @@ require 'stdlibjs/Object.assign'
 module.exports = class Style
 
   constructor: (style) ->
-    Object.assign(this, style || {})
+    @update(style)
 
   clone: ->
     new Style(this)
 
-  merge: (style) ->
-    clone = @clone()
-    assign(clone, style) if style?
-    clone
+  update: (style) ->
+    Object.assign(this, style || {})
+    this
 
-  compute: (state) ->
-    state ||= {}
+  merge: (style) ->
+    @clone().update(style)
+
+  compute: (state={}) ->
     style = {}
     keys = Object.keys(this)
     for key in keys

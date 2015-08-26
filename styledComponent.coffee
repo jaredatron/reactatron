@@ -1,16 +1,40 @@
-component = require './component'
+createComponent = require './component'
 Style = require './Style'
 
-module.exports = (component, style) ->
-  style = new Style(style)
-  (props) ->
-    props ||= {}
-    props.style = style.merge(props.style)
-    props.component = component
-    StyleComponent.apply(null, arguments)
+###
+
+Box = styledComponent 'Box', div,
+  display: 'inline-block'
+
+Block = styledComponent 'Block', box,
+  displayL 'inline-block'
+
+###
+module.exports = (name, component, style) ->
+  if component.isStyledComponent
+    # subclass styled component
+    newComponent = createComponent name, (props) ->
+      props.style = newComponent.style.merge(props.style)
+      newComponent.targetComponent(props)
+    newComponent.style = component.style.merge(style)
+    newComponent.targetComponent = component.targetComponent
+  else
+    # root styled component
+    newComponent = createComponent name, (props) ->
+      props.style = newComponent.style.merge(props.style)
+      props.component = newComponent.targetComponent
+      StyleComponent.call(null, props)
+    newComponent.targetComponent = component
+    newComponent.style = new Style(style)
+
+  newComponent.isStyledComponent = true
+  newComponent
 
 
-StyleComponent = component 'Style',
+StyleComponent = createComponent 'Style',
+
+  getDefaultProps: ->
+    style: {}
 
   getInitialState: ->
     hover: false
@@ -37,21 +61,33 @@ StyleComponent = component 'Style',
 
   componentDidMount: ->
     node = @getDOMNode()
-    node.addEventListener 'mouseenter', @onMouseenter
-    node.addEventListener 'mouseleave', @onMouseleave
-    node.addEventListener 'focus', @onFocus
-    node.addEventListener 'blur', @onBlur
-    node.addEventListener 'mousedown', @onMousedown
-    document.body.addEventListener 'mouseup', @onMouseup
+
+    if @props.style[':hover']
+      node.addEventListener 'mouseenter', @onMouseenter
+      node.addEventListener 'mouseleave', @onMouseleave
+
+    if @props.style[':focus']
+      node.addEventListener 'focus', @onFocus
+      node.addEventListener 'blur', @onBlur
+
+    if @props.style[':mousedown']
+      node.addEventListener 'mousedown', @onMousedown
+      document.body.addEventListener 'mouseup', @onMouseup
 
   componentWillUnmount: ->
     node = @getDOMNode()
-    node.removeEventListener 'mouseenter', @onMouseenter
-    node.removeEventListener 'mouseleave', @onMouseleave
-    node.removeEventListener 'focus', @onFocus
-    node.removeEventListener 'blur', @onBlur
-    node.removeEventListener 'mousedown', @onMousedown
-    document.body.removeEventListener 'mouseup', @onMouseup
+
+    if @props.style[':hover']
+      node.removeEventListener 'mouseenter', @onMouseenter
+      node.removeEventListener 'mouseleave', @onMouseleave
+
+    if @props.style[':focus']
+      node.removeEventListener 'focus', @onFocus
+      node.removeEventListener 'blur', @onBlur
+
+    if @props.style[':mousedown']
+      node.removeEventListener 'mousedown', @onMousedown
+      document.body.removeEventListener 'mouseup', @onMouseup
 
   render: ->
     props = @cloneProps()

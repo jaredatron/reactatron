@@ -1,5 +1,6 @@
 React = require 'react'
 ReactatronApp = require './App'
+Style = require './Style'
 require 'stdlibjs/Array#excludes'
 
 module.exports =
@@ -36,12 +37,21 @@ module.exports =
 
   cloneProps: ->
     props = Object.clone(@props)
-    props.style = Object.assign(
-      {},
-      @defaultStyle || {},
-      @props.style || {},
-      @enforcedStyle || {},
-    )
+    props.style = new Style(@defaultStyle)
+      .merge(props.style)
+      .merge(@styleFromProps())
+      .merge(@enforcedStyle)
     props
+
+  styleFromProps: ->
+    style = {}
+    style.flexGrow   = @props.grow      if @props.grow?
+    style.flexShrink = @props.shrink    if @props.shrink?
+    style.minWidth   = @props.minWidth  if @props.minWidth?
+    style.overflowY  = @props.overflowY if @props.overflowY?
+    style.overflowX  = @props.overflowX if @props.overflowX?
+    style.overflow   = @props.overflow  if @props.overflow?
+    style
+
 
   ### / STYLES MIXIN ###

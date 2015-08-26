@@ -1,7 +1,9 @@
 React = require 'react'
 BaseMixin = require './BaseMixin'
+Style = require './Style'
 isFunction = require 'stdlibjs/isFunction'
 isString = require 'stdlibjs/isString'
+isArray = require 'stdlibjs/isArray'
 
 ###
 
@@ -12,6 +14,10 @@ component 'Button',
 oneoff = component
   render: ->
     …
+
+# short hand for just render
+Button = component 'Button', (props) ->
+  …
 
 wrapper = component (props) ->
   …
@@ -27,6 +33,12 @@ module.exports = (arg1, arg2) ->
   else
     name = null
     spec = arg1
+
+  if isFunction(spec)
+    render = spec
+    spec = {
+      render: -> render(@cloneProps())
+    }
 
   spec.displayName = name if name?
   spec.mixins ||= []
@@ -44,11 +56,18 @@ componentWrapper = (wrapper) ->
     wrapper.apply(null, cloneProps(arguments))
 
 cloneProps = (args) ->
+  children = [].slice.call(args, 1)
   props = Object.clone(args[0] || {})
-  props.style = Object.clone(props.style) if props.style?
+  props.style = new Style(props.style)
+  props.children = mergeChildren(props.children, children)
   args[0] = props
   args
 
+
+# this might be an aweful ideas :P
+mergeChildren = (a, b) ->
+  a = [a] unless isArray(a)
+  a.concat(b)
 
 
 

@@ -51,9 +51,11 @@ module.exports = (arg1, arg2) ->
 
 module.exports.PropTypes = React.PropTypes
 
-componentWrapper = (wrapper) ->
-  ->
-    wrapper.apply(null, cloneProps(arguments))
+componentWrapper = (component) ->
+  newComponent = ->
+    component.apply(null, cloneProps(arguments))
+  newComponent.wrapsComponent = component
+  newComponent
 
 cloneProps = (args) ->
   children = [].slice.call(args, 1)

@@ -5,14 +5,11 @@ component = require './component'
 module.exports = component 'Link',
 
   onClick: (event) ->
-    return unless event
-    return unless target = event.target
-    return unless target.nodeName == 'A'
+    target = @getDOMNode()
     uri = parseURI(target.href)
-    return unless uri.isSameOrigin
-    event.preventDefault()
-    @app.setLocation(uri.asRelative)
-    return
+    if uri.isSameOrigin
+      event.preventDefault() if event?
+      @app.setLocation(uri.asRelative)
 
   render: ->
     props = Object.clone(@props)

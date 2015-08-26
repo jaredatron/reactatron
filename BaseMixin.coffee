@@ -3,6 +3,13 @@ ReactatronApp = require './App'
 Style = require './Style'
 require 'stdlibjs/Array#excludes'
 
+STYLE_PROPERTIES =
+    grow:     'flexGrow'
+    shrink:   'flexShrink'
+    width:    'width'
+    minWidth: 'minWidth'
+    maxWidth: 'maxWidth'
+
 module.exports =
 
   contextTypes:
@@ -43,14 +50,11 @@ module.exports =
       .merge(@enforcedStyle)
     props
 
+
   styleFromProps: ->
     style = {}
-    style.flexGrow   = @props.grow      if @props.grow?
-    style.flexShrink = @props.shrink    if @props.shrink?
-    style.minWidth   = @props.minWidth  if @props.minWidth?
-    style.overflowY  = @props.overflowY if @props.overflowY?
-    style.overflowX  = @props.overflowX if @props.overflowX?
-    style.overflow   = @props.overflow  if @props.overflow?
+    for key, value of STYLE_PROPERTIES
+      style[value] = @props[key] if @props[key]?
     style
 
 

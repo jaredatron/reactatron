@@ -1,5 +1,6 @@
 require 'stdlibjs/Object.bindAll'
 require 'stdlibjs/Array#remove'
+require 'stdlibjs/Array#filter'
 
 isArray = require 'stdlibjs/isArray'
 
@@ -25,14 +26,14 @@ module.exports = class Store
     @events = options.events
     @subscriptions = {}
 
-  prefix: 'Reactatron'
+  prefix: 'Reactatron/'
 
   #
   # @private
   #
   #
   _get: (key) ->
-    key = "#{@prefix}/#{key}"
+    key = "#{@prefix}#{key}"
     JSON.parse(@data[key]) if key of @data
 
   #
@@ -40,8 +41,8 @@ module.exports = class Store
   #
   #
   _set: (key, value) ->
-    @data["#{@prefix}/#{key}"] = JSON.stringify(value)
-    @events.pub("store:change:#{key}")
+    @data["#{@prefix}#{key}"] = JSON.stringify(value)
+    @events.pub("store:change:#{key}", {type:'set'})
 
 
   #
@@ -49,7 +50,8 @@ module.exports = class Store
   #
   #
   _unset: (key) ->
-    delete @data["#{@prefix}/#{key}"]
+    delete @data["#{@prefix}#{key}"]
+    @events.pub("store:change:#{key}", {type:'del'})
 
 
   #
@@ -86,6 +88,21 @@ module.exports = class Store
   del: (keys) ->
     @_unset(key) for key in toArray(keys)
     this
+
+  keys: ->
+    keys = []
+    Object.keys(@data).forEach (key) =>
+      if key.startsWith(@prefix)
+        keys.push key.slice(@prefix.length)
+    keys
+
+  clear: ->
+    Object.keys(@data).forEach (key) =>
+      if key.startsWith(@prefix)
+        delete @data[key]
+    this
+
+
 
 
 

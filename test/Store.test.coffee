@@ -21,7 +21,7 @@ describe 'Store', ->
 
     expect( store.set('a','b') ).to.be(store)
     expect( events.pub.calls ).to.eql([
-      ["store:change:a"]
+      ["store:change:a", {"type":"set"}]
     ])
     expect( store.get('a')     ).to.equal('b')
     expect( store.del('a')     ).to.be(store)

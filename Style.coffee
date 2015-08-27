@@ -9,7 +9,7 @@ module.exports = class Style
     new Style(this)
 
   update: (style) ->
-    Object.assign(this, style || {})
+    assign(this, style || {})
     this
 
   merge: (style) ->

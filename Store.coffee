@@ -40,19 +40,15 @@ module.exports = class Store
   # @private
   #
   #
-  _set: (key, value) ->
-    @data["#{@prefix}#{key}"] = JSON.stringify(value)
-    @events.pub("store:change:#{key}", {type:'set'})
+  _set: (changes) ->
+    for key, value of changes
+      if value == undefined
+        delete @data["#{@prefix}#{key}"]
+      else
+        @data["#{@prefix}#{key}"] = JSON.stringify(value)
 
-
-  #
-  # @private
-  #
-  #
-  _unset: (key) ->
-    delete @data["#{@prefix}#{key}"]
-    @events.pub("store:change:#{key}", {type:'del'})
-
+    for key, value of changes
+      @events.pub("store:change:#{key}", {type:'set', changes: changes})
 
   #
   # @example
@@ -71,22 +67,21 @@ module.exports = class Store
   #
   #   store.set a:1, b:2
   #
-  set: (pairs) ->
-    if arguments.length == 2
-      @_set(arguments[0], arguments[1])
-    else
-      for key, value of pairs
-        @_set(key, value)
+  set: (changes) ->
+    @_set(changes)
     this
 
   #
   # @example
   #
-  #   store.unset ['a', 'b']
+  #   store.del ['a', 'b']
 
   #
   del: (keys) ->
-    @_unset(key) for key in toArray(keys)
+    keys = toArray(keys)
+    changes = {}
+    changes[key] = undefined for key in keys
+    @set(changes)
     this
 
   keys: ->

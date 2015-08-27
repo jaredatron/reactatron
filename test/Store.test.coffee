@@ -19,9 +19,10 @@ describe 'Store', ->
     expect( store.get('a')     ).to.be(undefined)
     expect( events.pub.calls ).to.eql([])
 
-    expect( store.set('a','b') ).to.be(store)
+    expect( store.set( a: 'b' ) ).to.be(store)
+    console.log(data)
     expect( events.pub.calls ).to.eql([
-      ["store:change:a", {"type":"set"}]
+      ["store:change:a", {type:"set", changes:{a:'b'}}]
     ])
     expect( store.get('a')     ).to.equal('b')
     expect( store.del('a')     ).to.be(store)
@@ -36,7 +37,7 @@ describe 'Store', ->
         {name: 'splean', dead: true},
       ]
     }
-    store.set('thing',thing)
+    store.set thing: thing
     expect( store.get('thing') ).to.eql(thing)
     expect( store.get('thing') ).to.not.be(thing)
 
@@ -53,3 +54,8 @@ describe 'Store', ->
 
 
 
+  describe '#keys', ->
+
+    it 'should work', ->
+
+      expect( store.keys() ).to.eql( [] )

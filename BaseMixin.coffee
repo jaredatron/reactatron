@@ -30,7 +30,8 @@ module.exports =
 
   getInitialState: ->
     @_dataBindings = []
-    @app = @context.app || @props.app
+    @app = @context.app || @props.app # || throw new Error('app not found')
+    debugger unless @app?
     {}
 
   componentWillUnmount: ->

@@ -54,6 +54,7 @@ module.exports.PropTypes = React.PropTypes
 componentWrapper = (component) ->
   newComponent = ->
     component.apply(null, cloneProps(arguments))
+  newComponent.type = newComponent
   newComponent.wrapsComponent = component
   newComponent
 

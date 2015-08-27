@@ -40,5 +40,5 @@ module.exports = class ResponsiveSizePlugin
     horizontalSize = @widths.findIndex (max) -> width < max
     horizontalSize = @widths.length if horizontalSize == -1
     if horizontalSize != @app.get('horizontalSize')
-      @app.set 'horizontalSize', horizontalSize
+      @app.set horizontalSize: horizontalSize
     this

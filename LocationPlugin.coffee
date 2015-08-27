@@ -20,7 +20,7 @@ module.exports = class LocationPlugin
     @app
 
   update: ->
-    @app.set 'location', {
+    @app.set location: {
       path:   @window.location.pathname
       params: searchToObject(@window.location.search)
     }

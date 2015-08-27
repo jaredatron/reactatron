@@ -1,6 +1,7 @@
 require 'stdlibjs/Object.bindAll'
 require 'stdlibjs/Array#remove'
 require 'stdlibjs/Array#filter'
+require 'stdlibjs/String#startsWith'
 
 isArray = require 'stdlibjs/isArray'
 
@@ -92,9 +93,7 @@ module.exports = class Store
     keys
 
   clear: ->
-    Object.keys(@data).forEach (key) =>
-      if key.startsWith(@prefix)
-        delete @data[key]
+    @del @keys()
     this
 
 

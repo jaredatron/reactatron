@@ -16,7 +16,7 @@ module.exports = class WindowSizePlugin
     this
 
   update: ->
-    @app.set 'windowSize', {
+    @app.set windowSize: {
       height: @window.innerHeight,
       width:  @window.innerWidth,
     }

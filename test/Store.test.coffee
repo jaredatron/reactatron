@@ -20,7 +20,6 @@ describe 'Store', ->
     expect( events.pub.calls ).to.eql([])
 
     expect( store.set( a: 'b' ) ).to.be(store)
-    console.log(data)
     expect( events.pub.calls ).to.eql([
       ["store:change:a", {type:"set", changes:{a:'b'}}]
     ])
@@ -58,4 +57,25 @@ describe 'Store', ->
 
     it 'should work', ->
 
+      expect( store.keys() ).to.eql( [] )
+
+      store.set a: 1, b: 2
+      expect( store.keys() ).to.eql( ['a','b'] )
+
+      store.del 'a'
+      expect( store.keys() ).to.eql( ['b'] )
+
+      store.set c:3, d:undefined,e:5
+      expect( store.keys() ).to.eql( ['b','c','e'] )
+
+  describe '#clear', ->
+
+    it 'should work', ->
+
+      expect( store.keys() ).to.eql( [] )
+
+      store.set a: 1, b: 2
+      expect( store.keys() ).to.eql( ['a','b'] )
+
+      store.clear()
       expect( store.keys() ).to.eql( [] )

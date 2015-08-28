@@ -6,33 +6,29 @@ isString = require 'stdlibjs/isString'
 class Events
   constructor: ->
     Object.bindAll(this)
-    @subscriptions = []
+    @subscriptions = {}
 
   sub: (events, handler) ->
     events = Array.wrap(events)
     for event in events
-      @subscriptions.push [event, handler]
+      subscriptions = @subscriptions[event] ||= []
+      subscriptions.push handler
     this
 
   unsub: (events, handler) ->
     events = Array.wrap(events)
-    @subscriptions = @subscriptions.filter (subscription) ->
-      for event in events
-        if event.toString() == subscription[0].toString() && handler == subscription[1]
-          return false
-      return true
+    for event in events
+      if subscriptions = @subscriptions[event]
+        subscriptions.remove(handler)
+        if subscriptions.length == 0
+          delete @subscriptions[event]
     this
 
   pub: (event, payload) ->
-    for subscription in @subscriptions
-      [eventExpression, handler] = subscription
-
-      if (
-          (isString(eventExpression) && event == eventExpression) ||
-          (eventExpression instanceof RegExp && eventExpression.test(event))
-        )
+    if subscriptions = @subscriptions[event]
+      subscriptions = subscriptions.slice()
+      for handler in subscriptions
         handler(event, payload)
-
     this
 
 module.exports = Events

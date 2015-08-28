@@ -17,7 +17,7 @@ module.exports =
     app: React.PropTypes.object.isRequired
 
   rerender: ->
-    @forceUpdate()
+    @forceUpdate() if @isMounted()
 
   ### DATA BINDINGS MIXIN ###
 

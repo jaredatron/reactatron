@@ -26,6 +26,7 @@ module.exports = class Store
     Object.bindAll(this)
     @events = options.events
     @subscriptions = {}
+    @changedKeys = {}
 
   prefix: 'Reactatron/'
 
@@ -34,7 +35,6 @@ module.exports = class Store
   #
   #
   _get: (key) ->
-    console.count("Store#get(#{key})")
     key = "#{@prefix}#{key}"
     JSON.parse(@data[key]) if key of @data
 
@@ -43,16 +43,28 @@ module.exports = class Store
   #
   #
   _set: (changes) ->
-    console.count('Store#set')
+    # console.count('Store#set')
     for key, value of changes
+      @_scheduleChangeEvent(key)
       if value == undefined
         delete @data["#{@prefix}#{key}"]
       else
         @data["#{@prefix}#{key}"] = JSON.stringify(value)
 
-    for key, value of changes
-      @events.pub("store:change:#{key}", {type:'set', changes: changes})
+  _scheduleChangeEvent: (key) ->
+    @changedKeys[key] = true
+    @publisherTimeoutId ||= setTimeout(@_publish)
 
+  _publish: ->
+    console.time('Store#_publish')
+    delete @publisherTimeoutId
+    changedKeys = @changedKeys
+    @changedKeys = {}
+    console.log('Store changes: ', Object.keys(changedKeys))
+    for key of changedKeys
+      @events.pub("store:change:#{key}", key)
+
+    console.timeEnd('Store#_publish')
   #
   # @example
   #

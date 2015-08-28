@@ -22,16 +22,16 @@ module.exports = class LocationPlugin
     @app
 
   update: ->
-    @app.set location: {
+    @location =  {
       path:   @window.location.pathname
       params: searchToObject(@window.location.search)
     }
+    @app.set location: @location
     @app
 
   for: (path, params) ->
-    location = @app.get('location')
-    path ||= location.path
-    params ||= location.params
+    path ||= @location.path
+    params ||= @location.params
     path = '/'+path if path[0] != '/'
     "#{path}#{objectToSearch(params)}"
 

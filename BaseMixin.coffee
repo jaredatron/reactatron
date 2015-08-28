@@ -16,10 +16,16 @@ module.exports =
     # app: React.PropTypes.instanceOf(ReactatronApp).isRequired
     app: React.PropTypes.object.isRequired
 
-  rerender: (event, payload) ->
+  getInitialState: ->
+    @_dataBindings = []
+    @app = @context.app || @props.app # || throw new Error('app not found')
+    debugger unless @app?
+    {}
+
+  rerender: ->
     return unless @isMounted()
-    console.count("rerender #{@constructor.displayName}")
-    console.info("rerender #{@constructor.displayName}", event, payload)
+    # console.count("rerender #{@constructor.displayName}")
+    # console.info("rerender #{@constructor.displayName}", event, payload)
     @forceUpdate()
 
   ### DATA BINDINGS MIXIN ###
@@ -27,19 +33,18 @@ module.exports =
   get: (key) ->
     if @_dataBindings.excludes(key)
       @_dataBindings.push(key)
-      @app.sub "store:change:#{key}", @rerender
+      @app.sub "store:change:#{key}", @storeChange
 
     @app.get(key)
 
-  getInitialState: ->
-    @_dataBindings = []
-    @app = @context.app || @props.app # || throw new Error('app not found')
-    debugger unless @app?
-    {}
-
   componentWillUnmount: ->
     for key in @_dataBindings
-      @app.unsub "store:change:#{key}", @rerender
+      @app.unsub "store:change:#{key}", @storeChange
+
+  storeChange: (event, key) ->
+    @app.stats.rerenders++
+    @rerender()
+
 
   ### / DATA BINDINGS MIXIN ###
 

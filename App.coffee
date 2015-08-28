@@ -25,6 +25,10 @@ class ReactatronApp
     # we need this to be responsive
     @registerPlugin new WindowSizePlugin( window: options.window ) # :D
 
+    @stats =
+      rerenders: 0
+      styledComponentRerenders: 0
+
 
   registerPlugin: (plugin) ->
     plugin.app = this
@@ -47,9 +51,8 @@ class ReactatronApp
   start: ->
     if @rootComponent
       throw new Error('app already started')
-    console.info('App#start')
     @events.waitForClearQueue =>
-      console.info('App#start (real)')
+      console.info('App#start')
       @plugins.forEach (plugin) -> plugin.start()
       # console.log('pub app start')
       # @pub 'app start', this

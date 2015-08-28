@@ -16,13 +16,6 @@ module.exports = class Animator
   animate: (spec) ->
     new Animation(spec).start()
 
-  stop: (element) ->
-    # element.style.animationName     = null
-    # element.style.animationDuration = null
-    # element.style.animationFillMode = null
-    # element.style.transformOrigin   = null
-
-
 
 class Animation
 
@@ -55,5 +48,4 @@ class Animation
     this
 
   onEndEvent: (event) ->
-    console.log('animation end', event)
     @stop()

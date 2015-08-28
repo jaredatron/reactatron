@@ -97,7 +97,7 @@ module.exports = class Store
   #
   set: (changes) ->
     throw new Error("Store#set first arg must be an object") unless Object.isObject(changes)
-    console.trace("Store#set", changes)
+    # console.trace("Store#set", changes)
     @_set(changes)
     this
 

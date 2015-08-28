@@ -21,6 +21,7 @@ extendStyledComponent = (name, style) ->
   spec =
     mixins: []
     render: ->
+      @app.stats.styledComponentRerenders++
       props = @cloneProps()
       props.style = style.merge(props.style).compute(@state)
       targetComponent(props)

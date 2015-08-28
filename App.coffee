@@ -28,7 +28,6 @@ class ReactatronApp
 
   registerPlugin: (plugin) ->
     plugin.app = this
-    console.info('App#registerPlugin')
     plugin.init() if plugin.init?
     @plugins.push plugin
     this
@@ -39,7 +38,7 @@ class ReactatronApp
   MainComponent: -> React.DOM.div(null, 'you forgot to set app.MainComponent')
 
   render: ->
-    console.info('Store:', @store.toObject())
+    console.info('App#render', {store: @store.toObject()})
     @rootComponent = React.render(
       RootComponent(app: this, Component: @MainComponent),
       @DOMNode = @getDOMNode()
@@ -47,12 +46,14 @@ class ReactatronApp
 
   start: ->
     if @rootComponent
-      throw new Error('already started', this)
-    console.info('starting plugins')
-    @plugins.forEach (plugin) -> plugin.start()
-    console.info('pub app start')
-    @pub 'app start', this
-    @render()
+      throw new Error('app already started')
+    console.info('App#start')
+    @events.waitForClearQueue =>
+      console.info('App#start (real)')
+      @plugins.forEach (plugin) -> plugin.start()
+      # console.log('pub app start')
+      # @pub 'app start', this
+      @render()
     this
 
   stop: ->

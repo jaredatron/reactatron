@@ -44,6 +44,7 @@ class ReactatronApp
     if @rootComponent
       throw new Error('already started', this)
     @plugins.forEach (plugin) -> plugin.start()
+    @pub 'app start', this
     @render()
     this
 
@@ -51,6 +52,7 @@ class ReactatronApp
     # @DOMNode.innerHTML = ''
     delete @rootComponent
     delete @DOMNode
+    @pub 'app stop', this
     @plugins.forEach (plugin) -> plugin.stop()
     this
 

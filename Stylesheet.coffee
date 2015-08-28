@@ -1,8 +1,11 @@
 hyphenateStyleName = require 'react/lib/hyphenateStyleName'
 
-module.exports = class Keyframes
+module.exports = class Stylesheet
   constructor: (document) ->
-    @stylesheet = injectStylesheet()
+    @stylesheet = injectStylesheet(document)
+
+  appendRule: (rule) ->
+    @stylesheet.insertRule(rule, @stylesheet.rules.length)
 
 # # rule = ''+
 # # '@keyframes spinIt {\n'+

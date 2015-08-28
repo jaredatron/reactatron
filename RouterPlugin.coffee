@@ -17,9 +17,9 @@ module.exports = class RouterPlugin
     @router = new Router(spec)
 
   init: ->
-    @update()
     @app.router = @router
     @app.RouteComponent = RouteComponent
+    @update()
 
   start: ->
     @app.sub 'store:change:location', @update
@@ -35,7 +35,6 @@ module.exports = class RouterPlugin
 
 RouteComponent = component 'RouteComponent',
   render: ->
-    console.count('RouteComponent render')
     route = @get('route')
     page = @app.router.pageForRoute(route)
     page(route.params)

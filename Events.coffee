@@ -24,11 +24,12 @@ class Events
           delete @subscriptions[event]
     this
 
-  pub: (event, payload) ->
+  pub: (event, payload, done) ->
     if subscriptions = @subscriptions[event]
       subscriptions = subscriptions.slice()
       for handler in subscriptions
         handler(event, payload)
+    done(event, payload) if done
     this
 
 module.exports = Events

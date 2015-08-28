@@ -25,8 +25,10 @@ class ReactatronApp
     # we need this to be responsive
     @registerPlugin new WindowSizePlugin( window: options.window ) # :D
 
+
   registerPlugin: (plugin) ->
     plugin.app = this
+    console.info('App#registerPlugin')
     plugin.init() if plugin.init?
     @plugins.push plugin
     this
@@ -37,6 +39,7 @@ class ReactatronApp
   MainComponent: -> React.DOM.div(null, 'you forgot to set app.MainComponent')
 
   render: ->
+    console.info('Store:', @store.toObject())
     @rootComponent = React.render(
       RootComponent(app: this, Component: @MainComponent),
       @DOMNode = @getDOMNode()
@@ -45,9 +48,12 @@ class ReactatronApp
   start: ->
     if @rootComponent
       throw new Error('already started', this)
-    @plugins.forEach (plugin) -> plugin.start()
-    @pub 'app start', this
-    @render()
+    setTimeout =>
+      console.info('starting plugins')
+      @plugins.forEach (plugin) -> plugin.start()
+      console.info('pub app start')
+      @pub 'app start', this
+      @render()
     this
 
   stop: ->
@@ -76,4 +82,5 @@ RootComponent = React.createFactory React.createClass
     app: @props.app
 
   render: ->
+    @app.pub 'ReactatronApp.RootComponent render'
     @props.Component()

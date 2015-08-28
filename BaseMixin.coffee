@@ -16,8 +16,11 @@ module.exports =
     # app: React.PropTypes.instanceOf(ReactatronApp).isRequired
     app: React.PropTypes.object.isRequired
 
-  rerender: ->
-    @forceUpdate() if @isMounted()
+  rerender: (event, payload) ->
+    return unless @isMounted()
+    console.count("rerender #{@constructor.displayName}")
+    console.info("rerender #{@constructor.displayName}", event, payload)
+    @forceUpdate()
 
   ### DATA BINDINGS MIXIN ###
 

@@ -60,10 +60,9 @@ module.exports = class Store
     delete @publisherTimeoutId
     changedKeys = @changedKeys
     @changedKeys = {}
-    console.log('Store changes: ', Object.keys(changedKeys))
+    console.log('Store#_publish', Object.keys(changedKeys))
     for key of changedKeys
       @events.pub("store:change:#{key}", key)
-
     console.timeEnd('Store#_publish')
   #
   # @example
@@ -83,6 +82,7 @@ module.exports = class Store
   #   store.set a:1, b:2
   #
   set: (changes) ->
+    console.trace("Store#set", changes)
     @_set(changes)
     this
 
@@ -110,6 +110,11 @@ module.exports = class Store
     @del @keys()
     this
 
+  toObject: ->
+    object = {}
+    for key in @keys()
+      object[key] = @get(key)
+    object
 
 
 

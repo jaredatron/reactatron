@@ -34,9 +34,11 @@ class ReactatronApp
   getDOMNode: ->
     document.body
 
+  MainComponent: -> React.DOM.div(null, 'you forgot to set app.MainComponent')
+
   render: ->
     @rootComponent = React.render(
-      RootComponent(app: this, Component: @Component),
+      RootComponent(app: this, Component: @MainComponent),
       @DOMNode = @getDOMNode()
     )
 

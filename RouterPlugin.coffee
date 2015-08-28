@@ -1,91 +1,43 @@
-# class RouterPlugin
+Router = require './Router'
+component = require './component'
 
-#   window: global.window
+###
 
-#   init: ->
-#     Object.bindAll(this)
-#     @app.locationFor = @for
-#     @app.setLocation = @set
-#     @app.setPath = @setPath
-#     @app.setParams = @setParams
-#     @update()
+new ResponsiveSizePlugin
+  window: global.window
+  widths: [100, 400, 650, 800, 789, 1240, 2480]
+  heights: [100, 400, 650, 800, 789, 1240, 2480]
 
-#   start: ->
-#     @window.addEventListener 'popstate', @update
-#     this
+###
 
-#   stop: ->
-#     @window.removeEventListener 'popstate', @update
-#     this
+module.exports = class RouterPlugin
 
-#   update: ->
-#     @app.set 'location', {
-#       path:   @window.location.pathname
-#       params: searchToObject(@window.location.search)
-#     }
-#     this
+  constructor: (spec) ->
+    Object.bindAll(this)
+    @router = new Router(spec)
 
-#   for: (path, params) ->
-#     location = @app.get('location')
-#     path ||= location.path
-#     params ||= location.params
-#     path = '/'+path if path[0] != '/'
-#     "#{path}#{objectToSearch(params)}"
+  init: ->
+    @update()
+    @app.router = @router
+    @app.RouteComponent = RouteComponent
 
-#   set: (value, replace) ->
-#     value = "/#{value}" unless value[0] == '/'
-#     if replace
-#       history.replaceState({}, document.title, value)
-#     else
-#       history.pushState({}, document.title, value)
-#     @update()
-#     this
+  start: ->
+    @app.sub 'store:change:location', @update
+    this
 
-#   setPath: (path, replace) ->
-#     @set(@for(path), replace)
-#     this
+  stop: ->
+    @app.unsub 'store:change:location', @update
+    this
 
-#   setParams: (params, replace) ->
-#     @set(@for(null, params), replace)
-#     this
-
-#   updateParams: (params, replace) ->
-#     @setParams(assign({}, @params, params), replace)
-#     this
+  update: ->
+    route = @router.routeFor(@app.get('location'))
+    @app.set
+      routeIndex: route.index
+      path:       route.params
+      params:     route.params
+    this
 
 
-
-# module.exports = LocationPlugin
-
-
-# searchToObject = (search) ->
-#   params = {}
-#   search = search.substring(search.indexOf('?') + 1, search.length);
-#   return {} if search.length == 0
-#   search.split(/&+/).forEach (param) ->
-#     [key, value] = param.split('=')
-#     key = decodeURIComponent(key)
-#     if value?
-#       value = decodeURIComponent(value)
-#     else
-#       value = true
-#     params[key] = value
-#   params
-
-
-# objectToQueryString = (params) ->
-#   return undefined if !params?
-#   pairs = []
-#   Object.keys(params).forEach (key) ->
-#     value = params[key]
-#     switch value
-#       when true
-#         pairs.push "#{encodeURIComponent(key)}"
-#       when false, null, undefined
-#       else
-#         pairs.push "#{encodeURIComponent(key)}=#{encodeURIComponent(value)}"
-#   pairs.join('&')
-
-# objectToSearch = (params) ->
-#   search = objectToQueryString(params)
-#   if search.length == 0 then '' else '?'+search
+RouteComponent = component 'RouteComponent',
+  render: ->
+    @app.router.get(@get('routeIndex')).page()

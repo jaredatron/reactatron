@@ -47,7 +47,7 @@ module.exports = (arg1, arg2) ->
   if isFunction(spec)
     render = spec
     spec = {
-      render: -> render(@cloneProps())
+      render: -> render.call(this, @cloneProps())
     }
 
   spec.displayName = name if name?

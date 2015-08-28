@@ -19,19 +19,23 @@ class Router
     spec.call(this)
 
   match: (expression, page) ->
-    @routes.push new Route(expression, page)
+    route = new Route(expression, page)
+    route.index = @routes.length
+    @routes.push route
+
+  get: (index) ->
+    @routes[index]
 
   routeFor: (location) ->
     {path, params} = location
-    for route in @routes
+    for route, index in @routes
       if match = route.match(path, params)
         return match
     throw new Error('route not found for '+path+' '+JSON.stringify(params))
 
   redirectTo: (path, params={}) ->
     return ->
-      return ->
-        RedirectComponent(path: path, params: params)
+      RedirectComponent(path: path, params: params)
 
 
 

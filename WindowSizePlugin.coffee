@@ -4,10 +4,8 @@ module.exports = class WindowSizePlugin
     Object.bindAll(this)
     @window = options.window
 
-  init: ->
-    @update()
-
   start: ->
+    @update()
     @window.addEventListener 'resize', @update
     this
 

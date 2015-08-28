@@ -1,5 +1,6 @@
 Router = require './Router'
 component = require './component'
+Block = require './Block'
 
 ###
 
@@ -19,9 +20,9 @@ module.exports = class RouterPlugin
   init: ->
     @app.router = @router
     @app.RouteComponent = RouteComponent
-    @update()
 
   start: ->
+    @update()
     @app.sub 'store:change:location', @update
     this
 
@@ -30,11 +31,16 @@ module.exports = class RouterPlugin
     this
 
   update: ->
-    @app.set route: @router.routeFor(@app.get('location'))
+    if location = @app.get('location')
+      @app.set route: @router.routeFor(location)
 
 
 RouteComponent = component 'RouteComponent',
+  dataBindings: ->
+    route: 'route'
+
   render: ->
-    route = @get('route')
+    route = @state.route
+    return Block {}, 'route undefined :(' if !route?
     page = @app.router.pageForRoute(route)
     page(route.params)

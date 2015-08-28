@@ -15,11 +15,9 @@ module.exports = class ResponsiveSizePlugin
     @window = options.window
     @widths = options.widths || [480, 768, 992, 1200]
 
-  init: ->
-    @update()
-
   start: ->
     @window.addEventListener 'resize', @update
+    @update()
     this
 
   stop: ->

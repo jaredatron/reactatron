@@ -26,7 +26,8 @@ class ReactatronApp
     @registerPlugin new WindowSizePlugin( window: options.window ) # :D
 
     @stats =
-      rerenders: 0
+      storeChangeRerenders: 0
+      fullRerender: 0
       styledComponentRerenders: 0
 
 
@@ -42,6 +43,7 @@ class ReactatronApp
   MainComponent: -> React.DOM.div(null, 'you forgot to set app.MainComponent')
 
   render: ->
+    @stats.fullRerender++
     console.info('App#render', {store: @store.toObject()})
     @rootComponent = React.render(
       RootComponent(app: this, Component: @MainComponent),
@@ -63,7 +65,6 @@ class ReactatronApp
     # @DOMNode.innerHTML = ''
     delete @rootComponent
     delete @DOMNode
-    @pub 'app stop', this
     @plugins.forEach (plugin) -> plugin.stop()
     this
 
@@ -85,5 +86,6 @@ RootComponent = React.createFactory React.createClass
     app: @props.app
 
   render: ->
+    console.info('ReactatronApp.RootComponent render')
     @props.app.pub 'ReactatronApp.RootComponent render'
     @props.Component()

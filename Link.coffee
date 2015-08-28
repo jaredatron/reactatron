@@ -12,9 +12,7 @@ module.exports = component 'Link',
     if event?
       return if event.shiftKey || event.metaKey || event.ctrlKey
 
-    if @props.onClick
-      @props.onClick(event)
-      return
+    @props.onClick(event) if @props.onClick
 
     return if event? && event.defaultPrevented
     event.preventDefault()

@@ -11,15 +11,15 @@ module.exports = class LocationPlugin
     @app.setLocation = @set
     @app.setPath = @setPath
     @app.setParams = @setParams
-    @update()
 
   start: ->
+    @update()
     @window.addEventListener 'popstate', @update
-    @app
+    # @app.sub 'store:change:location', @update
 
   stop: ->
     @window.removeEventListener 'popstate', @update
-    @app
+    # @app.unsub 'store:change:location', @update
 
   update: ->
     @location =  {

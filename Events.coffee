@@ -51,16 +51,23 @@ class Events
     @_clearQueueCallbacks = []
 
     keys = publishings.map (p) -> p[0]
-    console.info('Events#_publish', keys, publishings)
+
+
+    calls = []
     for [event, payload, done] in publishings
       subscriptions = @subscriptions[event] || []
       subscriptions = subscriptions.concat(@subscriptions['*'] || [])
       for handler in subscriptions
-        handler(event, payload)
-      done(event, payload) if done
+        calls.push [handler, [event, payload]]
+
+      calls.push [done, [event, payload]] if done
 
     for callback in clearQueueCallbacks
-      callback(publishings)
+      calls.push [callback, [publishings]]
+
+    console.info('Events#_publish', keys, calls.length)
+    for [callback, args] in calls
+      callback.apply(null, args)
 
     this
 

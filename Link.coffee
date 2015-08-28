@@ -22,6 +22,7 @@ module.exports = component 'Link',
       return
 
   defaultStyle:
+    cursor: 'pointer'
     color: 'inherit'
     textDecoration: 'none'
 

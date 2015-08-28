@@ -34,6 +34,7 @@ module.exports = class Store
   #
   #
   _get: (key) ->
+    console.count("Store#get(#{key})")
     key = "#{@prefix}#{key}"
     JSON.parse(@data[key]) if key of @data
 
@@ -42,6 +43,7 @@ module.exports = class Store
   #
   #
   _set: (changes) ->
+    console.count('Store#set')
     for key, value of changes
       if value == undefined
         delete @data["#{@prefix}#{key}"]

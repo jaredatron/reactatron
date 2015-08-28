@@ -20,18 +20,21 @@ class Router
 
   match: (expression, page) ->
     route = new Route(expression, page)
-    route.index = @routes.length
+    route.id = @routes.length
     @routes.push route
 
-  get: (index) ->
-    @routes[index]
+  get: (id) ->
+    @routes[id]
 
   routeFor: (location) ->
     {path, params} = location
-    for route, index in @routes
+    for route in @routes
       if match = route.match(path, params)
         return match
     throw new Error('route not found for '+path+' '+JSON.stringify(params))
+
+  pageForRoute: (route) ->
+    @get(route.id).page
 
   redirectTo: (path, params={}) ->
     return ->
@@ -58,10 +61,10 @@ class Route
     params = Object.assign({}, params)
     @paramNames.forEach (paramName) ->
       params[paramName] = parts.shift()
-    route = Object.create(this)
-    route.path = path
-    route.params = params
-    return route
+
+    id: @id
+    path: path
+    params: params
 
 
 escapeRegExp  = /[\-{}\[\]+?.,\\\^$|#\s]/g

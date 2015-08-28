@@ -30,14 +30,12 @@ module.exports = class RouterPlugin
     this
 
   update: ->
-    route = @router.routeFor(@app.get('location'))
-    @app.set
-      routeIndex: route.index
-      path:       route.params
-      params:     route.params
-    this
+    @app.set route: @router.routeFor(@app.get('location'))
 
 
 RouteComponent = component 'RouteComponent',
   render: ->
-    @app.router.get(@get('routeIndex')).page()
+    console.count('RouteComponent render')
+    route = @get('route')
+    page = @app.router.pageForRoute(route)
+    page(route.params)

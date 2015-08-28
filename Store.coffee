@@ -12,6 +12,8 @@ toArray = (object) ->
   if isArray(object) then object else [object]
 
 
+
+
 #
 # @example
 #
@@ -28,28 +30,52 @@ module.exports = class Store
     @events = options.events
     @subscriptions = {}
     @changedKeys = {}
+    @stats =
+      totalGets: 0
+      totalSets: 0
+      gets: {}
+      sets: {}
+
+    # # disable localStorage
+    # @data = {}
+    # # disable JSON serialization
+    # @_serialize = (object) -> object
+    # @_deserialize = (object) -> object
 
   prefix: 'Reactatron/'
+
+  _serialize: (object) ->
+    JSON.stringify(object)
+
+  _deserialize: (object) ->
+    JSON.parse(object)
 
   #
   # @private
   #
   #
   _get: (key) ->
+    # console.count('Store#_get')
+    @stats.totalGets++
+    @stats.gets[key] = (@stats.gets[key]||0) + 1
     key = "#{@prefix}#{key}"
-    JSON.parse(@data[key]) if key of @data
+    value = @_deserialize(@data[key]) if key of @data
+    value
+
 
   #
   # @private
   #
   #
   _set: (changes) ->
-    # console.count('Store#set')
+    # console.count('Store#_set')
+    @stats.totalSets++
+    @stats.sets[key] = (@stats.sets[key]||0) + 1
     for key, value of changes
       if value == undefined
         delete @data["#{@prefix}#{key}"]
       else
-        @data["#{@prefix}#{key}"] = JSON.stringify(value)
+        @data["#{@prefix}#{key}"] = @_serialize(value)
       @events.pub("store:change:#{key}", key)
 
   #
@@ -59,7 +85,7 @@ module.exports = class Store
   #
   get: (keys) ->
     if isArray(keys)
-      keys.map (key) -> @_get(key)
+      keys.map(@_get)
     else
       @_get(keys)
 

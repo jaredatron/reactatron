@@ -18,8 +18,8 @@ module.exports =
 
   rerender: (event, payload) ->
     return unless @isMounted()
-    # console.count("rerender #{@constructor.displayName}")
-    # console.info("rerender #{@constructor.displayName}", event, payload)
+    console.count("rerender #{@constructor.displayName}")
+    console.info("rerender #{@constructor.displayName}", event, payload)
     @forceUpdate()
 
   ### DATA BINDINGS MIXIN ###

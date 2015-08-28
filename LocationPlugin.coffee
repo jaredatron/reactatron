@@ -1,10 +1,12 @@
+require 'stdlibjs/Object.bindAll'
+
 module.exports = class LocationPlugin
 
   constructor: (options) ->
+    Object.bindAll(this)
     @window = options.window
 
   init: ->
-    Object.bindAll(this)
     @app.locationFor = @for
     @app.setLocation = @set
     @app.setPath = @setPath

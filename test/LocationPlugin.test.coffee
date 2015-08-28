@@ -21,7 +21,7 @@ describe 'LocationPlugin', ->
     expect( app.setParams   ).to.be( locationPlugin.setParams )
     expect( app.locationFor ).to.be( locationPlugin.for )
     expect(app.set.calls).to.eql([
-      ['location', {path: '/', params: {}}]
+      [ { location: { path: '/', params: {} } } ]
     ])
 
   it 'start and stop should add and remove evner listeners', ->
@@ -39,13 +39,14 @@ describe 'LocationPlugin', ->
 
     it 'should set "location"', ->
 
+      console.log(app.set.calls)
       expect(app.set.calls).to.eql([
-        ['location', {path: '/', params: {}}]
+        [ { location: {path: '/', params: {}}} ]
       ])
       locationPlugin.update()
       expect(app.set.calls).to.eql([
-        ['location', {path: '/', params: {}}],
-        ['location', {path: '/', params: {}}]
+        [ { location: {path: '/', params: {}}} ],
+        [ { location: {path: '/', params: {}}} ]
       ])
 
       locationPlugin.window.location = {
@@ -55,12 +56,12 @@ describe 'LocationPlugin', ->
 
       locationPlugin.update()
       expect(app.set.calls).to.eql([
-        ['location', {path: '/', params: {}}],
-        ['location', {path: '/', params: {}}]
-        ['location', {path: '/login', params: {
+        [{ location: {path: '/', params: {}}}],
+        [{ location: {path: '/', params: {}}}],
+        [{ location: {path: '/login', params: {
           password: '12345god',
           username: 'Julia+Sanders'
-        }}]
+        }}}]
       ])
 
 

@@ -10,22 +10,23 @@ RedirectComponent = require './RedirectComponent'
 #
 
 class Router
-  constructor: (app) ->
+  constructor: (spec) ->
     Object.bindAll(this)
-    @app = app
     @routes = []
+    @map(spec)
 
   map: (spec) ->
     spec.call(this)
 
-  match: (expression, getPage) ->
-    @routes.push new Route(expression, getPage)
+  match: (expression, page) ->
+    @routes.push new Route(expression, page)
 
-  pageFor: (path, params) ->
+  routeFor: (location) ->
+    {path, params} = location
     for route in @routes
       if match = route.match(path, params)
         return match
-    throw new Error('route not found for', path, params)
+    throw new Error('route not found for '+path+' '+JSON.stringify(params))
 
   redirectTo: (path, params={}) ->
     return ->
@@ -41,13 +42,12 @@ module.exports = Router
 # private
 
 class Route
-  constructor: (expression, getPage) ->
+  constructor: (expression, page) ->
     @expression = expression
-    @getPage = getPage
+    @page = page
     parseExpression.call(this, expression)
 
   match: (path, params) ->
-    debugger if typeof path != 'string'
     parts = path.match(@regexp)
     return false unless parts
     parts.shift()
@@ -61,7 +61,7 @@ class Route
 
 
 escapeRegExp  = /[\-{}\[\]+?.,\\\^$|#\s]/g
-namedParams   = /\/(:|\*)([^\/?]+)/g
+namedParams   = /\/?(:|\*)([^\/?]+)/g
 parseExpression = (expression) ->
   paramNames = []
   expression = expression.replace(escapeRegExp, '\\$&')
@@ -70,6 +70,5 @@ parseExpression = (expression) ->
     switch type
       when ':' then '/([^/?]+)'
       when '*' then '/(.*?)'
-
   @paramNames = paramNames
   @regexp = new RegExp("^#{expression}$")

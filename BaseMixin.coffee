@@ -53,6 +53,12 @@ module.exports =
 
   cloneProps: ->
     props = Object.clone(@props)
+
+    # # TODO delete any props listed by PropTypes
+    # debugger if this.constructor.displayName == 'DirectoryContents'
+    # keys = Object.keys(this.propTypes||{})
+    # delete props[key] for key in keys
+
     props.style = new Style(@defaultStyle)
       .merge(props.style)
       .merge(@styleFromProps())

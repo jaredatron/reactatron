@@ -11,11 +11,13 @@ module.exports = component 'Link',
   onClick: (event) ->
     if event?
       return if event.shiftKey || event.metaKey || event.ctrlKey
-      event.preventDefault()
 
     if @props.onClick
       @props.onClick(event)
       return
+
+    return if event? && event.defaultPrevented
+    event.preventDefault()
 
     if @props.path? || @props.params?
       @app.setLocation @location()

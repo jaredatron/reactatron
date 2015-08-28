@@ -48,12 +48,11 @@ class ReactatronApp
   start: ->
     if @rootComponent
       throw new Error('already started', this)
-    setTimeout =>
-      console.info('starting plugins')
-      @plugins.forEach (plugin) -> plugin.start()
-      console.info('pub app start')
-      @pub 'app start', this
-      @render()
+    console.info('starting plugins')
+    @plugins.forEach (plugin) -> plugin.start()
+    console.info('pub app start')
+    @pub 'app start', this
+    @render()
     this
 
   stop: ->
@@ -82,5 +81,5 @@ RootComponent = React.createFactory React.createClass
     app: @props.app
 
   render: ->
-    @app.pub 'ReactatronApp.RootComponent render'
+    @props.app.pub 'ReactatronApp.RootComponent render'
     @props.Component()

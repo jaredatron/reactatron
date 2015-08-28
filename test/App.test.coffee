@@ -32,14 +32,14 @@ describe 'App', ->
     current_user = { name: 'Thomas' }
 
     events = []
-    app.sub /.*/, (event, payload) ->
+    app.sub '*', (event, payload) ->
       events.push [event, payload]
 
-    app.set 'current_user', current_user
+    app.set current_user: current_user
     expect( app.get('current_user') ).to.eql(current_user)
     expect( app.get('current_user') ).to.not.be(current_user)
     expect( events ).to.eql([
-      [ 'store:change:current_user', undefined ],
+      [ 'store:change:current_user', 'current_user' ],
     ])
 
 

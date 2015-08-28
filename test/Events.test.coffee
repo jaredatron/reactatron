@@ -63,7 +63,7 @@ describe 'Events', ->
     expect(counter.value).to.be(2)
 
 
-  it 'RegExp subscriptions', ->
+  xit 'RegExp subscriptions', ->
 
     events.sub /^jump|leap$/, counter
 
@@ -83,8 +83,8 @@ describe 'Events', ->
     events.pub('leap')
     expect( counter.value ).to.be(2)
 
-  it 'glob subscriptions', ->
-    events.sub /.*/, counter
+  it 'all subscriptions', ->
+    events.sub '*', counter
 
     events.pub 'a'
     events.pub 'b'

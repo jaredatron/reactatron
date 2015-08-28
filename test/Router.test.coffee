@@ -17,23 +17,19 @@ describe 'Router', ->
 
 
     route = router.routeFor path: '/', params: {}
-    expect( route.path    ).to.eql( '/'      )
-    expect( route.params  ).to.eql( {}       )
-    expect( route.page    ).to.be(  HomePage )
+    expect( route ).to.eql id: 0, path: '/', params: {}
+    expect( router.pageForRoute(route) ).to.be HomePage
 
 
     route = router.routeFor path: '/users', params: {}
-    expect( route.path    ).to.eql( '/users'  )
-    expect( route.params  ).to.eql( {}        )
-    expect( route.page    ).to.be(  UsersPage )
+    expect( route ).to.eql id: 1, path: '/users', params: {}
+    expect( router.pageForRoute(route) ).to.be UsersPage
 
     route = router.routeFor path: '/users/12', params: {}
-    expect( route.path    ).to.eql( '/users/12'  )
-    expect( route.params  ).to.eql( {user_id:12} )
-    expect( route.page    ).to.be(  UserPage     )
+    expect( route ).to.eql id: 2, path: '/users/12', params: {user_id:12}
+    expect( router.pageForRoute(route) ).to.be UserPage
 
 
     route = router.routeFor path: '/asdfasdf', params: {}
-    expect( route.path    ).to.eql( '/asdfasdf'  )
-    expect( route.params  ).to.eql( {path:'asdfasdf'} )
-    expect( route.page    ).to.be(  NotFoundPage     )
+    expect( route ).to.eql id: 3, path: '/asdfasdf', params: {path:'asdfasdf'}
+    expect( router.pageForRoute(route) ).to.be NotFoundPage

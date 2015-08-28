@@ -25,10 +25,10 @@ class Events
     this
 
   pub: (event, payload, done) ->
-    if subscriptions = @subscriptions[event]
-      subscriptions = subscriptions.slice()
-      for handler in subscriptions
-        handler(event, payload)
+    subscriptions = @subscriptions[event] || []
+    subscriptions = subscriptions.concat(@subscriptions['*'] || [])
+    for handler in subscriptions
+      handler(event, payload)
     done(event, payload) if done
     this
 

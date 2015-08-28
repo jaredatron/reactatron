@@ -1,3 +1,4 @@
+require 'stdlibjs/Object.isObject'
 require 'stdlibjs/Object.bindAll'
 require 'stdlibjs/Array#remove'
 require 'stdlibjs/Array#filter'
@@ -45,25 +46,12 @@ module.exports = class Store
   _set: (changes) ->
     # console.count('Store#set')
     for key, value of changes
-      @_scheduleChangeEvent(key)
       if value == undefined
         delete @data["#{@prefix}#{key}"]
       else
         @data["#{@prefix}#{key}"] = JSON.stringify(value)
-
-  _scheduleChangeEvent: (key) ->
-    @changedKeys[key] = true
-    @publisherTimeoutId ||= setTimeout(@_publish)
-
-  _publish: ->
-    console.time('Store#_publish')
-    delete @publisherTimeoutId
-    changedKeys = @changedKeys
-    @changedKeys = {}
-    console.log('Store#_publish', Object.keys(changedKeys))
-    for key of changedKeys
       @events.pub("store:change:#{key}", key)
-    console.timeEnd('Store#_publish')
+
   #
   # @example
   #
@@ -82,6 +70,7 @@ module.exports = class Store
   #   store.set a:1, b:2
   #
   set: (changes) ->
+    throw new Error("Store#set first arg must be an object") unless Object.isObject(changes)
     console.trace("Store#set", changes)
     @_set(changes)
     this

@@ -1,9 +1,19 @@
 React = require 'react'
 BaseMixin = require './BaseMixin'
 Style = require './Style'
+isFunction = require 'stdlibjs/Function#wrap'
 isFunction = require 'stdlibjs/isFunction'
 isString = require 'stdlibjs/isString'
 isArray = require 'stdlibjs/isArray'
+
+
+
+
+# React.createElement = React.createElement.wrap ($createElement, type, props, children) ->
+#   return type(props, children) if isFunction(type)
+#   return $createElement.call(this, type, props, children)
+
+
 
 ###
 
@@ -45,6 +55,7 @@ module.exports = (arg1, arg2) ->
   spec.mixins = [BaseMixin].concat(spec.mixins)
   reactClass = React.createClass(spec)
   component = componentWrapper React.createFactory(reactClass)
+  component.type = reactClass
   component.reactClass = reactClass
   component.style
   component
@@ -54,7 +65,6 @@ module.exports.PropTypes = React.PropTypes
 componentWrapper = (component) ->
   newComponent = ->
     component.apply(null, cloneProps(arguments))
-  newComponent.type = newComponent
   newComponent.wrapsComponent = component
   newComponent
 

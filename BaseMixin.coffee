@@ -26,6 +26,9 @@ parseDataBindings = (dataBindings) ->
     else throw new Error('invalid data bindings')
 
 
+generateUUID = -> generateUUID.counter++
+generateUUID.counter = 0
+
 module.exports =
 
   contextTypes:
@@ -33,6 +36,8 @@ module.exports =
     app: React.PropTypes.object.isRequired
 
   getInitialState: ->
+    @_UUID ||= generateUUID()
+
     @app = @context.app || @props.app # || throw new Error('app not found')
     debugger unless @app?
 
@@ -51,6 +56,7 @@ module.exports =
         @setState "#{stateKey}": @app.get(storeKey)
 
   componentWillMount: ->
+    console.time('')
     for stateKey, storeKey of @_dataBindings
       @app.sub "store:change:#{storeKey}", @storeChange
 
@@ -65,6 +71,15 @@ module.exports =
     @forceUpdate()
 
   ### DATA BINDINGS MIXIN ###
+
+
+  componentWillUpdate: ->
+    # console.log("componentWillUpdate", @_UUID, @constructor.displayName)
+    # console.time("update #{@_UUID}")
+
+  componentDidUpdate: ->
+    # console.timeEnd("update #{@_UUID}")
+
 
   # get: (key) ->
   #   if @_dataBindings.excludes(key)

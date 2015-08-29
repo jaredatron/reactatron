@@ -35,13 +35,18 @@ class Events
 
   waitForClearQueue: (callback) ->
     @_clearQueueCallbacks.push callback
+    @_schedulePublish()
+
+  _schedulePublish: ->
+    @publishingTimeout ||= setTimeout(@_publish)
 
   _schedulePublishing: (event, payload, done) ->
     @publishings.push [event, payload, done]
-    @publishingTimeout ||= setTimeout(@_publish)
+    @_schedulePublish()
+
 
   _publish: ->
-    clearTimeout(@publishingTimeout)
+    clearTimeout(@publishingTimeout) if @publishingTimeout?
     @publishingTimeout = null
 
     publishings = @publishings

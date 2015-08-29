@@ -30,7 +30,6 @@ class ReactatronApp
       fullRerender: 0
       styledComponentRerenders: 0
 
-
   registerPlugin: (plugin) ->
     plugin.app = this
     plugin.init() if plugin.init?
@@ -44,7 +43,7 @@ class ReactatronApp
 
   render: ->
     @stats.fullRerender++
-    console.info('App#render', {store: @store.toObject()})
+    console.info('App#render', @store.toObject())
     @rootComponent = React.render(
       RootComponent(app: this, Component: @MainComponent),
       @DOMNode = @getDOMNode()
@@ -53,12 +52,9 @@ class ReactatronApp
   start: ->
     if @rootComponent
       throw new Error('app already started')
-    @events.waitForClearQueue =>
-      console.info('App#start')
-      @plugins.forEach (plugin) -> plugin.start()
-      # console.log('pub app start')
-      # @pub 'app start', this
-      @render()
+    console.log('App#start', @store.toObject())
+    @plugins.forEach (plugin) -> plugin.start()
+    @events.waitForClearQueue(@render)
     this
 
   stop: ->
@@ -87,5 +83,4 @@ RootComponent = React.createFactory React.createClass
 
   render: ->
     console.info('ReactatronApp.RootComponent render')
-    @props.app.pub 'ReactatronApp.RootComponent render'
     @props.Component()

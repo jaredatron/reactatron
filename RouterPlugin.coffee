@@ -32,7 +32,10 @@ module.exports = class RouterPlugin
 
   update: ->
     if location = @app.get('location')
-      @app.set route: @router.routeFor(location)
+      route = @router.routeFor(location)
+      currentRoute = @app.get('route')
+      if !currentRoute || route.id != currentRoute.id
+        @app.set route: route
 
 
 RouteComponent = component 'RouteComponent',

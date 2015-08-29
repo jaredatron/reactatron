@@ -7,3 +7,5 @@ module.exports = Box.extendStyledComponent 'Rows',
   flexDirection: 'column'
   flexWrap: 'nowrap'
   justifyContent: 'flex-start'
+  maxWidth: '100%'
+  maxHeight: '100%'

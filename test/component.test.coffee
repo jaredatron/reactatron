@@ -31,7 +31,18 @@ describe 'component', ->
     button = Button()
     expect( renderComponent(button) ).to.eql('<div>ClickMe</div>')
 
-  it 'composing should take children and style into account', ->
+  it 'should append children from arguments into props.children', ->
+    tree = div
+      children:['A', div({}, 'B')]
+      'C'
+      div({},'D')
+
+    expect( renderComponent(tree) ).to.eql(
+      '<div>A<div>B</div>C<div>D</div></div>'
+    )
+
+
+  it 'i have no idea what im testing :P', ->
 
     Z = component 'Z',
       render: ->
@@ -72,6 +83,12 @@ describe 'component', ->
         background: 'transparent'
         border: '1px solid grey'
         padding: '0.25em'
+
+      # console.log('Button.type', Button.type)
+      # console.log('isElement', isElement(Button.type))
+      # console.log('isDOMComponent', isDOMComponent(Button.type))
+      # console.log('isCompositeComponent', isCompositeComponent(Button.type))
+      # console.log('isCompositeComponentElement', isCompositeComponentElement(Button.type))
 
       RedButton = Button.withStyle 'RedButton',
         background: 'red'

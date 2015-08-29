@@ -31,9 +31,9 @@ generateUUID.counter = 0
 
 module.exports =
 
-  contextTypes:
+  # contextTypes:
     # app: React.PropTypes.instanceOf(ReactatronApp).isRequired
-    app: React.PropTypes.object.isRequired
+    # app: React.PropTypes.object.isRequired
 
   getInitialState: ->
     @_UUID ||= generateUUID()

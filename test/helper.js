@@ -6,6 +6,8 @@ TestUtils = React.addons.TestUtils
 isElement      = TestUtils.isElement
 isDOMComponent = TestUtils.isDOMComponent
 findAllInRenderedTree = TestUtils.findAllInRenderedTree
+isCompositeComponent = TestUtils.isCompositeComponent
+isCompositeComponentElement = TestUtils.isCompositeComponentElement
 
 // window = this
 // location = {

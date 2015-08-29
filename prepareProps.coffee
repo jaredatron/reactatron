@@ -3,16 +3,16 @@ Style = require './Style'
 
 prepareProps = (props, children...) ->
   props = props? and Object.clone(props) or {}
-  props.children = mergeChildren(props.children, children)
+  props.children = shoveChildrenIntoProps(props, children)
   props.style = new Style(props.style)
   props
 
 shoveChildrenIntoProps = (props, children) ->
-  children =
+  children = mergeChildren(props.children, children)
   if children? && children.length > 0
     props.children = children
   else
-    delete props.children
+    props.children = undefined
 
 
 # this might be an aweful idea :P

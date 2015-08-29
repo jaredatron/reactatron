@@ -69,12 +69,16 @@ wrapWithPrepareProps = (component) ->
     component prepareProps.apply(null, arguments)
 
 
-withStyle = (name, style, debugCallback) ->
-  style = new Style(style)
-  parentComponent = this
+withStyle = (name, style) ->
+  if this.isStyledComponent
+    return this.unstyled.withStyle(name, this.style.merge(style))
+
   component = createComponent name, (props) ->
-    props.style = style.merge(props.style)
-    parentComponent(props)
+    props.style = component.style.merge(props.style)
+    component.unstyled(props)
+  component.style = new Style(style)
+  component.unstyled = this
+  component.isStyledComponent = true
   component
 
 withDefaultProps = (defaultProps) ->

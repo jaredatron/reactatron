@@ -71,24 +71,10 @@ describe 'component', ->
 
     it 'should return a new component that wraps the original component', ->
 
-      # Button = component 'Button',
-      #   defaultStyle:
-      #     background: 'transparent'
-      #     padding: '0.25em'
-
-      #   render: ->
-      #     div @cloneProps()
-
       Button = DOM.button.withStyle 'Button',
         background: 'transparent'
         border: '1px solid grey'
         padding: '0.25em'
-
-      # console.log('Button.type', Button.type)
-      # console.log('isElement', isElement(Button.type))
-      # console.log('isDOMComponent', isDOMComponent(Button.type))
-      # console.log('isCompositeComponent', isCompositeComponent(Button.type))
-      # console.log('isCompositeComponentElement', isCompositeComponentElement(Button.type))
 
       RedButton = Button.withStyle 'RedButton',
         background: 'red'
@@ -97,7 +83,44 @@ describe 'component', ->
       BigRedButton = RedButton.withStyle 'BigRedButton',
         fontSize: '150%'
 
-      button = BigRedButton style: {color:'blue'}, 'PUSH'
+      expect( DOM.button().type   ).to.be( 'button' )
+      expect( Button().type       ).to.be( Button.type )
+      expect( RedButton().type    ).to.be( RedButton.type )
+      expect( BigRedButton().type ).to.be( BigRedButton.type )
+
+      expect( DOM.button.isStyledComponent   ).to.be( undefined )
+      expect( Button.isStyledComponent       ).to.be( true )
+      expect( RedButton.isStyledComponent    ).to.be( true )
+      expect( BigRedButton.isStyledComponent ).to.be( true )
+
+      expect( DOM.button.unstyled   ).to.be( undefined )
+      expect( Button.unstyled       ).to.be( DOM.button )
+      expect( RedButton.unstyled    ).to.be( DOM.button )
+      expect( BigRedButton.unstyled ).to.be( DOM.button )
+
+      expect( Button.style ).to.eql
+        background: 'transparent'
+        border: '1px solid grey'
+        padding: '0.25em'
+
+
+      expect( RedButton.style ).to.eql
+        background: 'red'
+        border: '1px solid grey'
+        padding: '0.25em'
+        borderColor: 'red'
+
+      expect( BigRedButton.style ).to.eql
+        background: 'red'
+        border: '1px solid grey'
+        padding: '0.25em'
+        borderColor: 'red'
+        fontSize: '150%'
+
+      button = BigRedButton
+        style:
+          color:'blue'
+        'PUSH'
 
       expect( renderComponent(button) ).to.eql(
         '<button style="background:red;border:1px solid grey;padding:0.25em;border-color:red;font-size:150%;color:blue;">PUSH</button>'

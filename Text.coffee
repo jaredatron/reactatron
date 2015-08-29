@@ -1,7 +1,6 @@
-styledComponent = require './styledComponent'
 {span} = require './DOM'
 
-module.exports = styledComponent 'Text', span,
+module.exports = span.withStyle
   cursor: 'default'
   display: 'inline'
   fontFamily: 'sans-serif'

@@ -1,3 +1,5 @@
+throw 'DONE USE'
+
 component = require './component'
 Style = require './Style'
 

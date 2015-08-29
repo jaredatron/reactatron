@@ -1,5 +1,5 @@
 Text = require './Text'
 
-module.exports = Text.extendStyledComponent 'SublteText',
+module.exports = Text.withStyle
   fontSize: '13px'
   color: 'grey'

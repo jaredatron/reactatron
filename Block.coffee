@@ -1,6 +1,6 @@
 Box = require './Box'
 
-module.exports = Box.extendStyledComponent 'Block',
+module.exports = Box.withStyle
   display: 'inline-flex'
   flexWrap: 'wrap'
   alignItems: 'flex-start'

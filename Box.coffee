@@ -1,8 +1,6 @@
-styledComponent = require './styledComponent'
 {div} = require './DOM'
 
-
-module.exports = styledComponent 'Box', div,
+module.exports = div.withStyle
   display: 'block'
   border: 'none'
   overflow: 'hidden'

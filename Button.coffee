@@ -1,7 +1,6 @@
-styledComponent = require './styledComponent'
 {button} = require './DOM'
 
-module.exports = styledComponent 'Button', button,
+module.exports = button.withStyle
   cursor: 'pointer'
   display: 'inline-block'
   border: '0'

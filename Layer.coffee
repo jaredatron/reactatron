@@ -1,6 +1,6 @@
 Box = require './Box'
 
-module.exports = Box.extendStyledComponent 'Layer',
+module.exports = Box.withStyle
   display: 'flex'
   alignItems: 'stretch'
   alignContent: 'stretch'

@@ -2,14 +2,21 @@ require 'stdlibjs/Object.assign'
 
 module.exports = class Style
 
+  @merge: ->
+    style = new Style
+    for otherStyle in arguments
+      style.update(otherStyle)
+    style
+
   constructor: (style) ->
     @update(style)
 
   clone: ->
     new Style(this)
 
-  update: (style) ->
-    assign(this, style || {})
+  update: (styles...) ->
+    for style in styles
+      assign(this, style) if style?
     this
 
   merge: (style) ->

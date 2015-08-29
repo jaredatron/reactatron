@@ -1,3 +1,5 @@
+require 'stdlibjs/Object.clone'
+
 React = require 'react'
 BaseMixin = require './BaseMixin'
 Style = require './Style'
@@ -6,36 +8,30 @@ isFunction = require 'stdlibjs/isFunction'
 isString = require 'stdlibjs/isString'
 isArray = require 'stdlibjs/isArray'
 
-
-
-
-# React.createElement = React.createElement.wrap ($createElement, type, props, children) ->
-#   return type(props, children) if isFunction(type)
-#   return $createElement.call(this, type, props, children)
-
-
-
 ###
 
-component 'Button',
+Button = component 'Button',
   render: ->
     …
 
-oneoff = component
-  render: ->
-    …
+RedButton = Button.withDefaultProps
+  style:
 
-# short hand for just render
-Button = component 'Button', (props) ->
-  …
+RedButton = Button.withStyle
+  background: 'red'
 
-wrapper = component (props) ->
+RedButton = component (props) ->
+  props.style.merge
+    background: 'red'
+  Button(props)
+
+RedButton = component 'Button', (props) ->
   …
 
 ###
 createComponent = (arg1, arg2) ->
   if isFunction(arg1)
-    return componentWrapper(arg1)
+    return wrapWithPrepareProps(arg1)
 
   if isString(arg1)
     name = arg1
@@ -58,7 +54,38 @@ createComponent = (arg1, arg2) ->
   component.type = reactClass
   component.reactClass = reactClass
   component.style
+  component.withStyle = withStyle
   component
+
+
+
+wrapWithPrepareProps = (callback) ->
+  (props, children...) ->
+    props = props? and Object.clone(props) or {}
+    shoveChildrenIntoProps(props, children)
+    props.style = new Style(props.style)
+    callback(props)
+
+shoveChildrenIntoProps = (props, children) ->
+  props.children = mergeChildren(props.children, children)
+
+# this might be an aweful idea :P
+mergeChildren = (a, b) ->
+  a ||= []
+  return a unless b?
+  a = [a] unless isArray(a)
+  a.concat(b)
+
+
+
+
+
+
+withStyle = (style) ->
+  mergeChildrenWrapper (props) ->
+    null
+
+
 
 componentWrapper = (component) ->
   newComponent = ->
@@ -74,11 +101,6 @@ cloneProps = (args) ->
   args[0] = props
   args
 
-
-# this might be an aweful idea :P
-mergeChildren = (a, b) ->
-  a = [a] unless isArray(a)
-  a.concat(b)
 
 mergeStyle = (props, styles...) ->
   props.style = new Style(props.style).update(styles...)

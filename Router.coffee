@@ -1,5 +1,4 @@
 require 'stdlibjs/Object.bindAll'
-RedirectComponent = require './RedirectComponent'
 
 #
 # Usage:
@@ -38,7 +37,7 @@ class Router
 
   redirectTo: (path, params={}) ->
     return ->
-      RedirectComponent(path: path, params: params)
+      require('./RedirectComponent')(path: path, params: params)
 
 
 

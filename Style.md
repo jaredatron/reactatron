@@ -1,9 +1,18 @@
 # Style
 
 
+StyledComponent
+ - just styles and a component
+
+
+
+
 
 we need a stlye inheritance thing along side composure so were
 not using 10x more react components
+
+
+
 
 
 
@@ -34,3 +43,21 @@ Scrollbox ?
 
 
 
+
+
+
+button = React.DOM.button
+
+
+# merging styles inline
+BlueButton = component (props) ->
+  props.style.update BlueButton.style
+  button(props)
+
+# merging styles at definition time
+
+BlueButton = Button.style
+  backgroundColor: 'blue'
+
+
+# do we need to wrap each core component with a styled component wrapper?

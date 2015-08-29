@@ -1,8 +1,10 @@
 component = require './component'
-DOM = require './DOM'
+Block = require './Block'
 
 module.exports = component 'ReactatronRedirect',
+
   componentDidMount: ->
     @app.setLocation @app.locationFor(@props.path, @props.params)
+
   render: ->
-    DOM.div(null, "redirecting to: #{@props.path}")
+    Block {}, "redirecting to: #{@props.path}"

@@ -1,4 +1,7 @@
-global.expect = require('expect.js')
+React = require('react/addons')
+
+expect = require('expect.js')
+TestUtils = React.addons.TestUtils
 
 
 // window = this
@@ -43,4 +46,9 @@ Counter = function(){
   }
   counter.value = 0;
   return counter;
+};
+
+
+renderComponent = function(component){
+  return React.renderToStaticMarkup(component);
 };

@@ -1,5 +1,5 @@
 component  = require '../component'
-{div,span} = require '../DOM'
+{div,span} = DOM = require '../DOM'
 
 describe 'component', ->
 
@@ -52,6 +52,41 @@ describe 'component', ->
       'W'
 
     expect( renderComponent(tree) ).to.eql('<div title="xxx" style="color:blue;">WXYZ</div>')
+
+
+
+
+  describe '#withStyle', ->
+
+    it 'should return a new component that wraps the original component', ->
+
+      # Button = component 'Button',
+      #   defaultStyle:
+      #     background: 'transparent'
+      #     padding: '0.25em'
+
+      #   render: ->
+      #     div @cloneProps()
+
+      Button = DOM.button.withStyle 'Button',
+        background: 'transparent'
+        border: '1px solid grey'
+        padding: '0.25em'
+
+      RedButton = Button.withStyle 'RedButton',
+        background: 'red'
+        borderColor: 'red'
+
+      BigRedButton = RedButton.withStyle 'BigRedButton',
+        fontSize: '150%'
+
+      button = BigRedButton style: {color:'blue'}, 'PUSH'
+
+      expect( renderComponent(button) ).to.eql(
+        '<button style="background:red;border:1px solid grey;padding:0.25em;border-color:red;font-size:150%;color:blue;">PUSH</button>'
+      )
+
+
 
 
 
@@ -140,65 +175,6 @@ describe 'component', ->
           }
           children: []
         }
-
-
-
-
-
-
-
-    describe 'using Component#withStyle', ->
-
-      it 'should return a function wrapping the component', ->
-
-        RedButton.displayName = 'RedButton'
-
-        BigRedButton = RedButton.withStyle
-          fontSize: '120%'
-          fontWeight: 'bolder'
-
-        BigRedButton.displayName = 'BigRedButton'
-
-        HugeRedButton = BigRedButton.withStyle
-          fontSize: '150%'
-
-        button = BigRedButton
-          style: {color:'yellow'},
-          'omg u sure?'
-
-        expect( button ).to.eql {
-          props: {
-            style: {
-              background: 'red'
-              fontSize:   '120%'
-              color:      'yellow'
-              fontWeight: 'bolder'
-            }
-            children: ['omg u sure?'],
-          }
-          children: []
-        }
-
-
-        console.log("\n\n\n------------\n\n\n")
-
-        button = HugeRedButton
-          style: {color:'yellow'},
-          'omg u sure?'
-
-        expect( button ).to.eql {
-          props: {
-            style: {
-              background: 'red'
-              fontSize:   '150%'
-              color:      'yellow'
-              fontWeight: 'bolder'
-            }
-            children: ['omg u sure?'],
-          }
-          children: []
-        }
-
 
 
 

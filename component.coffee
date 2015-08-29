@@ -31,7 +31,7 @@ RedButton = Button.withDefaultProps
   style:
 
 
-RedButton = Button.withStyle
+RedButton = Button.withStyle 'RedButton',
   background: 'red'
 
 
@@ -84,12 +84,13 @@ mergeChildren = (a, b) ->
   a.concat(b)
 
 
-withStyle = (style, debugCallback) ->
+withStyle = (name, style, debugCallback) ->
   style = new Style(style)
   parentComponent = this
-  wrapWithPrepareProps (props) ->
+  component = createComponent name, (props) ->
     props.style = style.merge(props.style)
     parentComponent(props)
+  component
 
 withDefaultProps = (defaultProps) ->
   parentComponent = this

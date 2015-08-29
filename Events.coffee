@@ -70,7 +70,7 @@ class Events
     for callback in clearQueueCallbacks
       calls.push [callback, [publishings]]
 
-    console.info('Events#_publish', keys, calls.length)
+    # console.info('Events#_publish', keys, calls.length)
     for [callback, args] in calls
       callback.apply(null, args)
 

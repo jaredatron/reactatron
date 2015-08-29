@@ -1,6 +1,6 @@
 {div} = require './DOM'
 
-module.exports = div.withStyle
+module.exports = div.withStyle 'Box',
   display: 'block'
   border: 'none'
   overflow: 'hidden'

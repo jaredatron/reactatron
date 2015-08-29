@@ -16,9 +16,9 @@ module.exports = component 'Link',
     @props.onClick(event) if @props.onClick
 
     return if event? && event.defaultPrevented
-    event.preventDefault()
 
     if @props.path? || @props.params?
+      event.preventDefault()
       @app.setLocation @location()
       return
 

@@ -8,5 +8,5 @@ module.exports = Box.withStyle 'Columns',
   flexDirection: 'row'
   flexWrap: 'nowrap'
   justifyContent: 'flex-start'
-  maxWidth: '100%'
-  maxHeight: '100%'
+  # maxWidth: '100%'
+  # maxHeight: '100%'

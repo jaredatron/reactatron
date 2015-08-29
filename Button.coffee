@@ -1,6 +1,6 @@
 {button} = require './DOM'
 
-module.exports = button.withStyle
+module.exports = button.withStyle 'Button',
   cursor: 'pointer'
   display: 'inline-block'
   border: '0'

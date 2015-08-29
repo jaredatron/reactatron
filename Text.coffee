@@ -1,6 +1,6 @@
 {span} = require './DOM'
 
-module.exports = span.withStyle
+module.exports = span.withStyle 'Text',
   cursor: 'default'
   display: 'inline'
   fontFamily: 'sans-serif'

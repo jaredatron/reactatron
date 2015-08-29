@@ -1,6 +1,6 @@
 Box = require './Box'
 
-module.exports = Box.withStyle
+module.exports = Box.withStyle 'Rows',
   display: 'inline-flex'
   alignItems: 'stretch'
   alignContent: 'stretch'

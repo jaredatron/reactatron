@@ -12,24 +12,35 @@ describe 'LocationPlugin', ->
     }
     locationPlugin = new LocationPlugin( window: window )
     locationPlugin.app = app
-    locationPlugin.init()
 
   it 'init', ->
+    expect( app.locationFor ).to.be( undefined )
+    expect( app.setLocation ).to.be( undefined )
+    expect( app.setPath     ).to.be( undefined )
+    expect( app.setParams   ).to.be( undefined )
+    expect( app.locationFor ).to.be( undefined )
+
+    locationPlugin.init()
     expect( app.locationFor ).to.be( locationPlugin.for )
     expect( app.setLocation ).to.be( locationPlugin.set )
     expect( app.setPath     ).to.be( locationPlugin.setPath )
     expect( app.setParams   ).to.be( locationPlugin.setParams )
     expect( app.locationFor ).to.be( locationPlugin.for )
-    expect(app.set.calls).to.eql([
-      [ { location: { path: '/', params: {} } } ]
-    ])
+
+    expect(app.set.calls).to.eql([])
 
   it 'start and stop should add and remove evner listeners', ->
     expect(locationPlugin.window.addEventListener.calls).to.eql([])
     expect(locationPlugin.window.removeEventListener.calls).to.eql([])
+
+    locationPlugin.init()
+    expect(locationPlugin.window.addEventListener.calls).to.eql([])
+    expect(locationPlugin.window.removeEventListener.calls).to.eql([])
+
     locationPlugin.start()
     expect(locationPlugin.window.addEventListener.calls).to.eql([['popstate', locationPlugin.update]])
     expect(locationPlugin.window.removeEventListener.calls).to.eql([])
+
     locationPlugin.stop()
     expect(locationPlugin.window.addEventListener.calls).to.eql([['popstate', locationPlugin.update]])
     expect(locationPlugin.window.removeEventListener.calls).to.eql([['popstate', locationPlugin.update]])
@@ -39,7 +50,14 @@ describe 'LocationPlugin', ->
 
     it 'should set "location"', ->
 
-      console.log(app.set.calls)
+      expect(app.set.calls).to.eql([])
+
+      locationPlugin.init()
+
+      expect(app.set.calls).to.eql([])
+
+      locationPlugin.update()
+
       expect(app.set.calls).to.eql([
         [ { location: {path: '/', params: {}}} ]
       ])

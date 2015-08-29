@@ -7,12 +7,11 @@ describe 'App', ->
     app = new App
       window: new FakeWindow
 
-    console.log('--->', app.plugins)
     app.document = {body: {}}
     app.store.data = data = {}
     app.render = new CallLogger
 
-  it 'pub sub', ->
+  it 'pub sub', (done) ->
 
     loginCounter = new Counter
 
@@ -20,14 +19,18 @@ describe 'App', ->
 
     expect(loginCounter.value).to.be(0)
     app.pub 'login'
-    expect(loginCounter.value).to.be(1)
+    expect(loginCounter.value).to.be(0)
+    setTimeout ->
+      expect(loginCounter.value).to.be(1)
+      app.unsub 'login', loginCounter
+      app.pub 'login'
+      expect(loginCounter.value).to.be(1)
+      setTimeout ->
+        expect(loginCounter.value).to.be(1)
+        done()
 
-    app.unsub 'login', loginCounter
-    app.pub 'login'
-    expect(loginCounter.value).to.be(1)
 
-
-  it 'store', ->
+  it 'store', (done) ->
 
     current_user = { name: 'Thomas' }
 
@@ -38,9 +41,13 @@ describe 'App', ->
     app.set current_user: current_user
     expect( app.get('current_user') ).to.eql(current_user)
     expect( app.get('current_user') ).to.not.be(current_user)
-    expect( events ).to.eql([
-      [ 'store:change:current_user', 'current_user' ],
-    ])
+    expect( events ).to.eql([])
+
+    setTimeout ->
+      expect( events ).to.eql([
+        [ 'store:change:current_user', 'current_user' ],
+      ])
+      done()
 
 
   describe '#render', ->

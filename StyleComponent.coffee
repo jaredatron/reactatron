@@ -50,14 +50,23 @@ module.exports = createFactory React.createClass
 
   componentDidMount: ->
     style = new Style(@props.style)
+    node = @getDOMNode()
     if style[':mousedown']?
-      node = @getDOMNode()
       node.ownerDocument.addEventListener 'mouseup', @onMouseUp
+
+    # Why doesnt react support onFocusIn
+
+    if @props.onFocusIn
+      node.addEventListener 'focusin', @props.onFocusIn
+
+    if @props.onFocusOut
+      node.addEventListener 'focusout', @props.onFocusOut
 
   componentWillUnmount: ->
     node = @getDOMNode()
     node.ownerDocument.removeEventListener 'mouseup', @onMouseUp
-
+    node.addEventListener 'focusin', @props.onFocusIn
+    node.addEventListener 'focusout', @props.onFocusOut
 
   render: ->
     style = new Style(@props.style)

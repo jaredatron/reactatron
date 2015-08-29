@@ -1,11 +1,12 @@
 require 'stdlibjs/Object.bindAll'
 
-React         = require 'react'
-Events        = require './Events'
-Store         = require './Store'
-LocationPlugin = require('./LocationPlugin')
-WindowSizePlugin = require('./WindowSizePlugin')
-Router        = require './Router'
+React            = require 'react'
+Events           = require './Events'
+Store            = require './Store'
+LocationPlugin   = require './LocationPlugin'
+WindowSizePlugin = require './WindowSizePlugin'
+Router           = require './Router'
+createFactory    = require './createFactory'
 
 class ReactatronApp
 
@@ -68,7 +69,7 @@ module.exports = ReactatronApp
 
 
 
-RootComponent = React.createFactory React.createClass
+RootComponent = createFactory React.createClass
   displayName: 'ReactatronApp'
 
   propTypes:

@@ -120,6 +120,8 @@ module.exports =
     props.style.update(@enforcedStyle)
     props
 
+  extendProps: (props) ->
+    Object.assign(@cloneProps(), props)
 
   styleFromProps: ->
     style = {}

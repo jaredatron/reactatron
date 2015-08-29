@@ -1,47 +1,9 @@
-throw 'DONE USE'
-
-component = require './component'
-Style = require './Style'
-
 ###
 
-Box = styledComponent 'Box', div,
-  display: 'inline-block'
-
+StyleComponentMixin
 
 ###
-module.exports = (name, targetComponent, style) ->
-  extendStyledComponent.apply(
-    {style: new Style, targetComponent: targetComponent},
-    [name, style],
-  )
-
-extendStyledComponent = (name, style) ->
-  style = @style.merge(style)
-  targetComponent = @targetComponent
-
-  spec =
-    mixins: []
-    render: ->
-      @app.stats.styledComponentRerenders++
-      props = @cloneProps()
-      props.style = style.merge(props.style).compute(@state)
-      targetComponent(props)
-
-  # TODO break up mixins
-  spec.mixins.push StyleComponent
-
-  styledComponent = component(name, spec)
-  styledComponent.isStyledComponent = true
-  styledComponent.style = style
-  styledComponent.targetComponent = targetComponent
-  styledComponent.extendStyledComponent = extendStyledComponent
-  styledComponent
-
-
-
-StyleComponent =
-
+module.exports =
   getInitialState: ->
     hover: false
     focused: false

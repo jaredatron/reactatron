@@ -1,13 +1,14 @@
 require 'stdlibjs/Object.clone'
 isObject = require 'stdlibjs/isObject'
-
-React = require 'react'
-BaseMixin = require './BaseMixin'
-Style = require './Style'
 isFunction = require 'stdlibjs/Function#wrap'
 isFunction = require 'stdlibjs/isFunction'
 isString = require 'stdlibjs/isString'
 isArray = require 'stdlibjs/isArray'
+
+React = require 'react'
+BaseMixin = require './BaseMixin'
+Style = require './Style'
+createFactory = require './createFactory'
 
 ###
 
@@ -40,8 +41,7 @@ createComponent = (name, spec) ->
 
   # TODO deprecate this
   if isObject(name)
-    spec = name
-    name = 'Anonymous'
+    throw new Error('this API is deprecated')
 
   if isFunction(spec)
     render = spec
@@ -49,10 +49,10 @@ createComponent = (name, spec) ->
       render: -> render.call(this, @cloneProps())
     }
 
-  spec.displayName = name if name?
+  spec.displayName = name
   spec.mixins = [BaseMixin].concat(spec.mixins||[])
   reactClass = React.createClass(spec)
-  component = wrapWithPrepareProps React.createFactory(reactClass)
+  component = wrapWithPrepareProps createFactory(reactClass)
   # extendComponent(component)
   component.displayName = name
   component
@@ -111,5 +111,7 @@ mergeProps = (args...) ->
 
 createComponent.PropTypes = React.PropTypes
 createComponent.mergeStyle = mergeStyle
+createComponent.withDefaultProps = (component, props) ->
+  withDefaultProps.call(component, props)
 
 module.exports = createComponent

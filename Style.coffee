@@ -32,6 +32,11 @@ module.exports = class Style
         style[key] = this[key]
     style
 
+  needsControl: ->
+    keys = Object.keys(this)
+    for key in keys
+      return true if key.match(/^:(.+)/)
+    false
 
 
 

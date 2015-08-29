@@ -3,11 +3,6 @@ component  = require '../component'
 
 describe 'component', ->
 
-  RootComponent = null
-  beforeEach ->
-    RootComponent = (props, children...) ->
-      {props:props, children:children}
-
   it 'should work', ->
 
     Button = component 'Button',
@@ -17,35 +12,86 @@ describe 'component', ->
     button = Button()
     expect( renderComponent(button) ).to.eql('<div>ClickMe</div>')
 
+
+
   describe 'wrapping components', ->
 
-    it 'should work', ->
-
+    RootComponent = RedButton = null
+    beforeEach ->
+      RootComponent = (props, children...) ->
+        {props:props, children:children}
 
       RedButton = component (props) ->
         props.style.update
           background: 'red'
-        RootComponent props, 'ClickMe'
+        RootComponent props
 
-      button = RedButton()
-      expect( button ).to.eql {
-        props: {
-          style: {
-            background: "red"
+
+    describe 'useing functions', ->
+
+      it 'should just call through', ->
+
+        button = RedButton
+          style: {color:'orange'},
+          'Click it!'
+
+        expect( button ).to.eql {
+          props: {
+            style: {
+              background: "red"
+              color:      'orange'
+            }
+            children: ['Click it!'],
           }
-          children: [],
+          children: []
         }
-        children: ['ClickMe']
-      }
 
 
-      # RedButton = Button.withStyle
-      #   background: 'red'
+        BigRedbutton = component (props) ->
+          props.style.update
+            fontSize: '120%'
+          RedButton props
 
-      # button = RedButton()
-      # expect( renderComponent(button) ).to.eql('<div style="background: red;">ClickMe</div>')
+        button = BigRedbutton
+          style: {color:'green'},
+          'cancel?'
 
-      # # console.log Object.keys(React)
-      # # console.log Object.keys(TestUtils)
+        expect( button ).to.eql {
+          props: {
+            style: {
+              background: "red"
+              color:      'green'
+              fontSize: '120%'
+            }
+            children: ['cancel?'],
+          }
+          children: []
+        }
+
+
+    describe 'using Component#withStyle', ->
+
+      it 'should return a function wrapping the component', ->
+
+        BigRedButton = RedButton.withStyle
+          fontSize: '120%'
+
+        button = BigRedButton
+          style: {color:'yellow'},
+          'omg u sure?'
+
+        expect( button ).to.eql {
+          props: {
+            style: {
+              background: 'red'
+              fontSize:   '120%'
+              color:      'yellow'
+            }
+            children: ['omg u sure?'],
+          }
+          children: []
+        }
+
+
 
 

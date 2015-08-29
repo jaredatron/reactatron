@@ -9,7 +9,7 @@ module.exports = class Style
     style
 
   constructor: (style) ->
-    @update(style)
+    @update(style) if style?
 
   clone: ->
     new Style(this)

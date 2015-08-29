@@ -8,4 +8,3 @@ module.exports = div.withStyle
   padding: 0
   flexShrink: 0
   flexGrow: 0
-

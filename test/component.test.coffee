@@ -151,8 +151,16 @@ describe 'component', ->
 
       it 'should return a function wrapping the component', ->
 
+        RedButton.displayName = 'RedButton'
+
         BigRedButton = RedButton.withStyle
           fontSize: '120%'
+          fontWeight: 'bolder'
+
+        BigRedButton.displayName = 'BigRedButton'
+
+        HugeRedButton = BigRedButton.withStyle
+          fontSize: '150%'
 
         button = BigRedButton
           style: {color:'yellow'},
@@ -164,11 +172,33 @@ describe 'component', ->
               background: 'red'
               fontSize:   '120%'
               color:      'yellow'
+              fontWeight: 'bolder'
             }
             children: ['omg u sure?'],
           }
           children: []
         }
+
+
+        console.log("\n\n\n------------\n\n\n")
+
+        button = HugeRedButton
+          style: {color:'yellow'},
+          'omg u sure?'
+
+        expect( button ).to.eql {
+          props: {
+            style: {
+              background: 'red'
+              fontSize:   '150%'
+              color:      'yellow'
+              fontWeight: 'bolder'
+            }
+            children: ['omg u sure?'],
+          }
+          children: []
+        }
+
 
 
 

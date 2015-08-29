@@ -64,12 +64,8 @@ extendComponent = (component) ->
   component
 
 wrapWithPrepareProps = (component) ->
-  componentWrapper = ->
-    if global.LOG_COMPONENT_CALLS
-      console.log('COMPONENT CALLED', component, arguments)
+  extendComponent ->
     component prepareProps.apply(null, arguments)
-  componentWrapper.parentComponent = component
-  extendComponent(componentWrapper)
 
 prepareProps = (props, children...) ->
   props = props? and Object.clone(props) or {}
@@ -88,21 +84,18 @@ mergeChildren = (a, b) ->
   a.concat(b)
 
 
-withStyle = (style) ->
+withStyle = (style, debugCallback) ->
+  style = new Style(style)
   parentComponent = this
-  component = wrapWithPrepareProps (props) ->
-    props.style.update(style)
+  wrapWithPrepareProps (props) ->
+    props.style = style.merge(props.style)
     parentComponent(props)
-  component.parentComponent = parentComponent
-  component
 
 withDefaultProps = (defaultProps) ->
   parentComponent = this
-  component = wrapWithPrepareProps (props) ->
+  wrapWithPrepareProps (props) ->
     props = mergeProps(defaultProps, props)
     parentComponent(props)
-  parentComponent.parentComponent = parentComponent
-  component
 
 mergeStyle = (props, styles...) ->
   props.style = new Style(props.style).update(styles...)

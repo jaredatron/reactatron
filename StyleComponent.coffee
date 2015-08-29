@@ -77,7 +77,6 @@ module.exports = createFactory React.createClass
       props.onMouseDown  = @onMouseDown
       # props.onMouseUp    = @onMouseUp
 
-    console.log('StyleComponent', props)
     React.createElement(@props.type, props)
 
 

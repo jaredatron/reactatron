@@ -52,7 +52,6 @@ module.exports =
     @app.stats.storeChangeRerenders++
     for stateKey, storeKey of @_dataBindings
       if key == storeKey
-        console.log('storeChange', this.constructor.displayName, stateKey, storeKey)
         @setState "#{stateKey}": @app.get(storeKey)
 
   componentWillMount: ->

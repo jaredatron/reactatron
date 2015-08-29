@@ -1,6 +1,7 @@
 require 'stdlibjs/Object.clone'
-React = require 'react'
+
 component = require './component'
+{a} = require './DOM'
 
 module.exports = component 'Link',
 
@@ -31,4 +32,4 @@ module.exports = component 'Link',
     props.onClick = @onClick
     props.href = @location() if props.path? || props.params?
     props.href ||= ''
-    React.createElement('a', props)
+    a(props)

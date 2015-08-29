@@ -1,11 +1,15 @@
 {button} = require './DOM'
 
 module.exports = button.withStyle 'Button',
+  outline: 'none'
+  display: 'inlineBlock'
+  whiteSpace: 'nowrap'
+  verticalAlign: 'middle'
+  MsTouchAction: 'manipulation'
+  touchAction: 'manipulation'
   cursor: 'pointer'
-  display: 'inline-block'
-  border: '0'
-  background: 'none'
-  overflow: 'hidden'
-  margin: 0
-  padding: 0
-  backgroundColor: 'inherit'
+  WebkitUserSelect: 'none'
+  MozUserSelect: 'none'
+  MsUserSelect: 'none'
+  userSelect: 'none'
+  backgroundImage: 'none'

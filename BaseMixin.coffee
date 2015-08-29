@@ -105,6 +105,12 @@ module.exports =
 
   ### STYLES MIXIN ###
 
+  style: ->
+    new Style(@defaultStyle)
+      .update(@props.style)
+      .update(@styleFromProps())
+      .update(@enforcedStyle)
+
   cloneProps: ->
     props = Object.clone(@props)
 
@@ -113,10 +119,7 @@ module.exports =
     # keys = Object.keys(this.propTypes||{})
     # delete props[key] for key in keys
 
-    props.style = new Style(@defaultStyle)
-    props.style.update(@props.style)
-    props.style.update(@styleFromProps())
-    props.style.update(@enforcedStyle)
+    props.style = @style()
     props
 
   extendProps: (props) ->

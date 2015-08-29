@@ -8,3 +8,6 @@ module.exports = div.withStyle 'Box',
   padding: 0
   flexShrink: 0
   flexGrow: 0
+  WebkitBoxSizing: 'border-box'
+  MozBoxSizing: 'border-box'
+  boxSizing: 'border-box'

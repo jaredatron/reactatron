@@ -3,7 +3,8 @@ component  = require '../component'
 
 describe 'component', ->
 
-  it 'should work', ->
+
+  it 'component(name, spec)', ->
 
     Button = component 'Button',
       render: ->
@@ -11,6 +12,47 @@ describe 'component', ->
 
     button = Button()
     expect( renderComponent(button) ).to.eql('<div>ClickMe</div>')
+
+
+  it 'component(name, function)', ->
+
+    Button = component 'Button', ->
+      div {}, 'ClickMe'
+
+    button = Button()
+    expect( renderComponent(button) ).to.eql('<div>ClickMe</div>')
+
+
+  it 'component(function)', ->
+
+    Button = component ->
+      div {}, 'ClickMe'
+
+    button = Button()
+    expect( renderComponent(button) ).to.eql('<div>ClickMe</div>')
+
+  it 'composing should take children and style into account', ->
+
+    Z = component 'Z',
+      render: ->
+        div @cloneProps(), 'Z'
+
+    Y = component 'Y', (props) ->
+      Z props, 'Y'
+
+
+    X = component (props) ->
+      Y props, 'X'
+
+
+    tree = X
+      title: 'xxx'
+      style:
+        color: 'blue'
+      'W'
+
+    expect( renderComponent(tree) ).to.eql('<div title="xxx" style="color:blue;">WXYZ</div>')
+
 
 
 
@@ -27,7 +69,7 @@ describe 'component', ->
         RootComponent props
 
 
-    describe 'useing functions', ->
+    describe 'using functions', ->
 
       it 'should just call through', ->
 
@@ -67,6 +109,42 @@ describe 'component', ->
           }
           children: []
         }
+
+
+    describe 'using Component#withDefaultProps', ->
+
+      it 'should return a function wrapping the component', ->
+
+        DangerButton = RedButton.withDefaultProps
+          title: 'warning!!'
+          alt: 'warning :D'
+          style:
+            fontWeight: 'bolder'
+
+
+        button = DangerButton
+          style: {color:'teal'},
+          alt: 'warning D:'
+          'DANGER'
+
+        expect( button ).to.eql {
+          props: {
+            title: 'warning!!'
+            alt: 'warning D:'
+            style: {
+              background: 'red'
+              fontWeight: 'bolder'
+              color:      'teal'
+            }
+            children: ['DANGER'],
+          }
+          children: []
+        }
+
+
+
+
+
 
 
     describe 'using Component#withStyle', ->

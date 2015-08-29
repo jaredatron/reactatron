@@ -115,9 +115,9 @@ module.exports =
     # delete props[key] for key in keys
 
     props.style = new Style(@defaultStyle)
-      .merge(props.style)
-      .merge(@styleFromProps())
-      .merge(@enforcedStyle)
+    props.style.update(@props.style)
+    props.style.update(@styleFromProps())
+    props.style.update(@enforcedStyle)
     props
 
 

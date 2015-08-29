@@ -3,7 +3,8 @@ component = require './component'
 
 DOM = {}
 
-for key, value of React.DOM
-  DOM[key] = component(value)
+Object.keys(React.DOM).forEach (key) ->
+  DOM[key] = component (props) ->
+    React.createElement(key, props)
 
 module.exports = DOM

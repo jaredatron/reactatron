@@ -3,6 +3,9 @@ React = require('react/addons')
 expect = require('expect.js')
 TestUtils = React.addons.TestUtils
 
+isElement      = TestUtils.isElement
+isDOMComponent = TestUtils.isDOMComponent
+findAllInRenderedTree = TestUtils.findAllInRenderedTree
 
 // window = this
 // location = {

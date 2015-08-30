@@ -11,7 +11,7 @@ module.exports =
   mixins: [AppMixin]
 
   getInitialState: ->
-    @getData()
+    @getStateFromStore()
 
   componentWillMount: ->
     @subscribeToStoreChanges()
@@ -29,11 +29,19 @@ module.exports =
 
   ###
 
-  getData: ->
+  getStateFromStore: (dataBindings) ->
+    dataBindings ||= @dataBindings(@props)
+    stateKeys = Object.keys(dataBindings)
+    storeKeys = valuesFor(dataBindings, stateKeys).unique()
+
     data = {}
-    for stateKey, storeKey of @dataBindings(@props)
-      data[stateKey] = @app.get(storeKey)
-    data
+    for storeKey in storeKeys
+      data[storeKey] = @app.get(storeKey)
+
+    state = {}
+    for stateKey in stateKeys
+      state[stateKey] = data[dataBindings[stateKey]]
+    state
 
   storeChange: (event, storeKey) ->
     return unless @isMounted()
@@ -76,33 +84,30 @@ module.exports =
     currentStoreKeys    = Object.values(currentDataBindings).unique()
     nextStoreKeys       = Object.values(nextDataBindings).unique()
 
+    return if currentStoreKeys.length == 0 && nextStoreKeys.length == 0
+
     newStoreKeys = nextStoreKeys.filter (key) ->
       currentStoreKeys.excludes(key)
 
     oldStoreKeys = currentStoreKeys.filter (key) ->
       nextStoreKeys.excludes(key)
 
-    console.log('resubscribeToStoreChanges', oldStoreKeys, newStoreKeys)
+    return if newStoreKeys.length == 0 && oldStoreKeys.length == 0
 
     for storeKey in oldStoreKeys
-      # all the stateKeys for the given storeKey
-      # stateKeysFor(nextDataBindings, storeKey)
       @app.unsub "store:change:#{storeKey}", @storeChange
 
     for storeKey in nextStoreKeys
       @app.sub "store:change:#{storeKey}", @storeChange
 
-    stateKeysThatNeedUpdating = []
+    dataBindingsThatNeedUpdating = {}
     for newStoreKey in nextStoreKeys
       for stateKey, storeKey of nextDataBindings
         if storeKey == newStoreKey
-          stateKeysThatNeedUpdating.push(stateKey)
+          dataBindingsThatNeedUpdating[stateKey] = storeKey
 
-    cache = {}
-    state = {}
-    for stateKey in stateKeysThatNeedUpdating
-      storeKey = nextDataBindings[stateKey]
-      state[stateKey] = cache[storeKey] ||= @app.get(storeKey)
+    state = @getStateFromStore(dataBindingsThatNeedUpdating)
+    console.log('resubscribeToStoreChanges', state)
     @setState(state)
 
 
@@ -123,3 +128,9 @@ keysWithValue = (object, value) ->
 setKeys = (object, keys, value) ->
   object[key] = value for key in keys
   object
+
+
+valuesFor = (object, keys) ->
+  values = []
+  values.push(object[key]) for key in keys
+  values

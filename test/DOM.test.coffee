@@ -30,10 +30,10 @@ describe 'DOM', ->
 
     it 'should render a StyleComponent around the root component', ->
       tree = div()
-      expect( tree.type ).to.eql( 'div' )
+      expect( tree.type ).to.eql( StyleComponent.type )
 
       tree = div style: {}
-      expect( tree.type ).to.eql( 'div' )
+      expect( tree.type ).to.eql( StyleComponent.type )
 
 
       tree = div

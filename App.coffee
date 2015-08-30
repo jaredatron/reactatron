@@ -53,7 +53,6 @@ class ReactatronApp
   start: ->
     if @rootComponent
       throw new Error('app already started')
-    console.log('App#start', @store.toObject())
     @plugins.forEach (plugin) -> plugin.start()
     @events.waitForClearQueue(@render)
     this

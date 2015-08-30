@@ -1,4 +1,5 @@
-component  = require '../component'
+component        = require '../component'
+StyleComponent   = require '../StyleComponent'
 {div,span} = DOM = require '../DOM'
 
 describe 'component', ->
@@ -83,7 +84,7 @@ describe 'component', ->
       BigRedButton = RedButton.withStyle 'BigRedButton',
         fontSize: '150%'
 
-      expect( DOM.button().type   ).to.be( 'button' )
+      expect( DOM.button().type   ).to.be( StyleComponent.type )
       expect( Button().type       ).to.be( Button.type )
       expect( RedButton().type    ).to.be( RedButton.type )
       expect( BigRedButton().type ).to.be( BigRedButton.type )

@@ -68,7 +68,6 @@ detectMixins = (spec) ->
   addMixin(spec, BaseMixin)
   addMixin(spec, DataBindingsMixin) if spec.dataBindings
   spec.mixins = spec.mixins.unique()
-  console.log(spec.displayName, spec.mixins)
 
 addMixin = (spec, mixin) ->
   toArray(mixin.mixins).forEach (mixin) ->

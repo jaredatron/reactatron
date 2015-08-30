@@ -27,6 +27,7 @@ class ReactatronApp
     @registerPlugin new WindowSizePlugin( window: options.window ) # :D
 
     @stats =
+      storeChangeEvents: 0
       storeChangeRerenders: 0
       fullRerender: 0
       styledComponentRerenders: 0

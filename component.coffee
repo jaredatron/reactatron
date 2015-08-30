@@ -1,5 +1,5 @@
 require 'stdlibjs/Object.clone'
-require 'stdlibjs/Array#unqiue'
+require 'stdlibjs/Array#unique'
 toArray = require 'stdlibjs/toArray'
 isObject = require 'stdlibjs/isObject'
 isFunction = require 'stdlibjs/Function#wrap'

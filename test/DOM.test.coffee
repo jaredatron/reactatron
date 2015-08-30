@@ -4,24 +4,29 @@ StyleComponent = require '../StyleComponent'
 
 describe 'DOM', ->
 
-  it 'should work as expected', ->
-    tree = div()
-    expect( renderComponent(tree) ).to.eql('<div></div>')
+  app = {}
 
-    tree = div
-      title: 'frog'
-      style:
-        color: 'red'
-      'boosh'
-    expect( renderComponent(tree) ).to.eql('<div title="frog" style="color:red;">boosh</div>')
+  it 'should work as expected', ->
+    html = renderToString app, ->
+      div()
+    expect( html ).to.eql('<div></div>')
+
+    html = renderToString app, ->
+      div
+        title: 'frog'
+        style:
+          color: 'red'
+        'boosh'
+    expect( html ).to.eql('<div title="frog" style="color:red;">boosh</div>')
 
   it 'should append children from arguments into props.children', ->
-    tree = div
-      children:['A', div({}, 'B')]
-      'C'
-      div({},'D')
+    html = renderToString app, ->
+      div
+        children:['A', div({}, 'B')]
+        'C'
+        div({},'D')
 
-    expect( renderComponent(tree) ).to.eql(
+    expect( html ).to.eql(
       '<div>A<div>B</div>C<div>D</div></div>'
     )
 

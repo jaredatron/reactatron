@@ -8,5 +8,5 @@ module.exports =
     app: React.PropTypes.object.isRequired
 
   getInitialState: ->
-    @app = @context.app || @props.app # or console.warn('app not found')
+    @app = @context.app || @props.app or throw new Error('app not found')
     {}

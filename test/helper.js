@@ -54,6 +54,32 @@ Counter = function(){
 };
 
 
-renderComponent = function(component){
-  return React.renderToStaticMarkup(component);
+renderToString = function(app, render) {
+  return React.renderToStaticMarkup(
+    ContextWrapper({app: app, render: render})
+  );
 };
+
+// renderComponent = function(app, component, props, children){
+//   args = [].alice.call(arguments, 2);
+//   return React.renderToStaticMarkup(
+//     ContextWrapper({app: app}, Component.call(null, args))
+//   );
+// };
+
+
+ContextWrapper = React.createFactory(React.createClass({
+  displayName: 'ContextWrapper',
+  childContextTypes: {
+    app: React.PropTypes.object,
+  },
+  getChildContext: function(){
+    return {
+      app: this.props.app
+    };
+  },
+  render: function(){
+    return this.props.render()
+  }
+
+}))

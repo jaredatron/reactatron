@@ -4,6 +4,7 @@ StyleComponent   = require '../StyleComponent'
 
 describe 'component', ->
 
+  app = {}
 
   it 'component(name, spec)', ->
 
@@ -11,8 +12,9 @@ describe 'component', ->
       render: ->
         div {}, 'ClickMe'
 
-    button = Button()
-    expect( renderComponent(button) ).to.eql('<div>ClickMe</div>')
+    html = renderToString app, ->
+      Button()
+    expect( html ).to.eql('<div>ClickMe</div>')
 
 
   it 'component(name, function)', ->
@@ -20,8 +22,9 @@ describe 'component', ->
     Button = component 'Button', ->
       div {}, 'ClickMe'
 
-    button = Button()
-    expect( renderComponent(button) ).to.eql('<div>ClickMe</div>')
+    html = renderToString app, ->
+      Button()
+    expect( html ).to.eql('<div>ClickMe</div>')
 
 
   it 'component(function)', ->
@@ -29,16 +32,18 @@ describe 'component', ->
     Button = component ->
       div {}, 'ClickMe'
 
-    button = Button()
-    expect( renderComponent(button) ).to.eql('<div>ClickMe</div>')
+    html = renderToString app, ->
+      Button()
+    expect( html ).to.eql('<div>ClickMe</div>')
 
   it 'should append children from arguments into props.children', ->
-    tree = div
-      children:['A', div({}, 'B')]
-      'C'
-      div({},'D')
+    html = renderToString app, ->
+      div
+        children:['A', div({}, 'B')]
+        'C'
+        div({},'D')
 
-    expect( renderComponent(tree) ).to.eql(
+    expect( html ).to.eql(
       '<div>A<div>B</div>C<div>D</div></div>'
     )
 
@@ -57,13 +62,14 @@ describe 'component', ->
       Y props, 'X'
 
 
-    tree = X
-      title: 'xxx'
-      style:
-        color: 'blue'
-      'W'
+    html = renderToString app, ->
+      X
+        title: 'xxx'
+        style:
+          color: 'blue'
+        'W'
 
-    expect( renderComponent(tree) ).to.eql('<div title="xxx" style="color:blue;">WXYZ</div>')
+    expect( html ).to.eql('<div title="xxx" style="color:blue;">WXYZ</div>')
 
 
 
@@ -118,12 +124,13 @@ describe 'component', ->
         borderColor: 'red'
         fontSize: '150%'
 
-      button = BigRedButton
-        style:
-          color:'blue'
-        'PUSH'
+      html = renderToString app, ->
+        BigRedButton
+          style:
+            color:'blue'
+          'PUSH'
 
-      expect( renderComponent(button) ).to.eql(
+      expect( html ).to.eql(
         '<button style="background:red;border:1px solid grey;padding:0.25em;border-color:red;font-size:150%;color:blue;">PUSH</button>'
       )
 

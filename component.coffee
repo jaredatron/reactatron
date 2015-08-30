@@ -76,6 +76,7 @@ addMixin = (spec, mixin) ->
 
 
 extendComponent = (component) ->
+  component.wrapComponent = wrapComponent
   component.withStyle = withStyle
   component.withDefaultProps = withDefaultProps
   component
@@ -103,6 +104,12 @@ withDefaultProps = (defaultProps) ->
     props = mergeProps(defaultProps, props)
     parentComponent(props)
 
+wrapComponent = (wrapper) ->
+  parentComponent = this
+  createComponent (props) ->
+    parentComponent(wrapper.call(this, props))
+
+
 mergeStyle = (props, styles...) ->
   props.style = new Style(props.style).update(styles...)
 
@@ -119,5 +126,6 @@ createComponent.PropTypes = React.PropTypes
 createComponent.mergeStyle = mergeStyle
 createComponent.withDefaultProps = (component, props) ->
   withDefaultProps.call(component, props)
+
 
 module.exports = createComponent

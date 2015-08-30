@@ -195,13 +195,48 @@ describe 'component', ->
 
         button = DangerButton
           style: {color:'teal'},
-          alt: 'warning D:'
+          alt: 'DONT DO IT'
           'DANGER'
 
         expect( button ).to.eql {
           props: {
             title: 'warning!!'
-            alt: 'warning D:'
+            alt: 'DONT DO IT'
+            style: {
+              background: 'red'
+              fontWeight: 'bolder'
+              color:      'teal'
+            }
+            children: ['DANGER'],
+          }
+          children: []
+        }
+
+
+
+
+
+    describe 'using Component#wrapComponent', ->
+
+      it 'should return a function wrapping the component', ->
+
+        DangerButton = RedButton.wrapComponent (props) ->
+          props.title ||= 'warning!!'
+          props.alt   ||= 'warning :D'
+          props.style.reverseUpdate
+            fontWeight: 'bolder'
+          props
+
+
+        button = DangerButton
+          style: {color:'teal'},
+          alt: 'DONT DO IT'
+          'DANGER'
+
+        expect( button ).to.eql {
+          props: {
+            title: 'warning!!'
+            alt: 'DONT DO IT'
             style: {
               background: 'red'
               fontWeight: 'bolder'

@@ -1,4 +1,6 @@
 require 'stdlibjs/Object.clone'
+require 'stdlibjs/Array#unqiue'
+toArray = require 'stdlibjs/toArray'
 isObject = require 'stdlibjs/isObject'
 isFunction = require 'stdlibjs/Function#wrap'
 isFunction = require 'stdlibjs/isFunction'
@@ -7,6 +9,7 @@ isArray = require 'stdlibjs/isArray'
 
 React = require 'react'
 BaseMixin = require './BaseMixin'
+AppMixin = require './AppMixin'
 DataBindingsMixin = require './DataBindingsMixin'
 Style = require './Style'
 createFactory = require './createFactory'
@@ -59,12 +62,18 @@ createComponent = (name, spec) ->
   component.displayName = name
   component
 
+
 detectMixins = (spec) ->
   spec.mixins ||= []
-  spec.mixins.push BaseMixin
-  if spec.dataBindings
-    spec.mixins.push DataBindingsMixin
-  # if spec.style && ?????
+  addMixin(spec, BaseMixin)
+  addMixin(spec, DataBindingsMixin) if spec.dataBindings
+  spec.mixins = spec.mixins.unique()
+  console.log(spec.displayName, spec.mixins)
+
+addMixin = (spec, mixin) ->
+  toArray(mixin.mixins).forEach (mixin) ->
+    addMixin(spec, mixin)
+  spec.mixins.push mixin
 
 
 extendComponent = (component) ->

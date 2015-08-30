@@ -16,7 +16,7 @@ module.exports =
   componentWillMount: ->
     @subscribeToStoreChanges()
 
-  componentDidUpdate: (nextProps, nextState) ->
+  componentWillReceiveProps: (nextProps) ->
     @resubscribeToStoreChanges(nextProps)
 
   componentWillUnmount: ->
@@ -29,34 +29,30 @@ module.exports =
 
   ###
 
-  _getDataBindings: (props=@props) ->
-    @dataBindings.call(null, props)
-
   getData: ->
     data = {}
-    for stateKey, storeKey of @_getDataBindings()
+    for stateKey, storeKey of @dataBindings(@props)
       data[stateKey] = @app.get(storeKey)
     data
 
-  storeChange: (event, key) ->
+  storeChange: (event, storeKey) ->
     return unless @isMounted()
     @app.stats.storeChangeEvents++
-    @_changedStoreKeys ||= []
-    if @_changedStoreKeys.excludes(key)
-      @_changedStoreKeys.push(key)
-    if @_changedStoreKeys.length > 0
-      @scheduleDataRefresh()
+    @scheduleDataRefresh(storeKey)
 
-  scheduleDataRefresh: ->
+  scheduleDataRefresh: (storeKey) ->
+    @_changedStoreKeys ||= []
+    @_changedStoreKeys.push(storeKey) if @_changedStoreKeys.excludes(storeKey)
     return if @_dataRefreshTimeout
     @_dataRefreshTimeout = setTimeout(@refreshData)
 
   refreshData: ->
+    return unless @isMounted()
     delete @_dataRefreshTimeout
     changedStoreKeys = @_changedStoreKeys
     return if !changedStoreKeys?  || changedStoreKeys.length == 0
     @app.stats.storeChangeRerenders++
-    dataBindings = @_getDataBindings()
+    dataBindings = @dataBindings(@props)
     changes = {}
     changedStoreKeys.forEach (changedStoreKey) =>
       stateKeys = keysWithValue(dataBindings, changedStoreKey)
@@ -67,22 +63,49 @@ module.exports =
 
 
   subscribeToStoreChanges: (props=@props) ->
-    for stateKey, storeKey of @_getDataBindings(props)
+    for stateKey, storeKey of @dataBindings(props)
       @app.sub "store:change:#{storeKey}", @storeChange
 
   unsubscribefromStoreChanges: ->
-    for stateKey, storeKey of @_getDataBindings()
+    for stateKey, storeKey of @dataBindings(@props)
       @app.unsub "store:change:#{storeKey}", @storeChange
 
   resubscribeToStoreChanges: (props) ->
-    currentStoreKeys = Object.values(@_getDataBindings()).unique()
-    nextStoreKeys    = Object.values(@_getDataBindings(props)).unique()
-    for storeKey in currentStoreKeys
-      if nextStoreKeys.excludes(storeKey)
-        @app.unsub "store:change:#{storeKey}", @storeChange
+    currentDataBindings = @dataBindings(@props)
+    nextDataBindings    = @dataBindings(props)
+    currentStoreKeys    = Object.values(currentDataBindings).unique()
+    nextStoreKeys       = Object.values(nextDataBindings).unique()
+
+    newStoreKeys = nextStoreKeys.filter (key) ->
+      currentStoreKeys.excludes(key)
+
+    oldStoreKeys = currentStoreKeys.filter (key) ->
+      nextStoreKeys.excludes(key)
+
+    console.log('resubscribeToStoreChanges', oldStoreKeys, newStoreKeys)
+
+    for storeKey in oldStoreKeys
+      # all the stateKeys for the given storeKey
+      # stateKeysFor(nextDataBindings, storeKey)
+      @app.unsub "store:change:#{storeKey}", @storeChange
+
     for storeKey in nextStoreKeys
-      if currentStoreKeys.excludes(storeKey)
-        @app.sub "store:change:#{storeKey}", @storeChange
+      @app.sub "store:change:#{storeKey}", @storeChange
+
+    stateKeysThatNeedUpdating = []
+    for newStoreKey in nextStoreKeys
+      for stateKey, storeKey of nextDataBindings
+        if storeKey == newStoreKey
+          stateKeysThatNeedUpdating.push(stateKey)
+
+    cache = {}
+    state = {}
+    for stateKey in stateKeysThatNeedUpdating
+      storeKey = nextDataBindings[stateKey]
+      state[stateKey] = cache[storeKey] ||= @app.get(storeKey)
+    @setState(state)
+
+
 
 
 setKeys = (object, keys, value) ->

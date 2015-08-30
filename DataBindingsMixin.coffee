@@ -20,7 +20,7 @@ module.exports =
     @resubscribeToStoreChanges(nextProps)
 
   componentWillUnmount: ->
-    @unsubscribefromStoreChanges()
+    @unsubscribeFromStoreChanges()
 
 
   ###
@@ -28,6 +28,12 @@ module.exports =
   Helpers
 
   ###
+
+  dataBindingStoreKeys: (props=@props) ->
+    Object.values(@dataBindings(props)).unique()
+
+  dataBindingStateKeys: (props=@props) ->
+    Object.keys(@dataBindings(props))
 
   getStateFromStore: (dataBindings) ->
     dataBindings ||= @dataBindings(@props)
@@ -70,12 +76,14 @@ module.exports =
 
 
 
-  subscribeToStoreChanges: (props=@props) ->
-    for stateKey, storeKey of @dataBindings(props)
+  subscribeToStoreChanges: (storeKeys) ->
+    storeKeys ||= @dataBindingStoreKeys()
+    for storeKey in storeKeys
       @app.sub "store:change:#{storeKey}", @storeChange
 
-  unsubscribefromStoreChanges: ->
-    for stateKey, storeKey of @dataBindings(@props)
+  unsubscribeFromStoreChanges: (storeKeys) ->
+    storeKeys ||= @dataBindingStoreKeys()
+    for storeKey in storeKeys
       @app.unsub "store:change:#{storeKey}", @storeChange
 
   resubscribeToStoreChanges: (props) ->
@@ -94,11 +102,8 @@ module.exports =
 
     return if newStoreKeys.length == 0 && oldStoreKeys.length == 0
 
-    for storeKey in oldStoreKeys
-      @app.unsub "store:change:#{storeKey}", @storeChange
-
-    for storeKey in nextStoreKeys
-      @app.sub "store:change:#{storeKey}", @storeChange
+    @subscribeToStoreChanges(oldStoreKeys)
+    @unsubscribeFromStoreChanges(nextStoreKeys)
 
     dataBindingsThatNeedUpdating = {}
     for newStoreKey in nextStoreKeys
@@ -111,14 +116,6 @@ module.exports =
     @setState(state)
 
 
-
-
-setKeys = (object, keys, value) ->
-  for key in keys
-    object[key] = value
-  object
-
-
 keysWithValue = (object, value) ->
   keys = []
   for k, v of object
@@ -128,7 +125,6 @@ keysWithValue = (object, value) ->
 setKeys = (object, keys, value) ->
   object[key] = value for key in keys
   object
-
 
 valuesFor = (object, keys) ->
   values = []

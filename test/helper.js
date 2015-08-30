@@ -1,6 +1,7 @@
 React = require('react/addons')
 
 expect = require('expect.js')
+Assertion = expect.Assertion
 TestUtils = React.addons.TestUtils
 
 isElement      = TestUtils.isElement
@@ -8,6 +9,13 @@ isDOMComponent = TestUtils.isDOMComponent
 findAllInRenderedTree = TestUtils.findAllInRenderedTree
 isCompositeComponent = TestUtils.isCompositeComponent
 isCompositeComponentElement = TestUtils.isCompositeComponentElement
+
+
+Assertion.prototype.render = function(html) {
+  expect(this.obj).to.be.a('function');
+  expect(html).to.be.a('string');
+  expect( renderToString({}, this.obj) ).to.eql(html);
+};
 
 // window = this
 // location = {

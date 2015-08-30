@@ -32,9 +32,6 @@ module.exports =
   dataBindingStoreKeys: (props=@props) ->
     Object.values(@dataBindings(props)).unique()
 
-  dataBindingStateKeys: (props=@props) ->
-    Object.keys(@dataBindings(props))
-
   getStateFromStore: (dataBindings) ->
     dataBindings ||= @dataBindings(@props)
     stateKeys = Object.keys(dataBindings)
@@ -75,15 +72,16 @@ module.exports =
     @setState(changes)
 
 
-
   subscribeToStoreChanges: (storeKeys) ->
     storeKeys ||= @dataBindingStoreKeys()
     for storeKey in storeKeys
+      # console.log('sub', storeKey)
       @app.sub "store:change:#{storeKey}", @storeChange
 
   unsubscribeFromStoreChanges: (storeKeys) ->
     storeKeys ||= @dataBindingStoreKeys()
     for storeKey in storeKeys
+      # console.log('unsub', storeKey)
       @app.unsub "store:change:#{storeKey}", @storeChange
 
   resubscribeToStoreChanges: (props) ->
@@ -101,18 +99,19 @@ module.exports =
       nextStoreKeys.excludes(key)
 
     return if newStoreKeys.length == 0 && oldStoreKeys.length == 0
+    # console.log('resubscribeToStoreChanges', oldStoreKeys, newStoreKeys)
 
-    @subscribeToStoreChanges(oldStoreKeys)
-    @unsubscribeFromStoreChanges(nextStoreKeys)
+    @unsubscribeFromStoreChanges(oldStoreKeys)
+    @subscribeToStoreChanges(nextStoreKeys)
 
     dataBindingsThatNeedUpdating = {}
     for newStoreKey in nextStoreKeys
       for stateKey, storeKey of nextDataBindings
         if storeKey == newStoreKey
-          dataBindingsThatNeedUpdating[stateKey] = storeKey
+          dataBindingsThatNeedUpdating[stateKey] = newStoreKey
 
     state = @getStateFromStore(dataBindingsThatNeedUpdating)
-    console.log('resubscribeToStoreChanges', state)
+    # console.log('resubscribeToStoreChanges', state)
     @setState(state)
 
 

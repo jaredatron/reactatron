@@ -10,7 +10,7 @@ module.exports = class Style
   # Document me!
   #
   ###
-  @merge: ->
+  @merge:  ->
     style = new Style()
     style.update.apply(style, arguments)
 
@@ -18,18 +18,17 @@ module.exports = class Style
   # Document me!
   #
   ###
-  constructor: ->
-    style = this
-    style = new Style unless style instanceof Style
-    style.update.apply(style, arguments)
-    return style
+  constructor: (style) ->
+    return style if style instanceof Style
+    return new Style(style) unless this instanceof Style
+    @update(style)
 
   ###*
   # Document me!
   #
   ###
   clone: ->
-    new Style().update(this)
+    Style().update(this)
 
   ###*
   # Document me!
@@ -48,9 +47,8 @@ module.exports = class Style
   # Document me!
   #
   ###
-  update: (styles...) ->
-    assign(this, style) for style in styles
-    this
+  update: (style) ->
+    assign(this, style)
 
   ###
     @alias update
@@ -61,22 +59,22 @@ module.exports = class Style
   # Document me!
   #
   ###
-  reverseUpdate: ->
-    @replace @reverseMerge.apply(this, arguments)
+  reverseUpdate: (style) ->
+    @replace @reverseMerge(style)
 
   ###*
   # Document me!
   #
   ###
-  merge: ->
-    @update.apply(@clone(), arguments)
+  merge: (style) ->
+    @clone().update(style)
 
   ###*
   # Document me!
   #
   ###
-  reverseMerge: ->
-    Style.apply(null, arguments).update(this)
+  reverseMerge: (style) ->
+    Style(style).merge(this)
 
   META_SELECTOR_KEY = /^:(.+)/
 

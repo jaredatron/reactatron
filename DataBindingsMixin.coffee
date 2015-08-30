@@ -49,7 +49,7 @@ module.exports =
       if key == storeKey
         stateKeys.push stateKey
     return if stateKeys.length == 0
-    changes = setKeys({}, stateKeys, @app.get(storeKey))
+    changes = setKeys({}, stateKeys, @app.get(key))
     @setState(changes)
 
   subscribeToStoreChanges: (props=@props) ->
@@ -64,5 +64,6 @@ module.exports =
 
 
 setKeys = (object, keys, value) ->
-  object[key] = value for key in keys
+  for key in keys
+    object[key] = value
   object

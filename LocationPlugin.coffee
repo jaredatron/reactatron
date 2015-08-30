@@ -11,6 +11,7 @@ module.exports = class LocationPlugin
     @app.setLocation = @set
     @app.setPath = @setPath
     @app.setParams = @setParams
+    @app.clearHash = @clearHash
 
   start: ->
     @update()
@@ -21,11 +22,12 @@ module.exports = class LocationPlugin
     @window.removeEventListener 'popstate', @update
     # @app.unsub 'store:change:location', @update
 
+  readLocation: ->
+    path:   @window.location.pathname
+    params: searchToObject(@window.location.search)
+
   update: ->
-    @location =  {
-      path:   @window.location.pathname
-      params: searchToObject(@window.location.search)
-    }
+    @location = @readLocation()
     @app.set location: @location
     @app
 
@@ -55,6 +57,10 @@ module.exports = class LocationPlugin
   updateParams: (params, replace) ->
     @setParams(assign({}, @params, params), replace)
     @app
+
+  clearHash: ->
+    @location ||= @readLocation()
+    @set(@for(@location.path, @location.params))
 
 
 

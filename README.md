@@ -1,5 +1,11 @@
 # Reactatron
 
+## TODO
+
+- remove plugins and make the actions patten and hooks the way
+
+## thoughs
+
 - React but with the functions (AKA factory) way
 - built for coffee script (maybe ES6?)
 - has a flux-like event based system

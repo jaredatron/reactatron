@@ -22,6 +22,8 @@ module.exports = component 'Link',
       @app.setLocation @location()
       return
 
+    event.preventDefault() unless @props.href?
+
   defaultStyle:
     cursor: 'pointer'
     color: 'inherit'

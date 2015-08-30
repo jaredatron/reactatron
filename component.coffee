@@ -7,6 +7,7 @@ isArray = require 'stdlibjs/isArray'
 
 React = require 'react'
 BaseMixin = require './BaseMixin'
+DataBindingsMixin = require './DataBindingsMixin'
 Style = require './Style'
 createFactory = require './createFactory'
 prepareProps = require './prepareProps'
@@ -51,12 +52,19 @@ createComponent = (name, spec) ->
     }
 
   spec.displayName = name
-  spec.mixins = [BaseMixin].concat(spec.mixins||[])
+  detectMixins(spec)
   reactClass = React.createClass(spec)
   component = createFactory(reactClass)
   extendComponent(component)
   component.displayName = name
   component
+
+detectMixins = (spec) ->
+  spec.mixins ||= []
+  spec.mixins.push BaseMixin
+  if spec.dataBindings
+    spec.mixins.push DataBindingsMixin
+  # if spec.style && ?????
 
 
 extendComponent = (component) ->

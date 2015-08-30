@@ -41,11 +41,54 @@ module.exports =
     @app = @context.app || @props.app # || throw new Error('app not found')
     debugger unless @app?
 
-    state = {}
+    @parseDataBindings()
+    @getData()
+
+  componentWillMount: ->
+    @subscribeToStoreChanges()
+
+  componentWillReceiveProps: (nextProps) ->
+
+
+  componentWillUpdate: ->
+    # console.log("componentWillUpdate", @_UUID, @constructor.displayName)
+    # console.time("update #{@_UUID}")
+
+  componentDidUpdate: ->
+    # console.timeEnd("update #{@_UUID}")
+
+  componentWillUnmount: ->
+    @unsubscribefromStoreChanges()
+
+
+  ###
+
+  Helpers
+
+  ###
+
+
+  parseDataBindings: ->
     @_dataBindings = parseDataBindings(@dataBindings)
+
+  getData: ->
+    data = {}
     for stateKey, storeKey of @_dataBindings
-      state[stateKey] = @app.get(storeKey)
-    state
+      data[stateKey] = @app.get(storeKey)
+    data
+
+
+  subscribeToStoreChanges: ->
+    console.time('')
+    for stateKey, storeKey of @_dataBindings
+      @app.sub "store:change:#{storeKey}", @storeChange
+
+  unsubscribefromStoreChanges: ->
+    for stateKey, storeKey of @_dataBindings
+      @app.unsub "store:change:#{storeKey}", @storeChange
+
+
+
 
   storeChange: (event, key) ->
     return unless @isMounted()
@@ -54,14 +97,6 @@ module.exports =
       if key == storeKey
         @setState "#{stateKey}": @app.get(storeKey)
 
-  componentWillMount: ->
-    console.time('')
-    for stateKey, storeKey of @_dataBindings
-      @app.sub "store:change:#{storeKey}", @storeChange
-
-  componentWillUnmount: ->
-    for stateKey, storeKey of @_dataBindings
-      @app.unsub "store:change:#{storeKey}", @storeChange
 
   rerender: ->
     return unless @isMounted()
@@ -71,13 +106,6 @@ module.exports =
 
   ### DATA BINDINGS MIXIN ###
 
-
-  componentWillUpdate: ->
-    # console.log("componentWillUpdate", @_UUID, @constructor.displayName)
-    # console.time("update #{@_UUID}")
-
-  componentDidUpdate: ->
-    # console.timeEnd("update #{@_UUID}")
 
 
   # get: (key) ->

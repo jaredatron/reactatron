@@ -89,6 +89,8 @@ wrapComponent = (component, wrapper) ->
 
 createComponentWrapper = (wrapper) ->
   component = ->
+    if this instanceof component
+      throw new Error('do we need to make this work?')
     props = Props(prepareProps(arguments))
     wrapper(props)
   extendComponent(component)

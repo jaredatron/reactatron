@@ -22,7 +22,7 @@ describe 'component', ->
         render: ->
           div {}, 'ClickMe'
       expect(Button).to.be.aValidComponentClass()
-      expect(-> Button() ).to.render('<div>ClickMe</div>')
+      expect( Button() ).to.render('<div>ClickMe</div>')
 
 
 
@@ -34,7 +34,7 @@ describe 'component', ->
       Button = component 'Button', ->
         div {}, 'ClickMe'
 
-      expect(-> Button() ).to.render('<div>ClickMe</div>')
+      expect( Button() ).to.render('<div>ClickMe</div>')
 
 
   ###
@@ -46,7 +46,7 @@ describe 'component', ->
       Button = component ->
         div {}, 'ClickMe'
 
-      expect(-> Button() ).to.render('<div>ClickMe</div>')
+      expect( Button() ).to.render('<div>ClickMe</div>')
 
 
   ###
@@ -61,9 +61,9 @@ describe 'component', ->
 
       BooshButton = Button.withDefaultProps value: 'Boooosh'
 
-      expect(-> BooshButton()                ).to.render('<div>Boooosh</div>')
-      expect(-> BooshButton(value:'love')    ).to.render('<div>love</div>')
-      expect(-> BooshButton(value:undefined) ).to.render('<div>Boooosh</div>')
+      expect( BooshButton()                ).to.render('<div>Boooosh</div>')
+      expect( BooshButton(value:'love')    ).to.render('<div>love</div>')
+      expect( BooshButton(value:undefined) ).to.render('<div>Boooosh</div>')
 
    it 'should merge style', ->
 
@@ -92,12 +92,11 @@ describe 'component', ->
 
 
   it 'should append children from arguments into props.children', ->
-    expect ->
-      div
-        children:['A', div({}, 'B')]
-        'C'
-        div({},'D')
-    .to.render('<div>C<div>D</div></div>')
+    element = div
+      children:['A', div({}, 'B')]
+      'C'
+      div({},'D')
+    expect(element).to.render('<div>C<div>D</div></div>')
 
 
   it 'i have no idea what im testing :P', ->
@@ -114,13 +113,12 @@ describe 'component', ->
       Y props, props.children, 'X'
 
 
-    expect ->
-      X
-        title: 'xxx'
-        style:
-          color: 'blue'
-        'W'
-    .to.render('<div title="xxx" style="color:blue;">WXYZ</div>')
+    element = X
+      title: 'xxx'
+      style:
+        color: 'blue'
+      'W'
+    expect(element).to.render('<div title="xxx" style="color:blue;">WXYZ</div>')
 
 
 
@@ -179,13 +177,12 @@ describe 'component', ->
         borderColor: 'red'
         fontSize: '150%'
 
-      expect ->
-        BigRedButton
-          style:
-            color:'blue'
-          'PUSH'
+      element = BigRedButton
+        style:
+          color:'blue'
+        'PUSH'
 
-      .to.render(
+      expect(element).to.render(
         '<button style="background:red;border:1px solid grey;padding:0.25em;border-color:red;font-size:150%;color:blue;">PUSH</button>'
       )
 
@@ -315,6 +312,21 @@ describe 'component', ->
           children: []
         }
 
+
+
+
+  describe 'mixins', ->
+    it 'should work', ->
+      Thing = component 'Thing',
+        contextType:
+          app: component.PropTypes.object.isRequired
+        render: ->
+          React.DOM.div(@props, JSON.stringify(@context))
+
+      element = withContext app:{APP:11}, -> Thing()
+
+
+      expect(element).to.render('<div>{APP:11}</div>')
 
 
 

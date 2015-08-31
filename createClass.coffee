@@ -1,3 +1,5 @@
+require 'stdlibjs/Object.bindAll'
+
 createClass   = require('react/lib/ReactClass').createClass
 createElement = require('react/lib/ReactElement').createElement
 
@@ -7,6 +9,7 @@ module.exports = (spec) ->
   initialize = (props, context) ->
     # called with new when being mounted
     if this instanceof Constructor
+      bindAll(this)
       @props   = props
       @context = context
       @state   = @getInitialState?() || null
@@ -24,10 +27,20 @@ module.exports = (spec) ->
   """
 
   reactClass = createClass(spec)
-  Object.assign(Constructor, reactClass)
-  Constructor.prototype = reactClass.prototype
+  Constructor.type            = Constructor
+  Constructor.displayName     = reactClass.displayName
+  Constructor.getDefaultProps = reactClass.getDefaultProps
+  Constructor.defaultProps    = reactClass.defaultProps
+  Constructor.prototype       = reactClass.prototype
   Constructor.prototype.constructor = Constructor
-  Constructor.type = Constructor
   Constructor
 
 
+
+
+bindAll = (instance) ->
+  for key, value in instance
+    continue if 'constructor' == key
+    continue unless 'function' == typeof value
+    instance[key] = value.bind(instance)
+    instance[key].isReactClassApproved = true

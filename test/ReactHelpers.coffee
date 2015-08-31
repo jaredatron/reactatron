@@ -23,7 +23,7 @@ Assertion.prototype.aValidReactElement = ->
 
 Assertion.prototype.render = (html) ->
   element = @obj
-  expect( element                 ).to.be.a('function')
+  expect( element                 ).to.be.aReactElement()
   expect( html                    ).to.be.a('string')
   expect( renderToString(element) ).to.eql(html)
 
@@ -89,8 +89,8 @@ withContext = (context, render) ->
   React.createElement(ContextProvider)
 
 
-renderToString = (render, context={}) ->
-  React.renderToStaticMarkup withContext(context, render)
+renderToString = (element) ->
+  React.renderToStaticMarkup(element)
 
 
 

@@ -49,11 +49,8 @@ describe 'component', ->
       expect(-> Button() ).to.render('<div>ClickMe</div>')
 
 
-
-
-
   ###
-    Component wrapper
+    Component withDefaultProps wrapper
   ###
   describe 'component.withDefaultProps(props)', ->
     it 'should work', ->
@@ -66,7 +63,23 @@ describe 'component', ->
 
       expect(-> BooshButton()                ).to.render('<div>Boooosh</div>')
       expect(-> BooshButton(value:'love')    ).to.render('<div>love</div>')
-      expect(-> BooshButton(value:undefined) ).to.render('<div>love</div>')
+      expect(-> BooshButton(value:undefined) ).to.render('<div>Boooosh</div>')
+
+   it 'should merge style', ->
+
+  ###
+    Component withDefaultProps wrapper
+  ###
+  describe 'component.withStyle(props)', ->
+    it 'should work', ->
+
+      Button = component 'Button', -> div(@props)
+
+      # Red = Button.withDefaultProps value: 'Boooosh'
+
+      # expect(-> BooshButton()                ).to.render('<div>Boooosh</div>')
+      # expect(-> BooshButton(value:'love')    ).to.render('<div>love</div>')
+      # expect(-> BooshButton(value:undefined) ).to.render('<div>boooosh</div>')
 
 
 
@@ -116,7 +129,11 @@ describe 'component', ->
 
     it 'should return a new component that wraps the original component', ->
 
-      Button = DOM.button.withStyle 'Button',
+      BaseButton = component 'BaseButton',
+        render: ->
+          React.createElement('button', @props)
+
+      Button = BaseButton.withStyle 'Button',
         background: 'transparent'
         border: '1px solid grey'
         padding: '0.25em'
@@ -128,20 +145,20 @@ describe 'component', ->
       BigRedButton = RedButton.withStyle 'BigRedButton',
         fontSize: '150%'
 
-      expect( DOM.button().type   ).to.be( StyleComponent.type )
+      # expect( DOM.button().type   ).to.be( StyleComponent.type )
       expect( Button().type       ).to.be( Button.type )
       expect( RedButton().type    ).to.be( RedButton.type )
       expect( BigRedButton().type ).to.be( BigRedButton.type )
 
-      expect( DOM.button.isStyledComponent   ).to.be( undefined )
+      # expect( DOM.button.isStyledComponent   ).to.be( undefined )
       expect( Button.isStyledComponent       ).to.be( true )
       expect( RedButton.isStyledComponent    ).to.be( true )
       expect( BigRedButton.isStyledComponent ).to.be( true )
 
-      expect( DOM.button.unstyled   ).to.be( undefined )
-      expect( Button.unstyled       ).to.be( DOM.button )
-      expect( RedButton.unstyled    ).to.be( DOM.button )
-      expect( BigRedButton.unstyled ).to.be( DOM.button )
+      # expect( DOM.button.unstyled   ).to.be( undefined )
+      expect( Button.unstyled       ).to.be( BaseButton )
+      expect( RedButton.unstyled    ).to.be( BaseButton )
+      expect( BigRedButton.unstyled ).to.be( BaseButton )
 
       expect( Button.style ).to.eql
         background: 'transparent'

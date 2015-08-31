@@ -42,7 +42,7 @@ RedButton = Button.withStyle 'RedButton',
 
 
 ###
-module.exports = ->
+module.exports = exports = ->
   switch arguments.length
     when 1
       createComponentWrapper(arguments[0])
@@ -52,12 +52,46 @@ module.exports = ->
       throw new 'arrrrgument errrrr'
 
 
-module.exports.PropTypes = React.PropTypes
+exports.PropTypes = React.PropTypes
+
+extendComponent = (component) ->
+  Object.assign(component, prototype)
+
+exports.prototype = prototype =
+
+  wrapComponent: (wrapper) ->
+    wrapComponent(this, wrapper)
+
+  withDefaultProps: (defaultProps) ->
+    @wrapComponent (props) ->
+      props.reverseExtend(defaultProps)
+
+  withStyle: (name, style) ->
+    if this.isStyledComponent
+      return this.unstyled.withStyle(name, this.style.merge(style))
+
+    component = createComponent name, (props) ->
+      props.style = component.style.merge(props.style)
+      component.unstyled(props)
+    component.style = new Style(style)
+    component.unstyled = this
+    component.isStyledComponent = true
+    component
 
 
 
-createComponentWrapper = (component) ->
-  wrapWithPrepareProps(component)
+
+wrapComponent = (component, wrapper) ->
+  ->
+    props = Props(prepareProps(arguments))
+    component(wrapper(props))
+
+createComponentWrapper = (wrapper) ->
+  component = ->
+    props = Props(prepareProps(arguments))
+    wrapper(props)
+  extendComponent(component)
+  component
 
 
 
@@ -65,7 +99,7 @@ createComponent = (name, spec) ->
   if isFunction(spec)
     render = spec
     spec = {
-      render: -> render.call(this, Props(props))
+      render: -> render.call(this, Props(@props))
     }
   spec.displayName = name
   detectMixins(spec)
@@ -83,62 +117,3 @@ addMixin = (spec, mixin) ->
   toArray(mixin.mixins).forEach (mixin) ->
     addMixin(spec, mixin)
   spec.mixins.push mixin
-
-
-
-
-
-extendComponent = (component) ->
-  component.wrapComponent = wrapComponent
-  component.withStyle = withStyle
-  component.withDefaultProps = withDefaultProps
-  component
-
-wrapWithPrepareProps = (parentComponent) ->
-  component = ->
-    parentComponent(prepareProps(arguments))
-  component.type = parentComponent.type
-  extendComponent(component)
-  component
-
-
-
-
-
-
-withStyle = (name, style) ->
-  if this.isStyledComponent
-    return this.unstyled.withStyle(name, this.style.merge(style))
-
-  component = createComponent name, (props) ->
-    props.style = component.style.merge(props.style)
-    component.unstyled(props)
-  component.style = new Style(style)
-  component.unstyled = this
-  component.isStyledComponent = true
-  component
-
-withDefaultProps = (defaultProps) ->
-  parentComponent = this
-  defaultProps = Props(defaultProps)
-  wrapWithPrepareProps (props) ->
-    parentComponent props.reverseExtend(defaultProps)
-
-wrapComponent = (wrapper) ->
-  parentComponent = this
-  createComponent (props) ->
-    parentComponent(wrapper.call(this, props))
-
-
-mergeStyle = (props, styles...) ->
-  props.style = new Style(props.style).update(styles...)
-
-mergeProps = (args...) ->
-  mergedStyle = new Style
-  mergedProps = {}
-  for props in args
-    mergedStyle.update(props.style)
-    Object.assign(mergedProps, props)
-  mergedProps.style = mergedStyle
-  mergedProps
-

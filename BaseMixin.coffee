@@ -4,6 +4,7 @@ require 'stdlibjs/Array#excludes'
 React = require 'react'
 
 Style    = require './Style'
+Props    = require './Props'
 AppMixin = require './AppMixin'
 
 STYLE_PROPERTIES =
@@ -25,8 +26,7 @@ module.exports =
       .extend(@enforcedStyle)
 
   cloneProps: ->
-    debugger unless @props.clone
-    props = @props.clone()
+    props = Props(@props)
 
     # # TODO delete any props listed by PropTypes
     # debugger if this.constructor.displayName == 'DirectoryContents'

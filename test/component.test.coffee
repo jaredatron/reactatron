@@ -154,7 +154,7 @@ describe 'component', ->
               background: "red"
               color:      'orange'
             }
-            children: ['Click it!'],
+            children: 'Click it!',
           }
           children: []
         }
@@ -176,7 +176,7 @@ describe 'component', ->
               color:      'green'
               fontSize: '120%'
             }
-            children: ['cancel?'],
+            children: 'cancel?',
           }
           children: []
         }
@@ -207,7 +207,7 @@ describe 'component', ->
               fontWeight: 'bolder'
               color:      'teal'
             }
-            children: ['DANGER'],
+            children: 'DANGER',
           }
           children: []
         }
@@ -243,7 +243,7 @@ describe 'component', ->
               fontWeight: 'bolder'
               color:      'teal'
             }
-            children: ['DANGER'],
+            children: 'DANGER',
           }
           children: []
         }

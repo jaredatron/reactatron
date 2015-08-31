@@ -1,6 +1,8 @@
 require 'stdlibjs/Object.assign'
 require 'stdlibjs/Array#unique'
+
 Style = require './Style'
+mergeChildren = require './mergeChildren'
 
 
 module.exports = class Props

@@ -1,4 +1,5 @@
 React     = require '../React'
+ReactElement = require 'react/lib/ReactElement'
 expect    = require 'expect.js'
 
 inspect   = expect.stringify
@@ -8,24 +9,31 @@ TestUtils = React.addons.TestUtils
 
 
 
+Assertion.prototype.aValidReactElement = ->
+  element = @obj
+  @assert ReactElement.isValidElement(element),
+    -> 'expected ' + inspect(element) + ' to be a valid React element'
+    -> 'expected ' + inspect(element) + ' to not be a valid React element'
+
 Assertion.prototype.aReactElement = ->
-  component = @obj
-  @assert isElement(component),
-    -> 'expected ' + inspect(component) + ' to be a React element'
-    -> 'expected ' + inspect(component) + ' to not be a React element'
+  element = @obj
+  @assert isElement(element),
+    -> 'expected ' + inspect(element) + ' to be a React element'
+    -> 'expected ' + inspect(element) + ' to not be a React element'
 
 
 Assertion.prototype.render = (html) ->
-  component = @obj
-  expect( component                     ).to.be.a('function')
-  expect( html                          ).to.be.a('string')
-  expect( renderToString({}, component) ).to.eql(html)
+  element = @obj
+  expect( element                     ).to.be.a('function')
+  expect( html                        ).to.be.a('string')
+  expect( renderToString({}, element) ).to.eql(html)
 
 
 Assertion.prototype.aComponent = ->
   component = @obj
   expect(component).to.be.a('function')
-  @assert 'string' == typeof component.type || 'object' == typeof component.type,
+  typeoOfType = typeof component.type
+  @assert 'string' ==  typeoOfType || 'object' == typeoOfType || 'function' == typeoOfType,
     -> 'expected ' + inspect(component) + ' to be a Component'
     -> 'expected ' + inspect(component) + ' to not be a Component'
 
@@ -46,6 +54,7 @@ withContext = (context, render) ->
 
 
 renderToString = (app, render) ->
+  debugger
   React.renderToStaticMarkup withContext({app:app}, render)
 
 

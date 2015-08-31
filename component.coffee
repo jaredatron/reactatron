@@ -14,7 +14,7 @@ DataBindingsMixin = require './DataBindingsMixin'
 Style = require './Style'
 Props = require './Props'
 prepareProps = require './prepareProps'
-createFactory = require './createFactory'
+createClass = require './createClass'
 
 ###
 
@@ -102,7 +102,7 @@ createComponent = (name, spec) ->
     spec = {_render: spec, render: call_render}
   spec.displayName = name
   detectMixins(spec)
-  component = createFactory React.createClass(spec)
+  component = createClass(spec)
   extendComponent(component)
   component
 

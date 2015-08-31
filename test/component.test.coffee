@@ -14,10 +14,40 @@ describe 'component', ->
         children = @props.children
         div(@props)
 
+
+      expect( Test   ).to.be.aComponent()
+      expect( Test() ).to.be.aValidReactElement()
+
       renderToString {}, -> Test()
       expect(children).to.be(undefined)
+
       renderToString {}, -> Test({}, div())
-      expect(children).to.be(undefined)
+      expect(children).to.not.be(undefined)
+      expect(children.type).to.eql('div')
+
+      renderToString {}, -> Test({}, div(), span())
+      expect(children).to.be.an(Array)
+      expect(children[0].type).to.eql('div')
+      expect(children[1].type).to.eql('span')
+
+      renderToString {}, -> Test(children:span(), div(), span())
+      expect(children).to.be.an(Array)
+      expect(children[0].type).to.eql('div')
+      expect(children[1].type).to.eql('span')
+
+      renderToString {}, -> Test(children:span())
+      expect(children).to.not.be(undefined)
+      expect(children.type).to.eql('span')
+
+      renderToString {}, -> Test(children:[span(), div()])
+      expect(children).to.be.an(Array)
+      expect(children[0].type).to.eql('span')
+      expect(children[1].type).to.eql('div')
+
+      renderToString {}, -> Test(children:span(), div())
+      expect(children).to.not.be(undefined)
+      expect(children.type).to.eql('div')
+
 
       # html = renderToString {}, ->
       #   Test {}, div({}, 'a'), div({},'b')

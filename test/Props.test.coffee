@@ -16,6 +16,12 @@ describe 'Props', ->
       expect( new Props ).to.be.a(Props)
       expect( Props() ).to.be.a(Props)
 
+    it 'should return the given object if it is an instanceof Props', ->
+      props = new Props
+      expect(props           ).to.be.a(Props)
+      expect(    Props(props)).to.be(props)
+      expect(new Props(props)).to.be(props)
+
     it 'should extend itself with the props given object, merging style ', ->
 
       child = {child:1}
@@ -52,8 +58,7 @@ describe 'Props', ->
       props.extend style: style2
       expect(props.style).to.not.be(style1)
       expect(props.style).to.not.be(style2)
-      expect(props.style).to.eql(  )
-      expect(props.style).to.eql( Style(style1).merge(style2) )
+      expect(props.style).to.eql mergeStyle
 
 
     it 'should merge children', ->
@@ -77,10 +82,22 @@ describe 'Props', ->
 
   describe '#appendChildren', ->
     it 'should append the given children and return this', ->
-      props = Props()
+      props = Props().appendChildren()
       expect('children' of props).to.be(false)
-      props.extend children: child1
+
+      props = Props().appendChildren(child2)
+      expect(props.children).to.be(child2)
+
+      props = Props(children: child1).appendChildren()
       expect(props.children).to.be(child1)
-      props.extend children: child2
-      expect(props.children).to.eql([child1,child2])
+
+      props = Props(children: child1).appendChildren(child2)
+      expect(props.children).to.eql([child1, child2])
+
+      props = Props(children:[child1]).appendChildren(child2)
+      expect(props.children).to.eql([child1, child2])
+
+      props = Props(children:[child1]).appendChildren([child2])
+      expect(props.children).to.eql([child1, child2])
+
 

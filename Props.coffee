@@ -11,6 +11,7 @@ module.exports = class Props
   #
   ###
   constructor: (props={}) ->
+    return props if props instanceof Props
     return new Props(props) unless this instanceof Props
     return @extend(props)
 
@@ -28,6 +29,7 @@ module.exports = class Props
 
   appendChildren: (children) ->
     mergeChildren(this, children)
+    this
 
   extendStyle: (style) ->
     if this.style
@@ -58,18 +60,4 @@ mergeChildren = (props, children) ->
     props.children = props.children.concat(children)
   else
     props.children = children
-  props
 
-
-
-
-
-  # if this.children?
-  #   this.children =
-  # if isArray(value)
-  #   if value.length > 0
-  #     this.children ||= []
-  #     this.children = this.children.concat(value)
-  # else
-  #   this.children ||= []
-  #   this.children = this.children.concat([value])

@@ -223,8 +223,9 @@ describe 'component', ->
         DangerButton = RedButton.wrapComponent (props) ->
           props.title ||= 'warning!!'
           props.alt   ||= 'warning :D'
-          props.reverseExtendStyle
-            fontWeight: 'bolder'
+          props.reverseExtend
+            style:
+              fontWeight: 'bolder'
           props
 
 

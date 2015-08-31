@@ -16,6 +16,12 @@ module.exports = class Props
     return new Props(props) unless this instanceof Props
     return @extend(props)
 
+  ###*
+  # Document me!
+  #
+  ###
+  clone: ->
+    Props().extend(this)
 
   extend: (props) ->
     for key, value of props
@@ -28,15 +34,15 @@ module.exports = class Props
           this[key] = value
     this
 
-  reverseExtend: (prop) ->
+  reverseExtend: (props) ->
     for key, value of props
       switch key
         when 'style'
-          mergeStyle(this, value)
+          this.style = mergeStyles(value, this.style)
         when 'children'
-          mergeChildren(this, value)
+          this.children = mergeChildren(value, this.children)
         else
-          this[key] = value
+          this[key] = value unless key of this
     this
 
   appendChildren: (children) ->
@@ -49,6 +55,14 @@ module.exports = class Props
     else
       this.style = Style(style)
     this
+
+  reverseExtendStyle: (style) ->
+    if this.style
+      this.style = Style(style).extend(this.style)
+    else
+      this.style = Style(style)
+    this
+
 
 
 isEmptyArray = (object) ->

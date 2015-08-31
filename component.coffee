@@ -12,6 +12,7 @@ BaseMixin = require './BaseMixin'
 AppMixin = require './AppMixin'
 DataBindingsMixin = require './DataBindingsMixin'
 Style = require './Style'
+Props = require './Props'
 createFactory = require './createFactory'
 prepareProps = require './prepareProps'
 

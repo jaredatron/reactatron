@@ -42,27 +42,36 @@ RedButton = Button.withStyle 'RedButton',
 
 
 ###
+module.exports = ->
+  switch arguments.length
+    when 1
+      createComponentWrapper(arguments[0])
+    when 2
+      createComponent(arguments[0], arguments[1])
+    else
+      throw new 'arrrrgument errrrr'
+
+
+module.exports.PropTypes = React.PropTypes
+
+
+
+createComponentWrapper = (component) ->
+  wrapWithPrepareProps(component)
+
+
+
 createComponent = (name, spec) ->
-  return wrapWithPrepareProps(name) if isFunction(name)
-
-  # TODO deprecate this
-  if isObject(name)
-    throw new Error('this API is deprecated')
-
   if isFunction(spec)
     render = spec
     spec = {
-      render: -> render.call(this, @cloneProps())
+      render: -> render.call(this, Props(props))
     }
-
   spec.displayName = name
   detectMixins(spec)
-  reactClass = React.createClass(spec)
-  component = createFactory(reactClass)
+  component = createFactory React.createClass(spec)
   extendComponent(component)
-  component.displayName = name
   component
-
 
 detectMixins = (spec) ->
   spec.mixins ||= []
@@ -76,16 +85,25 @@ addMixin = (spec, mixin) ->
   spec.mixins.push mixin
 
 
+
+
+
 extendComponent = (component) ->
   component.wrapComponent = wrapComponent
   component.withStyle = withStyle
   component.withDefaultProps = withDefaultProps
   component
 
-wrapWithPrepareProps = (component) ->
-  extendComponent ->
-    # console.log('prepareProps', arguments, prepareProps.apply(null, arguments))
-    component prepareProps.apply(null, arguments)
+wrapWithPrepareProps = (parentComponent) ->
+  component = ->
+    parentComponent(prepareProps(arguments))
+  component.type = parentComponent.type
+  extendComponent(component)
+  component
+
+
+
+
 
 
 withStyle = (name, style) ->
@@ -124,10 +142,3 @@ mergeProps = (args...) ->
   mergedProps.style = mergedStyle
   mergedProps
 
-createComponent.PropTypes = React.PropTypes
-createComponent.mergeStyle = mergeStyle
-createComponent.withDefaultProps = (component, props) ->
-  withDefaultProps.call(component, props)
-
-
-module.exports = createComponent

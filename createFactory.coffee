@@ -4,7 +4,7 @@ prepareProps = require './prepareProps'
 
 module.exports = (ReactComponentClass) ->
   factory = ->
-    props = prepareProps.apply(null, arguments)
+    props = prepareProps(arguments)
     ReactElementValidator.createElement(ReactComponentClass,props)
   factory.type = ReactComponentClass
   factory

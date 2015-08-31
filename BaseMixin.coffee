@@ -25,7 +25,8 @@ module.exports =
       .extend(@enforcedStyle)
 
   cloneProps: ->
-    props = Object.clone(@props)
+    debugger unless @props.clone
+    props = @props.clone()
 
     # # TODO delete any props listed by PropTypes
     # debugger if this.constructor.displayName == 'DirectoryContents'
@@ -36,7 +37,7 @@ module.exports =
     props
 
   extendProps: (props) ->
-    Object.assign(@cloneProps(), props)
+    @cloneProps().extend(props)
 
   # TODO remove this
   styleFromProps: ->

@@ -1,7 +1,5 @@
 require 'stdlibjs/Object.assign'
 require 'stdlibjs/Array#unique'
-isArray = require 'stdlibjs/isArray'
-toArray = require 'stdlibjs/toArray'
 Style = require './Style'
 
 
@@ -65,15 +63,8 @@ module.exports = class Props
 
 
 
-isEmptyArray = (object) ->
-  isArray(object) && object.length == 0
 
 mergeStyles = (left, right) ->
   return left if !right?
   return right if !left?
   Style(left).merge(right)
-
-mergeChildren = (left, right) ->
-  return left  if !right? || isEmptyArray(right)
-  return right if !left?  || isEmptyArray(right)
-  toArray(left).concat(toArray(right))

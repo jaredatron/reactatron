@@ -7,39 +7,75 @@ Assertion = expect.Assertion
 TestUtils = React.addons.TestUtils
 
 
+Assertion.prototype.aReactElement = ->
+  element = @obj
+  @assert isElement(element), -> "expected #{inspect(element)} to be a React element"
 
 
 Assertion.prototype.aValidReactElement = ->
   element = @obj
-  @assert ReactElement.isValidElement(element),
-    -> 'expected ' + inspect(element) + ' to be a valid React element'
-    -> 'expected ' + inspect(element) + ' to not be a valid React element'
+  expect(element).to.be.aReactElement()
 
-Assertion.prototype.aReactElement = ->
-  element = @obj
-  @assert isElement(element),
-    -> 'expected ' + inspect(element) + ' to be a React element'
-    -> 'expected ' + inspect(element) + ' to not be a React element'
+  typeoOfType = typeof element.type
+  @assert 'string' == typeoOfType || 'function' == typeoOfType,
+    -> "expected #{inspect(element.type)} to be a string or a function"
 
 
 Assertion.prototype.render = (html) ->
   element = @obj
-  expect( element                     ).to.be.a('function')
-  expect( html                        ).to.be.a('string')
-  expect( renderToString({}, element) ).to.eql(html)
+  expect( element                 ).to.be.a('function')
+  expect( html                    ).to.be.a('string')
+  expect( renderToString(element) ).to.eql(html)
 
 
-Assertion.prototype.aComponent = ->
-  component = @obj
-  expect(component).to.be.a('function')
-  typeoOfType = typeof component.type
-  @assert 'string' ==  typeoOfType || 'object' == typeoOfType || 'function' == typeoOfType,
-    -> 'expected ' + inspect(component) + ' to be a Component'
-    -> 'expected ' + inspect(component) + ' to not be a Component'
+Assertion.prototype.aComponentClass = ->
+  ComponentClass = @obj
+  expect(ComponentClass).to.be.a('function')
+
+  typeoOfType = typeof ComponentClass.type
+  @assert 'string' ==  typeoOfType || 'function' == typeoOfType,
+    -> "expected ComponentClass.type to be a string or a function. Got: #{inspect(ComponentClass)}"
+
+  @assert ComponentClass.prototype.constructor == ComponentClass,
+    -> "expected ComponentClass.prototype.constructor to be ComponentClass. Got: #{inspect(ComponentClass.prototype.constructor)}"
+
+  @assert ComponentClass.type == ComponentClass,
+    -> "expected ComponentClass.type to be ComponentClass. Got: #{inspect(ComponentClass.type)}"
+
+Assertion.prototype.aValidComponentClass = ->
+  ComponentClass = @obj
+  expect(ComponentClass).to.be.aComponentClass()
+
+  element = React.createElement(ComponentClass, {p:1, children:'X'}, 'A', 'B')
+  expect(element).to.be.aValidReactElement()
+  expect(element._store).to.eql
+    props:         {p:1, children: ['A','B']}
+    originalProps: {p:1, children: ['A','B']}
+
+  element = React.createElement(ComponentClass, {p:1, children:'X'})
+  expect(element._store).to.eql
+    props:         {p:1, children: 'X'}
+    originalProps: {p:1, children: 'X'}
+
+  instance = new ComponentClass({p:1},{c:1})
+  expect(instance.props  ).to.eql p: 1
+  expect(instance.context).to.eql c: 1
+  assert ('state' of instance), -> "expect instance to have state prop"
+  expect(instance).to.be.a(ComponentClass)
+
+  element = ComponentClass()
+  expect(element).to.be.aValidReactElement()
+
+
+
+
+
+
 
 
 
 withContext = (context, render) ->
+  context.app ||= {}
   childContextTypes = {}
   for key of context
     childContextTypes[key] = React.PropTypes.any
@@ -50,12 +86,11 @@ withContext = (context, render) ->
     getChildContext: -> context
     render: -> render()
 
-  return React.createElement(ContextProvider)
+  React.createElement(ContextProvider)
 
 
-renderToString = (app, render) ->
-  debugger
-  React.renderToStaticMarkup withContext({app:app}, render)
+renderToString = (render, context={}) ->
+  React.renderToStaticMarkup withContext(context, render)
 
 
 

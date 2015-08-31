@@ -1,22 +1,31 @@
-ReactClass = require 'react/lib/ReactClass'
+createClass   = require('react/lib/ReactClass').createClass
 createElement = require('react/lib/ReactElement').createElement
 
 module.exports = (spec) ->
   spec.displayName ||= 'AnonymousReactComponent'
 
   initialize = (props, context) ->
-    return new Constructor(props, context) unless this instanceof Constructor
-    @props   = props
-    @context = context
-    @state   = @getInitialState?() || null
-    return createElement(this)
+    # called with new when being mounted
+    if this instanceof Constructor
+      @props   = props
+      @context = context
+      @state   = @getInitialState?() || null
+      return this
+
+    # called without new when being generating the initial tree
+    return createElement(Constructor, arguments...)
+
+
 
   Constructor = eval """
-    #{spec.displayName} = function(props, context){ return initialize.call(this, props, context); };
+    #{spec.displayName} = function(){
+      return initialize.apply(this, arguments);
+    };
   """
 
-  ReactClass = ReactClass.createClass(spec)
-  Object.assign(Constructor, ReactClass)
+  reactClass = createClass(spec)
+  Object.assign(Constructor, reactClass)
+  Constructor.prototype = reactClass.prototype
   Constructor.prototype.constructor = Constructor
   Constructor.type = Constructor
   Constructor

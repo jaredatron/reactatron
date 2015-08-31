@@ -6,71 +6,24 @@ StyleComponent   = require '../StyleComponent'
 
 describe 'component', ->
 
-  describe 'React.DOM.div', ->
+  it 'should be a valid react component', ->
+    Thing = component 'Thing',
+      render: ->
+        React.DOM.div({}, 'Thing here')
+
+    expect(Thing).to.be.aValidComponentClass()
+
+  ###
+    Create a standard Reactatron Component
+  ###
+  describe 'component(name, spec)', ->
     it 'should work', ->
+      Button = component 'Button',
+        render: ->
+          div {}, 'ClickMe'
+      expect(Button).to.be.aValidComponentClass()
+      expect(-> Button() ).to.render('<div>ClickMe</div>')
 
-      children = null
-      Test = component 'Test', ->
-        children = @props.children
-        div(@props)
-
-
-      expect( Test   ).to.be.aComponent()
-      expect( Test() ).to.be.aValidReactElement()
-
-      renderToString {}, -> Test()
-      expect(children).to.be(undefined)
-
-      renderToString {}, -> Test({}, div())
-      expect(children).to.not.be(undefined)
-      expect(children.type).to.eql('div')
-
-      renderToString {}, -> Test({}, div(), span())
-      expect(children).to.be.an(Array)
-      expect(children[0].type).to.eql('div')
-      expect(children[1].type).to.eql('span')
-
-      renderToString {}, -> Test(children:span(), div(), span())
-      expect(children).to.be.an(Array)
-      expect(children[0].type).to.eql('div')
-      expect(children[1].type).to.eql('span')
-
-      renderToString {}, -> Test(children:span())
-      expect(children).to.not.be(undefined)
-      expect(children.type).to.eql('span')
-
-      renderToString {}, -> Test(children:[span(), div()])
-      expect(children).to.be.an(Array)
-      expect(children[0].type).to.eql('span')
-      expect(children[1].type).to.eql('div')
-
-      renderToString {}, -> Test(children:span(), div())
-      expect(children).to.not.be(undefined)
-      expect(children.type).to.eql('div')
-
-
-      # html = renderToString {}, ->
-      #   Test {}, div({}, 'a'), div({},'b')
-
-      # console.log(html)
-
-    it 'should work', ->
-      expect(-> div({}, 'ClickMe') ).to.render('<div>ClickMe</div>')
-      expect(div).to.be.aComponent()
-
-  # ###
-  #   Create a standard Reactatron Component
-  # ###
-  # describe 'component(name, spec)', ->
-  #   it 'should work', ->
-  #     expect(-> div({}, 'ClickMe') ).to.render('<div>ClickMe</div>')
-
-  #     Button = component 'Button',
-  #       render: ->
-  #         div {}, 'ClickMe'
-  #     expect(-> Button() ).to.render('<div>ClickMe</div>')
-
-  #     expect(Button).to.be.aComponent()
 
 
   # ###
@@ -105,6 +58,66 @@ describe 'component', ->
 
 
 
+  # describe 'React.DOM.div', ->
+  # #   it 'should work', ->
+
+  # #     children = null
+  # #     Test = component 'Test', ->
+  # #       children = @props.children
+  # #       div(@props)
+
+
+  # #     expect( Test   ).to.be.aComponent()
+  # #     expect( Test() ).to.be.aValidReactElement()
+
+  # #     renderToString {}, -> Test()
+  # #     expect(children).to.be(undefined)
+
+  # #     renderToString {}, -> Test({}, div())
+  # #     expect(children).to.not.be(undefined)
+  # #     expect(children.type).to.eql('div')
+
+  # #     renderToString {}, -> Test({}, div(), span())
+  # #     expect(children).to.be.an(Array)
+  # #     expect(children[0].type).to.eql('div')
+  # #     expect(children[1].type).to.eql('span')
+
+  # #     renderToString {}, -> Test(children:span(), div(), span())
+  # #     expect(children).to.be.an(Array)
+  # #     expect(children[0].type).to.eql('div')
+  # #     expect(children[1].type).to.eql('span')
+
+  # #     renderToString {}, -> Test(children:span())
+  # #     expect(children).to.not.be(undefined)
+  # #     expect(children.type).to.eql('span')
+
+  # #     renderToString {}, -> Test(children:[span(), div()])
+  # #     expect(children).to.be.an(Array)
+  # #     expect(children[0].type).to.eql('span')
+  # #     expect(children[1].type).to.eql('div')
+
+  # #     renderToString {}, -> Test(children:span(), div())
+  # #     expect(children).to.not.be(undefined)
+  # #     expect(children.type).to.eql('div')
+
+
+  # #     # html = renderToString {}, ->
+  # #     #   Test {}, div({}, 'a'), div({},'b')
+
+  # #     # console.log(html)
+
+  #   it 'should work', ->
+  #     expect(-> div({}, 'ClickMe') ).to.render('<div>ClickMe</div>')
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -118,7 +131,7 @@ describe 'component', ->
   #       children:['A', div({}, 'B')]
   #       'C'
   #       div({},'D')
-  #   .to.render('<div>A<div>B</div>C<div>D</div></div>')
+  #   .to.render('<div>C<div>D</div></div>')
 
 
   # it 'i have no idea what im testing :P', ->

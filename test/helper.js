@@ -2,6 +2,11 @@ require('stdlibjs/Object.assign')
 
 global.expect  = require('expect.js')
 global.inspect = expect.stringify
+global.assert  = function(result, message){
+  if (result) return;
+  error = new Error(message());
+  throw error;
+};
 
 global.FakeWindow = function(){
   return {

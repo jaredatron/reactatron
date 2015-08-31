@@ -83,6 +83,7 @@ extendComponent = (component) ->
 
 wrapWithPrepareProps = (component) ->
   extendComponent ->
+    # console.log('prepareProps', arguments, prepareProps.apply(null, arguments))
     component prepareProps.apply(null, arguments)
 
 
@@ -100,9 +101,9 @@ withStyle = (name, style) ->
 
 withDefaultProps = (defaultProps) ->
   parentComponent = this
+  defaultProps = Props(defaultProps)
   wrapWithPrepareProps (props) ->
-    props = mergeProps(defaultProps, props)
-    parentComponent(props)
+    parentComponent props.reverseExtend(defaultProps)
 
 wrapComponent = (wrapper) ->
   parentComponent = this

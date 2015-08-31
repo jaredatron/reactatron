@@ -10,25 +10,17 @@ module.exports = class Style
   # Document me!
   #
   ###
-  @merge:  ->
-    style = new Style()
-    style.update.apply(style, arguments)
-
-  ###*
-  # Document me!
-  #
-  ###
   constructor: (style) ->
     return style if style instanceof Style
     return new Style(style) unless this instanceof Style
-    @update(style)
+    @extend(style)
 
   ###*
   # Document me!
   #
   ###
   clone: ->
-    Style().update(this)
+    Style().extend(this)
 
   ###*
   # Document me!
@@ -47,19 +39,21 @@ module.exports = class Style
   # Document me!
   #
   ###
-  update: (style) ->
+  extend: (style) ->
     assign(this, style)
 
   ###
     @alias update
   ###
-  extend: @::update
+  update: (style) ->
+    console.trace 'Style#update deprecated use Style#extend'
+    @extend(style)
 
   ###*
   # Document me!
   #
   ###
-  reverseUpdate: (style) ->
+  reverseExtend: (style) ->
     @replace @reverseMerge(style)
 
   ###*
@@ -67,7 +61,7 @@ module.exports = class Style
   #
   ###
   merge: (style) ->
-    @clone().update(style)
+    @clone().extend(style)
 
   ###*
   # Document me!

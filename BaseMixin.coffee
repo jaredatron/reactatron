@@ -19,10 +19,10 @@ module.exports =
   mixins: [AppMixin]
 
   style: ->
-    new Style(@defaultStyle)
-      .update(@props.style)
-      .update(@styleFromProps())
-      .update(@enforcedStyle)
+    Style(@defaultStyle)
+      .extend(@props.style)
+      .extend(@styleFromProps())
+      .extend(@enforcedStyle)
 
   cloneProps: ->
     props = Object.clone(@props)

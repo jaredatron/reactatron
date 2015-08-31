@@ -28,18 +28,18 @@ describe 'Style', ->
       style.replace b: 2, c: 2
       expect(style).to.eql b: 2, c: 2
 
-  describe '#update', ->
+  describe '#extend', ->
     it 'should return the same Style object', ->
       a = Style a:1
-      b = a.update b:2
+      b = a.extend b:2
       expect(b).to.be(a)
       expect(b).to.eql a:1, b:2
 
     it 'should deep merge objects 1 level deep', ->
       style = new Style
-      style.update a:1,           d:{e:1, f:1,      h:{i:1        }}
-      style.update      b:2,      d:{          g:2, h:{    j:2    }}
-      style.update a:3,      c:3, d:{     f:3,      h:{        k:3}}
+      style.extend a:1,           d:{e:1, f:1,      h:{i:1        }}
+      style.extend      b:2,      d:{          g:2, h:{    j:2    }}
+      style.extend a:3,      c:3, d:{     f:3,      h:{        k:3}}
 
       expect(style).to.eql(
         a: 3, b:2, c:3, d:{e:1, f:3, g:2, h:{k:3}}
@@ -47,21 +47,21 @@ describe 'Style', ->
 
     it 'should merge the given styles into the current styles', ->
       a = new Style a:1, b:1
-      b = a.update  a:2,      c:2
+      b = a.extend  a:2,      c:2
 
       expect(b).to.be(a)
       expect(a).to.eql a:2, b:1, c:2
 
-  describe '#reverseUpdate', ->
+  describe '#reverseExtend', ->
     it 'should return the same Style object', ->
       a = Style a:1
-      b = a.reverseUpdate b:2
+      b = a.reverseExtend b:2
       expect(b).to.be(a)
       expect(b).to.eql a:1, b:2
 
     it 'should update the current style object the reverseMerge results', ->
       a = new Style       a:1, b:1
-      b = a.reverseUpdate a:2,     c:2
+      b = a.reverseExtend a:2,     c:2
       expect(b).to.be(a)
       expect(a).to.eql a:1, b:1, c:2
 

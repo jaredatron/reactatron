@@ -1,6 +1,7 @@
 require 'stdlibjs/Object.assign'
 require 'stdlibjs/Array#unique'
 isArray = require 'stdlibjs/isArray'
+toArray = require 'stdlibjs/toArray'
 Style = require './Style'
 
 
@@ -20,6 +21,17 @@ module.exports = class Props
     for key, value of props
       switch key
         when 'style'
+          this.style = mergeStyles(this.style, value)
+        when 'children'
+          this.children = mergeChildren(this.children, value)
+        else
+          this[key] = value
+    this
+
+  reverseExtend: (prop) ->
+    for key, value of props
+      switch key
+        when 'style'
           mergeStyle(this, value)
         when 'children'
           mergeChildren(this, value)
@@ -28,36 +40,26 @@ module.exports = class Props
     this
 
   appendChildren: (children) ->
-    mergeChildren(this, children)
+    this.children = mergeChildren(this.children, children)
     this
 
   extendStyle: (style) ->
     if this.style
-      this.style.extend(style)
+      this.style = Style(this.style).extend(style)
     else
-      this.style = style
+      this.style = Style(style)
     this
 
 
-mergeStyle = (props, style) ->
-  return unless style?
-  if props.style
-    if props.style instanceof Style
-      props.style.extend(style)
-    else
-      props.style = new Style(props.style).extend(style)
-  else
-    props.style = style
+isEmptyArray = (object) ->
+  isArray(object) && object.length == 0
 
-mergeChildren = (props, children) ->
-  return unless children?
-  childrenIsArray = isArray(children)
-  return if childrenIsArray && children.length == 0
+mergeStyles = (left, right) ->
+  return left if !right?
+  return right if !left?
+  Style(left).merge(right)
 
-  if props.children?
-    props.children = [props.children] unless isArray(props.children)
-    children = [children] unless childrenIsArray
-    props.children = props.children.concat(children)
-  else
-    props.children = children
-
+mergeChildren = (left, right) ->
+  return left  if !right? || isEmptyArray(right)
+  return right if !left?  || isEmptyArray(right)
+  toArray(left).concat(toArray(right))

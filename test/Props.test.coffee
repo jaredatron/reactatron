@@ -63,7 +63,7 @@ describe 'Props', ->
 
     it 'should merge children', ->
       props = Props()
-      expect('children' of props).to.be(false)
+      expect(props.children).to.be(undefined)
 
       props = Props children: child1
       expect(props.children).to.be(child1)
@@ -74,7 +74,7 @@ describe 'Props', ->
       expect(props.children[0]).to.be(child1)
 
       props = Props()
-      expect('children' of props).to.be(false)
+      expect(props.children).to.be(undefined)
       props.extend children: child1
       expect(props.children).to.be(child1)
       props.extend children: child2
@@ -83,7 +83,7 @@ describe 'Props', ->
   describe '#appendChildren', ->
     it 'should append the given children and return this', ->
       props = Props().appendChildren()
-      expect('children' of props).to.be(false)
+      expect(props.children).to.be(undefined)
 
       props = Props().appendChildren(child2)
       expect(props.children).to.be(child2)

@@ -64,8 +64,9 @@ describe 'component', ->
 
       BooshButton = Button.withDefaultProps value: 'Boooosh'
 
-      expect(-> BooshButton() ).to.render('<div>Boooosh</div>')
-      expect(-> BooshButton(value:'love') ).to.render('<div>love</div>')
+      expect(-> BooshButton()                ).to.render('<div>Boooosh</div>')
+      expect(-> BooshButton(value:'love')    ).to.render('<div>love</div>')
+      expect(-> BooshButton(value:undefined) ).to.render('<div>love</div>')
 
 
 

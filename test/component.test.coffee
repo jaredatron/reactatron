@@ -26,27 +26,27 @@ describe 'component', ->
 
 
 
-  # ###
-  #   Shorthand for a standard Reactatron Component
-  # ###
-  # describe 'component(name, function)', ->
-  #   it 'should work', ->
-  #     Button = component 'Button', ->
-  #       div {}, 'ClickMe'
+  ###
+    Shorthand for a standard Reactatron Component
+  ###
+  describe 'component(name, function)', ->
+    it 'should work', ->
+      Button = component 'Button', ->
+        div {}, 'ClickMe'
 
-  #     expect(-> Button() ).to.render('<div>ClickMe</div>')
+      expect(-> Button() ).to.render('<div>ClickMe</div>')
 
 
-  # ###
-  #   Component wrapper
-  # ###
-  # describe 'component(function)', ->
-  #   it 'should work', ->
+  ###
+    Component wrapper
+  ###
+  describe 'component(function)', ->
+    it 'should work', ->
 
-  #     Button = component ->
-  #       div {}, 'ClickMe'
+      Button = component ->
+        div {}, 'ClickMe'
 
-  #     expect(-> Button() ).to.render('<div>ClickMe</div>')
+      expect(-> Button() ).to.render('<div>ClickMe</div>')
 
 
 

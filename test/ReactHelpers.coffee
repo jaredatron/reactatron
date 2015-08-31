@@ -60,7 +60,7 @@ Assertion.prototype.aValidComponentClass = ->
   instance = new ComponentClass({p:1},{c:1})
   expect(instance.props  ).to.eql p: 1
   expect(instance.context).to.eql c: 1
-  assert ('state' of instance), -> "expect instance to have state prop"
+  assert ('state' of instance), -> "expected ComponentClass instance to have state prop"
   expect(instance).to.be.a(ComponentClass)
 
   element = ComponentClass()

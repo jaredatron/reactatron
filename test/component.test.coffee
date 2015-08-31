@@ -318,15 +318,19 @@ describe 'component', ->
   describe 'mixins', ->
     it 'should work', ->
       Thing = component 'Thing',
-        contextType:
-          app: component.PropTypes.object.isRequired
+        contextTypes:
+          currentUser: component.PropTypes.object.isRequired
         render: ->
           React.DOM.div(@props, JSON.stringify(@context))
 
-      element = withContext app:{APP:11}, -> Thing()
+      expect(Object.keys(Thing.contextTypes)).to.eql ['app', 'currentUser']
 
+      element = withContext {app:{APP:11}, currentUser:{z:1}}, ->
+        Thing()
 
-      expect(element).to.render('<div>{APP:11}</div>')
+      expect(element).to.render(
+        '<div>{&quot;app&quot;:{&quot;APP&quot;:11},&quot;currentUser&quot;:{&quot;z&quot;:1}}</div>'
+      )
 
 
 

@@ -6,17 +6,15 @@ describe 'DOM', ->
 
   it 'should work as expected', ->
 
-    expect ->
-      div()
-    .to.render('<div></div>')
+    expect( div() ).to.render('<div></div>')
 
-    expect ->
+    expect(
       div
         title: 'frog'
         style:
           color: 'red'
         'boosh'
-    .to.render('<div title="frog" style="color:red;">boosh</div>')
+    ).to.render('<div title="frog" style="color:red;">boosh</div>')
 
 
   it 'should always render a StyleComponent around the root component', ->

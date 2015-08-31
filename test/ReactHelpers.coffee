@@ -75,7 +75,7 @@ Assertion.prototype.aValidComponentClass = ->
 
 
 withContext = (context, render) ->
-  context.app ||= {}
+  # context.app ||= {}
   childContextTypes = {}
   for key of context
     childContextTypes[key] = React.PropTypes.any

@@ -27,11 +27,14 @@ module.exports = (spec) ->
   """
 
   reactClass = createClass(spec)
-  Constructor.type            = Constructor
-  Constructor.displayName     = reactClass.displayName
-  Constructor.getDefaultProps = reactClass.getDefaultProps
-  Constructor.defaultProps    = reactClass.defaultProps
-  Constructor.prototype       = reactClass.prototype
+  Constructor.type              = Constructor
+  Constructor.displayName       = reactClass.displayName
+  Constructor.propTypes         = reactClass.propTypes
+  Constructor.contextTypes      = reactClass.contextTypes
+  Constructor.childContextTypes = reactClass.childContextTypes
+  Constructor.getDefaultProps   = reactClass.getDefaultProps
+  Constructor.defaultProps      = reactClass.defaultProps
+  Constructor.prototype         = reactClass.prototype
   Constructor.prototype.constructor = Constructor
   Constructor
 
@@ -39,7 +42,7 @@ module.exports = (spec) ->
 
 
 bindAll = (instance) ->
-  for key, value in instance
+  for key, value of instance
     continue if 'constructor' == key
     continue unless 'function' == typeof value
     instance[key] = value.bind(instance)

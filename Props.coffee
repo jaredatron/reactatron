@@ -1,5 +1,6 @@
 require 'stdlibjs/Object.assign'
 require 'stdlibjs/Array#unique'
+isUndefined = require 'stdlibjs/isUndefined'
 
 Style = require './Style'
 mergeChildren = require './mergeChildren'
@@ -25,13 +26,16 @@ module.exports = class Props
 
   extend: (props) ->
     for key, value of props
-      switch key
-        when 'style'
-          this.style = mergeStyles(this.style, value)
-        when 'children'
-          this.children = mergeChildren(this.children, value)
-        else
-          this[key] = value
+      if isUndefined(value)
+        delete this[key]
+      else
+        switch key
+          when 'style'
+            this.style = mergeStyles(this.style, value)
+          when 'children'
+            this.children = mergeChildren(this.children, value)
+          else
+            this[key] = value
     this
 
   reverseExtend: (props) ->

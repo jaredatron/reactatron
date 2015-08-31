@@ -1,19 +1,22 @@
 # Reactatron
 
+## Known Unknowns
+
+- Do we need to shove children into props for every component?
+
 ## TODO
 
 - remove plugins and make the actions patten and hooks the way
+
 
 ## thoughs
 
 - React but with the functions (AKA factory) way
 - built for coffee script (maybe ES6?)
 - has a flux-like event based system
-- has a json-query data store with simple event hooks
-- can json-query be used on mongo?
-- provide a different api for making components
-- provide a DOM object
-- provide a global mixins feature
+- has a key,value store persisted in localStorage as json
+- has a dead simple data binding system
+- provide a super api for making components
 - provide subclassing components
 - eveything is built as modules with the borders well documented
 - module: js css framework (need benchmarking)
@@ -25,6 +28,28 @@
 
 
 #### component
+
+- A Reactatron Components is any function that returns a React Element
+- Reactatron/DOM is every React.DOM element in function (React.createFactory) form
+
+
+###### Questions:
+
+- If you pass children in as arguments to a React Component `props.children` is ignored
+
+
+
+#### Styled Component
+
+A Styled Component is a wrapper that merges the given style prop the style object given
+at component definition time
+
+```coffee
+{div} = require 'reactatron/DOM'
+
+module.exports = div.withStyle 'RedBox',
+  borderColor: 'red'
+```
 
 
 

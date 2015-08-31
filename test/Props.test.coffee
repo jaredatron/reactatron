@@ -78,6 +78,11 @@ describe 'Props', ->
       props.extend children: child2
       expect(props.children).to.eql([child1,child2])
 
+    it 'should delete props set as undefined', ->
+      props = Props a:1, b:1
+      props.extend a:undefined, c:2
+      expect(props).to.eql b:1, c:2
+
   describe '#appendChildren', ->
     it 'should append the given children and return this', ->
       props = Props().appendChildren()

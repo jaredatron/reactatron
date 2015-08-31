@@ -36,7 +36,7 @@
 ###### Questions:
 
 - If you pass children in as arguments to a React Component `props.children` is ignored
-
+- How do we make `ReactElement.createElement(child.type, newProps)` work with functions?
 
 
 #### Styled Component

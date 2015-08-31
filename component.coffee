@@ -13,20 +13,20 @@ AppMixin = require './AppMixin'
 DataBindingsMixin = require './DataBindingsMixin'
 Style = require './Style'
 Props = require './Props'
-createFactory = require './createFactory'
 prepareProps = require './prepareProps'
 
 ###
 
-
+# Create a standard Reactatron Component
 Button = component 'Button',
   render: ->
     …
 
+# Shorthand for a standard Reactatron Component
 Button = component 'Button', (props) ->
   …
 
-
+# Component wrapper
 RedButton = component (props) ->
   props.style.merge
     background: 'red'
@@ -94,16 +94,14 @@ createComponentWrapper = (wrapper) ->
   component
 
 
-
+call_render = -> @_render.call(this, Props(@props))
 createComponent = (name, spec) ->
   if isFunction(spec)
     render = spec
-    spec = {
-      render: -> render.call(this, Props(@props))
-    }
+    spec = {_render: spec, render: call_render}
   spec.displayName = name
   detectMixins(spec)
-  component = createFactory React.createClass(spec)
+  component = React.createFactory React.createClass(spec)
   extendComponent(component)
   component
 

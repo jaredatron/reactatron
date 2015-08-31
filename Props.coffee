@@ -2,6 +2,8 @@ require 'stdlibjs/Object.assign'
 require 'stdlibjs/Array#unique'
 isUndefined = require 'stdlibjs/isUndefined'
 
+
+mergeProps = require('react/lib/ReactPropTransferer').mergeProps
 Style = require './Style'
 mergeChildren = require './mergeChildren'
 

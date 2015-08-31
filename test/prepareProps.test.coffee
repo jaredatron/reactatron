@@ -26,10 +26,10 @@ describe 'prepareProps', ->
 
 
 
-    expect( prepareProps([{ children: child1    }                       ]) ).to.eql { children: child1                   }
-    expect( prepareProps([{ children: child1    }, child1               ]) ).to.eql { children: [child1, child1]         }
-    expect( prepareProps([{ children: child1    }, [child1]             ]) ).to.eql { children: [child1, child1]         }
-    expect( prepareProps([{ children: child1    }, child1, child2       ]) ).to.eql { children: [child1, child1, child2] }
-    expect( prepareProps([{ children: child1    }, [child1], child2     ]) ).to.eql { children: [child1, child1, child2] }
-    expect( prepareProps([{ children: child1    }, [child1], [child2]   ]) ).to.eql { children: [child1, child1, child2] }
-    expect( prepareProps([{ children: child1    }, [[child1], [child2]] ]) ).to.eql { children: [child1, child1, child2] }
+    expect( prepareProps([{ children: child1    }                       ]) ).to.eql { children: child1 }
+    expect( prepareProps([{ children: child1    }, child1               ]) ).to.eql { children: child1 }
+    expect( prepareProps([{ children: child1    }, [child1]             ]) ).to.eql { children: child1 }
+    expect( prepareProps([{ children: child1    }, child1, child2       ]) ).to.eql { children: child1 }
+    expect( prepareProps([{ children: child1    }, [child1], child2     ]) ).to.eql { children: child1 }
+    expect( prepareProps([{ children: child1    }, [child1], [child2]   ]) ).to.eql { children: child1 }
+    expect( prepareProps([{ children: child1    }, [[child1], [child2]] ]) ).to.eql { children: child1 }

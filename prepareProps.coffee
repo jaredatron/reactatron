@@ -2,11 +2,14 @@ require 'stdlibjs/Array#flatten'
 
 mergeChildren = require './mergeChildren'
 
+# Pick between children as args or children as prop
 module.exports = (args) ->
-  return args[0] if args.length < 2
+  return if args.length == 0
   props = args[0]
-  children = [].slice.call(args, 1)
-  if children.length != 0
-    props ||= {}
-    props.children = mergeChildren(props.children, children.flatten())
+  return props if args.length == 1
+  if args.length == 2
+    props.children = args[1]
+  else
+    props.children = [].slice.call(args, 1)
   props
+

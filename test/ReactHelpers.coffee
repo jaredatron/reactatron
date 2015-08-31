@@ -1,7 +1,7 @@
-React = require('react/addons')
+React     = require '../react'
+expect    = require 'expect.js'
 
-expect = require('expect.js')
-inspect = expect.stringify
+inspect   = expect.stringify
 Assertion = expect.Assertion
 TestUtils = React.addons.TestUtils
 
@@ -48,69 +48,3 @@ Assertion.prototype.aComponent = function() {
 // document = {}
 // document.body = {'BODY': true}
 
-
-FakeWindow = function(){
-  return {
-    location: {
-      pathname: '/',
-      search: '',
-    },
-    addEventListener: new CallLogger,
-    removeEventListener: new CallLogger,
-  };
-};
-
-
-CallLogger = function(){
-  var callLogger = function(){
-    callLogger.calls.push([].slice.call(arguments));
-    callLogger.callCount = callLogger.calls.length;
-  };
-  callLogger.reset = function(){
-    callLogger.calls = [];
-    callLogger.callCount = 0;
-  };
-  callLogger.reset();
-
-  return callLogger;
-};
-
-
-Counter = function(){
-  var counter = function(){
-    counter.value++;
-  }
-  counter.value = 0;
-  return counter;
-};
-
-
-renderToString = function(app, render) {
-  return React.renderToStaticMarkup(
-    ContextWrapper({app: app, render: render})
-  );
-};
-
-// renderComponent = function(app, component, props, children){
-//   args = [].alice.call(arguments, 2);
-//   return React.renderToStaticMarkup(
-//     ContextWrapper({app: app}, Component.call(null, args))
-//   );
-// };
-
-
-ContextWrapper = React.createFactory(React.createClass({
-  displayName: 'ContextWrapper',
-  childContextTypes: {
-    app: React.PropTypes.object,
-  },
-  getChildContext: function(){
-    return {
-      app: this.props.app
-    };
-  },
-  render: function(){
-    return this.props.render()
-  }
-
-}))

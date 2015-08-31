@@ -1,32 +1,69 @@
+React            = require 'react'
 component        = require '../component'
 StyleComponent   = require '../StyleComponent'
-{div,span} = DOM = require '../DOM'
+
+{div,span} = DOM = React.DOM
 
 describe 'component', ->
 
-  it 'component(name, spec)', ->
-    expect(-> div({}, 'ClickMe') ).to.render('<div>ClickMe</div>')
+  describe 'React.DOM.div', ->
+    it 'should work', ->
+      expect(-> div({}, 'ClickMe') ).to.render('<div>ClickMe</div>')
+      expect(div).to.be.aComponent()
 
-    Button = component 'Button',
-      render: ->
+  ###
+    Create a standard Reactatron Component
+  ###
+  describe 'component(name, spec)', ->
+    it 'should work', ->
+      expect(-> div({}, 'ClickMe') ).to.render('<div>ClickMe</div>')
+
+      Button = component 'Button',
+        render: ->
+          div {}, 'ClickMe'
+      expect(-> Button() ).to.render('<div>ClickMe</div>')
+
+      expect(Button).to.be.aComponent()
+
+
+  ###
+    Shorthand for a standard Reactatron Component
+  ###
+  describe 'component(name, function)', ->
+    it 'should work', ->
+      Button = component 'Button', ->
         div {}, 'ClickMe'
-    expect(-> Button() ).to.render('<div>ClickMe</div>')
+
+      expect(-> Button() ).to.render('<div>ClickMe</div>')
 
 
-  it 'component(name, function)', ->
+  ###
+    Component wrapper
+  ###
+  describe 'component(function)', ->
+    it 'should work', ->
 
-    Button = component 'Button', ->
-      div {}, 'ClickMe'
+      Button = component ->
+        div {}, 'ClickMe'
 
-    expect(-> Button() ).to.render('<div>ClickMe</div>')
+      expect(-> Button() ).to.render('<div>ClickMe</div>')
 
 
-  it 'component(function)', ->
 
-    Button = component ->
-      div {}, 'ClickMe'
 
-    expect(-> Button() ).to.render('<div>ClickMe</div>')
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   it 'should append children from arguments into props.children', ->
     expect ->
@@ -41,14 +78,14 @@ describe 'component', ->
 
     Z = component 'Z',
       render: ->
-        div @cloneProps(), 'Z'
+        div @cloneProps(), @props.children, 'Z'
 
     Y = component 'Y', (props) ->
-      Z props, 'Y'
+      Z props, props.children, 'Y'
 
 
     X = component (props) ->
-      Y props, 'X'
+      Y props, props.children, 'X'
 
 
     expect ->

@@ -1,4 +1,4 @@
-React = require 'react'
+React = require './React'
 ReactatronApp = require './App'
 
 module.exports =

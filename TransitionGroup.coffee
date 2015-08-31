@@ -3,9 +3,8 @@ React = require 'react'
 ReactTransitionChildMapping = require 'react/lib/ReactTransitionChildMapping'
 cloneWithProps = require 'react/lib/cloneWithProps'
 emptyFunction = require 'react/lib/emptyFunction'
-createFactory = require './createFactory'
 
-module.exports = createFactory React.createClass
+module.exports = React.createFactory React.createClass
   displayName: 'ReactatronTransitionGroup',
 
   propTypes:

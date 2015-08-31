@@ -1,5 +1,5 @@
 require 'stdlibjs/Object.clone'
-React = require 'react'
+React = require './React'
 Style = require './Style'
 
 ###

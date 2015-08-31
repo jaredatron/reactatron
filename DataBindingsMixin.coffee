@@ -2,7 +2,7 @@ require 'stdlibjs/Object.values'
 require 'stdlibjs/Array#unique'
 require 'stdlibjs/Array#excludes'
 
-React = require 'react'
+React = require './React'
 ReactatronApp = require './App'
 AppMixin = require './AppMixin'
 

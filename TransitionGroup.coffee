@@ -1,5 +1,5 @@
 require 'stdlibjs/Object.assign'
-React = require 'react'
+React = require './React'
 ReactTransitionChildMapping = require 'react/lib/ReactTransitionChildMapping'
 cloneWithProps = require 'react/lib/cloneWithProps'
 emptyFunction = require 'react/lib/emptyFunction'

@@ -7,7 +7,7 @@ isFunction = require 'stdlibjs/isFunction'
 isString = require 'stdlibjs/isString'
 isArray = require 'stdlibjs/isArray'
 
-React = require 'react'
+React = require './React'
 BaseMixin = require './BaseMixin'
 AppMixin = require './AppMixin'
 DataBindingsMixin = require './DataBindingsMixin'

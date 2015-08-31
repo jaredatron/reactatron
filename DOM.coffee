@@ -1,4 +1,4 @@
-React = require 'react'
+React = require './React'
 component = require './component'
 
 StyleComponent = require './StyleComponent'

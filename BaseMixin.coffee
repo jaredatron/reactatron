@@ -1,7 +1,7 @@
 require 'stdlibjs/Object.type'
 require 'stdlibjs/Array#excludes'
 
-React = require 'react'
+React = require './React'
 
 Style    = require './Style'
 Props    = require './Props'

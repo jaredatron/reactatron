@@ -69,9 +69,7 @@ describe 'Props', ->
       expect(props.children).to.be(child1)
 
       props = Props children: [child1]
-      expect(props.children).to.be.a(Array)
-      expect(props.children.length).to.be(1)
-      expect(props.children[0]).to.be(child1)
+      expect(props.children).to.be(child1)
 
       props = Props()
       expect(props.children).to.be(undefined)

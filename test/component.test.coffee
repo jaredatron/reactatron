@@ -16,6 +16,8 @@ describe 'component', ->
 
       renderToString {}, -> Test()
       expect(children).to.be(undefined)
+      renderToString {}, -> Test({}, div())
+      expect(children).to.be(undefined)
 
       # html = renderToString {}, ->
       #   Test {}, div({}, 'a'), div({},'b')

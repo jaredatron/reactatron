@@ -18,35 +18,23 @@ describe 'DOM', ->
         'boosh'
     .to.render('<div title="frog" style="color:red;">boosh</div>')
 
-  it 'should append children from arguments into props.children', ->
-    expect ->
-      div
-        children:['A', div({}, 'B')]
-        'C'
-        div({},'D')
-    .to.render(
-      '<div>A<div>B</div>C<div>D</div></div>'
-    )
+
+  it 'should always render a StyleComponent around the root component', ->
+    tree = div()
+    expect( tree.type ).to.eql( StyleComponent.type )
+
+    tree = div style: {}
+    expect( tree.type ).to.eql( StyleComponent.type )
 
 
-  describe 'when given styles that need controlling', ->
+    tree = div
+      style:
+        color: 'red'
+        ':hover':
+          color: 'green
+          '
 
-    it 'should render a StyleComponent around the root component', ->
-      tree = div()
-      expect( tree.type ).to.eql( StyleComponent.type )
-
-      tree = div style: {}
-      expect( tree.type ).to.eql( StyleComponent.type )
-
-
-      tree = div
-        style:
-          color: 'red'
-          ':hover':
-            color: 'green
-            '
-
-      expect( tree.type ).to.eql( StyleComponent.type )
+    expect( tree.type ).to.eql( StyleComponent.type )
 
 
 

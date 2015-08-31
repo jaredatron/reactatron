@@ -1,10 +1,11 @@
 require 'stdlibjs/Object.assign'
+createFactory = require './createFactory'
 React = require './React'
 ReactTransitionChildMapping = require 'react/lib/ReactTransitionChildMapping'
 cloneWithProps = require 'react/lib/cloneWithProps'
 emptyFunction = require 'react/lib/emptyFunction'
 
-module.exports = React.createFactory React.createClass
+module.exports = createFactory React.createClass
   displayName: 'ReactatronTransitionGroup',
 
   propTypes:

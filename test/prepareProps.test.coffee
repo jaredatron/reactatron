@@ -9,7 +9,7 @@ describe 'prepareProps', ->
     expect( prepareProps([                                              ]) ).to.eql undefined
     expect( prepareProps([{                     }                       ]) ).to.eql {                            }
     expect( prepareProps([{                     }, child1               ]) ).to.eql { children: child1           }
-    expect( prepareProps([{                     }, [child1]             ]) ).to.eql { children: child1           }
+    expect( prepareProps([{                     }, [child1]             ]) ).to.eql { children: [child1]         }
     expect( prepareProps([{                     }, child1, child2       ]) ).to.eql { children: [child1, child2] }
     expect( prepareProps([{                     }, [child1], child2     ]) ).to.eql { children: [child1, child2] }
     expect( prepareProps([{                     }, [child1], [child2]   ]) ).to.eql { children: [child1, child2] }
@@ -18,7 +18,7 @@ describe 'prepareProps', ->
 
     expect( prepareProps([{ children: []        }                       ]) ).to.eql { children: []               }
     expect( prepareProps([{ children: []        }, child1               ]) ).to.eql { children: child1           }
-    expect( prepareProps([{ children: []        }, [child1]             ]) ).to.eql { children: child1           }
+    expect( prepareProps([{ children: []        }, [child1]             ]) ).to.eql { children: [child1]         }
     expect( prepareProps([{ children: []        }, child1, child2       ]) ).to.eql { children: [child1, child2] }
     expect( prepareProps([{ children: []        }, [child1], child2     ]) ).to.eql { children: [child1, child2] }
     expect( prepareProps([{ children: []        }, [child1], [child2]   ]) ).to.eql { children: [child1, child2] }

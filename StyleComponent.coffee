@@ -1,6 +1,7 @@
 require 'stdlibjs/Object.clone'
 React = require './React'
 Style = require './Style'
+createFactory = require './createFactory'
 
 ###
 
@@ -10,7 +11,7 @@ StyleComponent
 
 types = Object.keys(React.DOM)
 
-module.exports = React.createFactory React.createClass
+module.exports = createFactory React.createClass
 
   displayName: 'StyleComponent'
 

@@ -60,6 +60,12 @@ module.exports = component 'StyleComponent',
     if @props.onFocusOut
       node.addEventListener 'focusout', @props.onFocusOut
 
+  # shouldComponentUpdate: (nextProps, nextState) ->
+  #   # @app.stats.styledComponentRerenders++
+  #   console.log('STYLE UPDATE?', @state, nextState)
+  #   true
+
+
   componentWillUnmount: ->
     node = @getDOMNode()
     node.ownerDocument.removeEventListener 'mouseup', @onMouseUp

@@ -87,7 +87,13 @@ module.exports = class Style
     style
 
 
+#
+# TODO - this is called a fuck ton. This should be benchmarked
+#
+#
 assign = (left, right, deep=true) ->
+  # console.count('Style#assign')
+  # global.DEBUG?.app?.stats?.styleAssigns++
   return left if !right?
   rightKeys = Object.keys(right)
   for key in rightKeys

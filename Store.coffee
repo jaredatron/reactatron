@@ -54,11 +54,6 @@ module.exports = class Store
   #
   #
   _get: (key) ->
-    @app.stats.storeGets++;
-    # console.count('Store#_get')
-    # console.count("Store#get #{key}")
-    # console.trace()
-
     @stats.totalGets++
     @stats.gets[key] = (@stats.gets[key]||0) + 1
     key = "#{@prefix}#{key}"
@@ -71,8 +66,6 @@ module.exports = class Store
   #
   #
   _set: (changes) ->
-    @app.stats.storeSets++;
-    # console.count('Store#_set')
     @stats.totalSets++
     @stats.sets[key] = (@stats.sets[key]||0) + 1
     for key, value of changes

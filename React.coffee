@@ -1,1 +1,1 @@
-module.exports = require 'react/addons'
+module.exports = global.React = require 'react/addons'

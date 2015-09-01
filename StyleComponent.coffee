@@ -14,7 +14,7 @@ types = Object.keys(React.DOM)
 module.exports = component 'StyleComponent',
 
   propTypes:
-    type:  React.PropTypes.oneOf(types).isRequired
+    _type:  React.PropTypes.oneOf(types).isRequired
     style: React.PropTypes.object
 
   getInitialState: ->
@@ -72,11 +72,20 @@ module.exports = component 'StyleComponent',
     node.addEventListener 'focusin', @props.onFocusIn
     node.addEventListener 'focusout', @props.onFocusOut
 
+  # componentDidUpdate: (prevProps, prevStats) ->
+  #   style = new Style(@props.style).compute(@state)
+  #   prevStyle = new Style(prevProps.style).compute(prevStats)
+  #   diff = differemce(style, prevStyle)
+  #   console.log('StyleComponent update', diff) if diff
+
+  computedStyle: ->
+    new Style(@props.style).compute(@state)
+
   render: ->
-    style = new Style(@props.style)
-    props = Object.clone(@props)
-    delete props.type
-    props.style = style.compute(@state)
+    style = @props.style || {}
+    props = @extendProps
+      _type: undefined
+      style: @computedStyle()
 
     if style[':hover']?
       props.onMouseEnter = @onMouseEnter
@@ -99,8 +108,19 @@ module.exports = component 'StyleComponent',
 
 
 
+# differemce = (a,b) ->
+#   diff = {}
+#   for key, aValue of a
+#     bValue = b[key]
+#     continue if aValue == aValue
+#     diff[key] = [aValue, bValue]
 
+#   for key, bValue of b
+#     aValue = a[key]
+#     continue if bValue == aValue
+#     diff[key] = [aValue, bValue]
 
+#   return diff if Object.keys(diff).length > 0
 
 
 

@@ -33,6 +33,7 @@ class ReactatronApp
       storeChangeRerenders: 0
       fullRerender: 0
       styledComponentRerenders: 0
+      styleAssigns: 0
 
   registerPlugin: (plugin) ->
     plugin.app = this

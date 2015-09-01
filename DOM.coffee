@@ -7,7 +7,7 @@ DOM = {}
 
 Object.keys(React.DOM).forEach (type) ->
   DOM[type] = component (props={}) ->
-    props.type = type
+    props._type = type
     StyleComponent(props)
 
 module.exports = DOM

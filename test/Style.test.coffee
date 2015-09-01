@@ -1,3 +1,5 @@
+require './helper'
+
 Style = require '../Style'
 
 describe 'Style', ->

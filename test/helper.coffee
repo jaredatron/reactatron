@@ -1,10 +1,77 @@
-React     = require '../React'
+require 'stdlibjs/Object.assign'
+
+clear = require('clear')
+
+global.expect  = expect = require 'expect.js'
+global.inspect = expect.stringify
+
+before ->
+  clear()
+
+
+global.assert = (result, message) ->
+  if result
+    return
+  error = new Error(message())
+  throw error
+  return
+
+global.FakeWindow = ->
+  {
+    location:
+      pathname: '/'
+      search: ''
+    addEventListener: new CallLogger
+    removeEventListener: new CallLogger
+  }
+
+global.CallLogger = ->
+
+  callLogger = ->
+    callLogger.calls.push [].slice.call(arguments)
+    callLogger.callCount = callLogger.calls.length
+    return
+
+  callLogger.reset = ->
+    callLogger.calls = []
+    callLogger.callCount = 0
+    return
+
+  callLogger.reset()
+  callLogger
+
+global.Counter = ->
+
+  counter = ->
+    counter.value++
+    return
+
+  counter.value = 0
+  counter
+
+
+
+
+
+###
+
+
+React Helpers
+
+
+###
+
+
+
+
+React        = require '../React'
 ReactElement = require 'react/lib/ReactElement'
-expect    = require 'expect.js'
+expect       = require 'expect.js'
 
 inspect   = expect.stringify
 Assertion = expect.Assertion
-TestUtils = React.addons.TestUtils
+
+Object.assign(global, React.addons.TestUtils)
 
 
 Assertion.prototype.aReactElement = ->
@@ -74,7 +141,7 @@ Assertion.prototype.aValidComponentClass = ->
 
 
 
-withContext = (context, render) ->
+global.withContext = (context, render) ->
   # context.app ||= {}
   childContextTypes = {}
   for key of context
@@ -89,14 +156,14 @@ withContext = (context, render) ->
   React.createElement(ContextProvider)
 
 
-renderToString = (element) ->
+global.renderToString = (element) ->
   React.renderToStaticMarkup(element)
 
 
 
-module.exports =
-  inspect:        inspect
-  withContext:    withContext
-  renderToString: renderToString
 
-Object.assign(module.exports, TestUtils)
+
+
+
+
+

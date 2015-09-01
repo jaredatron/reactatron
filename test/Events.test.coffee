@@ -1,3 +1,5 @@
+require './helper'
+
 Events = require '../Events'
 
 describe 'Events', ->

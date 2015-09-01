@@ -1,3 +1,5 @@
+require './helper'
+
 {div} = DOM = require '../DOM'
 
 StyleComponent = require '../StyleComponent'

@@ -1,3 +1,5 @@
+require './helper'
+
 Keyframes = require '../Keyframes'
 
 describe 'Keyframes', ->

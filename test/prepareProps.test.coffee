@@ -1,3 +1,5 @@
+require './helper'
+
 prepareProps = require '../prepareProps'
 
 describe 'prepareProps', ->

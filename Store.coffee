@@ -52,8 +52,8 @@ module.exports = class Store
     JSON.parse(object)
 
   _expires: ->
-    @__expires ||= @_get('_expires') || {}
-
+    key = "#{@prefix}_expires"
+    @__expires ||= if key of @data then _deserialize(@data[key]) else {}
 
 
   #
@@ -63,9 +63,15 @@ module.exports = class Store
   _get: (key) ->
     @stats.totalGets++
     @stats.gets[key] = (@stats.gets[key]||0) + 1
-    key = "#{@prefix}#{key}"
-    [setAt, value] = @_deserialize(@data[key]) if key of @data
-    value
+    storeKey = "#{@prefix}#{key}"
+    if storeKey of @data
+      expiresAt = @_expires()[key]
+      [setAt, value] = @_deserialize(@data[storeKey])
+      if expiresAt && expiresAt <= @_now()
+        delete @data[storeKey]
+        undefined
+      else
+        value
 
 
   #
@@ -76,11 +82,11 @@ module.exports = class Store
     @stats.totalSets++
     @stats.sets[key] = (@stats.sets[key]||0) + 1
     for key, value of changes
-      key = "#{@prefix}#{key}"
+      storeKey = "#{@prefix}#{key}"
       if value == undefined
-        delete @data[key]
+        delete @data[storeKey]
       else
-        @data[key] = @_serialize([@_now(), value])
+        @data[storeKey] = @_serialize([@_now(), value])
       @events.pub("store:change:#{key}", key)
 
   #
@@ -121,7 +127,7 @@ module.exports = class Store
 
   # http://redis.io/commands/expire
   expire: (keys) ->
-    expires = @expires()
+    expires = @_expires()
     for key, expireAt of keys
       expires[key] = expireAt
     this

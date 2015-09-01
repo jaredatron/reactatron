@@ -1,3 +1,5 @@
+require './helper'
+
 Router = require '../Router'
 
 describe 'Router', ->

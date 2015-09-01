@@ -1,3 +1,5 @@
+require './helper'
+
 React            = require 'react'
 component        = require '../component'
 StyleComponent   = require '../StyleComponent'

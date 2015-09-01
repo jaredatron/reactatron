@@ -1,3 +1,5 @@
+require './helper'
+
 Store = require '../Store'
 
 describe 'Store', ->
@@ -8,7 +10,7 @@ describe 'Store', ->
       pub: new CallLogger
     }
 
-    store = new Store(events: events)
+    store = new Store events: events, prefix: 'test/'
     store.data = data = {}
 
   it 'should CRUD complex objects', ->
@@ -92,7 +94,7 @@ describe 'Store', ->
 
       store.set searchResults: 'none'
       expectedData =
-        "Reactatron/searchResults": "[#{now},\"none\"]"
+        "test/searchResults": "[#{now},\"none\"]"
       expect( store.data ).to.eql(expectedData)
       expect( store.get('searchResults') ).to.be('none')
 
@@ -105,8 +107,9 @@ describe 'Store', ->
       expect( store.get('searchResults') ).to.be('none')
 
       now += 5
-      expect( store.data ).to.eql({})
+      expect( store.data ).to.eql(expectedData)
       expect( store.get('searchResults') ).to.be(undefined)
+      expect( store.data ).to.eql({})
 
 
 

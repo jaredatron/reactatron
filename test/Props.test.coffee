@@ -1,3 +1,5 @@
+require './helper'
+
 Props = require '../Props'
 Style = require '../Style'
 

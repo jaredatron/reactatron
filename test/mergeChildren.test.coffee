@@ -1,3 +1,5 @@
+require './helper'
+
 mergeChildren = require '../mergeChildren'
 
 describe 'mergeChildren', ->

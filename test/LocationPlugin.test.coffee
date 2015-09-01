@@ -1,3 +1,5 @@
+require './helper'
+
 LocationPlugin = require '../LocationPlugin'
 
 describe 'LocationPlugin', ->

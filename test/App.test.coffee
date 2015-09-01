@@ -1,3 +1,5 @@
+require './helper'
+
 App = require '../App'
 
 describe 'App', ->

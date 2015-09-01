@@ -99,7 +99,7 @@ module.exports = component 'StyleComponent',
       props.onMouseDown  = @onMouseDown
       # props.onMouseUp    = @onMouseUp
 
-    React.createElement(@props.type, props)
+    React.createElement(@props._type, props)
 
 
 

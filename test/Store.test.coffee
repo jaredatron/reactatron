@@ -93,6 +93,7 @@ describe 'Store', ->
         expect( store.get('searchResults') ).to.be(undefined)
 
     it 'should call setTimeout', (done) ->
+
       now = Date.now()
       store._now = -> now
 

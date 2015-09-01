@@ -107,15 +107,16 @@ module.exports = class Store
   _expire: (key, silently=false) ->
     expiresAt = @_expires[key]
     return if !expiresAt?
-    entry = @_get(key)
+    entry = @__get(key)
     return if !entry?
     [setAt, value] = entry
+    # console.log('expiring', key, [setAt <= expiresAt, setAt, expiresAt])
     return unless setAt <= expiresAt
     delete @_expires[key]
     if silently
-      @_del(key)
+      @__del(key)
     else
-      @_set(key, undefined)
+      @_set "#{key}": undefined
     return true
 
 
@@ -126,33 +127,16 @@ module.exports = class Store
     @_expires = @__get('_expires') || {}
     now = @_now()
     for key of @_expires
-      @_expire(key) || @_scheduleExpiration(key, expiresAt - now)
+      @_expire(key, true) || @_scheduleExpiration(key, expiresAt - now)
     @_saveExpires()
 
   _saveExpires: ->
     @__set('_expires', @_expires)
 
-
-
-
-
   _scheduleExpiration: (key, delayFor) ->
     delay delayFor, =>
-      for key, expiresAt of @_expires
-        if setAt <= expiresAt
-          @__del(key)
-          delete @_expires[key]
+      @_expire(key) for key of @_expires
       @_saveExpires();
-
-
-      # expiresAt = @_expires[key]
-      # return unless expiresAt?
-      # entry = @__get(key)
-      # return unless entry?
-      # [setAt, value] = entry
-      # if !setAt? || setAt <= expiresAt
-      #   @del(key)
-      #   delete @_expires[key]
 
 
   #

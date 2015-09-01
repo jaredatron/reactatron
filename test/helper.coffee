@@ -1,5 +1,7 @@
 require 'stdlibjs/Object.assign'
 
+global.delay = require 'stdlibjs/delay'
+
 clear = require('clear')
 
 global.expect  = expect = require 'expect.js'

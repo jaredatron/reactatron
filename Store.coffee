@@ -5,6 +5,7 @@ require 'stdlibjs/Array#remove'
 require 'stdlibjs/Array#filter'
 require 'stdlibjs/String#startsWith'
 
+delay = require 'stdlibjs/delay'
 isArray = require 'stdlibjs/isArray'
 
 
@@ -30,12 +31,13 @@ module.exports = class Store
     Object.bindAll(this)
     @prefix ||= "Reactatron/"
     @subscriptions = {}
-    @changedKeys = {}
     @stats =
       totalGets: 0
       totalSets: 0
       gets: {}
       sets: {}
+
+    @_loadExpires()
 
     # # disable localStorage
     # @data = {}
@@ -43,17 +45,39 @@ module.exports = class Store
     # @_serialize = (object) -> object
     # @_deserialize = (object) -> object
 
-  _now: -> Date.now()
+
+  ###*
+  #
+  # @private
+  #
+  ###
+  _now: ->
+    Date.now()
+
 
   _serialize: (object) ->
     JSON.stringify(object)
 
+
   _deserialize: (object) ->
     JSON.parse(object)
 
-  _expires: ->
-    key = "#{@prefix}_expires"
-    @__expires ||= if key of @data then _deserialize(@data[key]) else {}
+
+  __get: (key) ->
+    storeKey = "#{@prefix}#{key}"
+    @_deserialize(@data[storeKey]) if storeKey of @data
+
+
+  __set: (key, value) ->
+    if value == undefined
+      @__del(key)
+    else
+      @data["#{@prefix}#{key}"] = @_serialize(value)
+
+
+  __del: (key) ->
+    delete @data["#{@prefix}#{key}"]
+
 
 
   #
@@ -63,15 +87,11 @@ module.exports = class Store
   _get: (key) ->
     @stats.totalGets++
     @stats.gets[key] = (@stats.gets[key]||0) + 1
-    storeKey = "#{@prefix}#{key}"
-    if storeKey of @data
-      expiresAt = @_expires()[key]
-      [setAt, value] = @_deserialize(@data[storeKey])
-      if expiresAt && expiresAt <= @_now()
-        delete @data[storeKey]
-        undefined
-      else
-        value
+    result = @__get(key)
+    if result
+      result[1]
+    else
+      undefined
 
 
   #
@@ -82,12 +102,44 @@ module.exports = class Store
     @stats.totalSets++
     @stats.sets[key] = (@stats.sets[key]||0) + 1
     for key, value of changes
-      storeKey = "#{@prefix}#{key}"
-      if value == undefined
-        delete @data[storeKey]
-      else
-        @data[storeKey] = @_serialize([@_now(), value])
+      value = [@_now(), value] unless value == undefined
+      @__set(key, value)
       @events.pub("store:change:#{key}", key)
+
+
+
+
+
+
+
+  _loadExpires: ->
+    @_expires = @__get('_expires') || {}
+    now = @_now()
+    for key, expiresAt of @_expires
+      delta = expiresAt - now
+      if delta <= 0
+        @__del(key)
+        delete @_expires[key]
+      else
+        @_scheduleExpiration(key, delta)
+    @_saveExpires();
+
+  _saveExpires: ->
+    @__set('_expires', @_expires)
+
+
+
+  _scheduleExpiration: (key, delayFor) ->
+    delay delayFor, =>
+      expiresAt = @_expires[key]
+      return unless expiresAt?
+      entry = @__get(key)
+      return unless entry?
+      [setAt, value] = entry
+      if !setAt? || setAt <= expiresAt
+        @del(key)
+        delete @_expires[key]
+
 
   #
   # @example
@@ -125,12 +177,56 @@ module.exports = class Store
     @set(changes)
     this
 
+  ###*
+  # Store#expire
   # http://redis.io/commands/expire
-  expire: (keys) ->
-    expires = @_expires()
-    for key, expireAt of keys
-      expires[key] = expireAt
+  #
+  # @param {Object} key value pairs where the value is an Time integer
+  # @return {this}
+  #
+  ###
+  expire: (expires) ->
+    now = @_now()
+    exipreNow = []
+    for key, expiresAt of expires
+      if expiresAt <= now
+        exipreNow.push key
+      else
+        @_expires[key] = expiresAt
+        @_scheduleExpiration(key, expiresAt - now)
+    @del(exipreNow)
     this
+
+
+  #   for key in
+  #     if key less than now
+  #       epire now (includes expire events)
+  #     else
+  #       scheudle setTimeout to expire
+  #       on boot we do this too to avoid having a watcher
+
+  #   @_expires(keys)
+  #   @_scheduleExpiration()
+  #   this
+
+  # _expires: (expires) ->
+  #   key = "#{@prefix}_expires"
+  #   if arguments.length == 0
+  #     return @__expires ||= if key of @data then @_deserialize(@data[key]) else {}
+  #   @data[key] = @_serialize Object.assign(@_expires(), expires)
+
+  # _scheduleExpiration: ->
+  #   @_scheduleExpirationTimeout ||= setTimeout(@_expireKeys)
+  #   this
+
+  # _expireKeys: ->
+  #   delete @_scheduleExpirationTimeout
+  #   now = @_now()
+  #   keysToDelete = []
+  #   for key, expiresAt of @_expires()
+  #     keysToDelete.push(key) if expiresAt <= now
+  #   console.log('expiring keys', keysToDelete, now, @_expires())
+  #   @del(keysToDelete)
 
 
   keys: ->

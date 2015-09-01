@@ -18,16 +18,16 @@ describe 'Store', ->
     expect(store).to.be.a(Store)
     expect(store.data).to.be(data)
 
-    expect( store.get('a')     ).to.be(undefined)
+    expect( store.get('a') ).to.be(undefined)
     expect( events.pub.calls ).to.eql([])
 
     expect( store.set( a: 'b' ) ).to.be(store)
     expect( events.pub.calls ).to.eql([
       ["store:change:a", 'a']
     ])
-    expect( store.get('a')     ).to.equal('b')
-    expect( store.del('a')     ).to.be(store)
-    expect( store.get('a')     ).to.be(undefined)
+    expect( store.get('a') ).to.equal('b')
+    expect( store.del('a') ).to.be(store)
+    expect( store.get('a') ).to.be(undefined)
 
 
     thing = {
@@ -85,7 +85,14 @@ describe 'Store', ->
 
   describe '#expire', ->
 
-    it 'should work', ->
+    describe 'when given a time <= now', ->
+      it 'should delete the key immediately', ->
+        store.set searchResults: 'none'
+        expect( store.get('searchResults') ).to.be('none')
+        store.expire searchResults: Date.now()
+        expect( store.get('searchResults') ).to.be(undefined)
+
+    it 'should call setTimeout', (done) ->
       now = Date.now()
       store._now = -> now
 
@@ -93,25 +100,15 @@ describe 'Store', ->
       expect( store.get('searchResults') ).to.be(undefined)
 
       store.set searchResults: 'none'
-      expectedData =
-        "test/searchResults": "[#{now},\"none\"]"
-      expect( store.data ).to.eql(expectedData)
       expect( store.get('searchResults') ).to.be('none')
 
-      store.expire searchResults: now + 10
-      expect( store.data ).to.eql(expectedData)
+      store.expire searchResults: now + 10 # in 10 miliseconds
       expect( store.get('searchResults') ).to.be('none')
 
-      now += 5
-      expect( store.data ).to.eql(expectedData)
-      expect( store.get('searchResults') ).to.be('none')
+      delay 5, ->
+        expect( store.get('searchResults') ).to.be('none')
 
-      now += 5
-      expect( store.data ).to.eql(expectedData)
-      expect( store.get('searchResults') ).to.be(undefined)
-      expect( store.data ).to.eql({})
-
-
-
-
+        delay 5, ->
+          expect( store.get('searchResults') ).to.be(undefined)
+          done()
 

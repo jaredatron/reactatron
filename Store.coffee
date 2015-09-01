@@ -26,8 +26,9 @@ module.exports = class Store
 
   data: global.localStorage || {}
 
-  constructor: ({@events, @app}) ->
+  constructor: ({@events, @app, @prefix}) ->
     Object.bindAll(this)
+    @prefix ||= "Reactatron/"
     @subscriptions = {}
     @changedKeys = {}
     @stats =
@@ -42,13 +43,18 @@ module.exports = class Store
     # @_serialize = (object) -> object
     # @_deserialize = (object) -> object
 
-  prefix: 'Reactatron/'
+  _now: -> Date.now()
 
   _serialize: (object) ->
     JSON.stringify(object)
 
   _deserialize: (object) ->
     JSON.parse(object)
+
+  _expires: ->
+    @__expires ||= @_get('_expires') || {}
+
+
 
   #
   # @private
@@ -70,10 +76,11 @@ module.exports = class Store
     @stats.totalSets++
     @stats.sets[key] = (@stats.sets[key]||0) + 1
     for key, value of changes
+      key = "#{@prefix}#{key}"
       if value == undefined
-        delete @data["#{@prefix}#{key}"]
+        delete @data[key]
       else
-        @data["#{@prefix}#{key}"] = @_serialize([Date.now(), value])
+        @data[key] = @_serialize([@_now(), value])
       @events.pub("store:change:#{key}", key)
 
   #
@@ -111,6 +118,14 @@ module.exports = class Store
     changes[key] = undefined for key in keys
     @set(changes)
     this
+
+  # http://redis.io/commands/expire
+  expire: (keys) ->
+    expires = @expires()
+    for key, expireAt of keys
+      expires[key] = expireAt
+    this
+
 
   keys: ->
     keys = []

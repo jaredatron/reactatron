@@ -79,3 +79,36 @@ describe 'Store', ->
 
       store.clear()
       expect( store.keys() ).to.eql( [] )
+
+
+  describe '#expire', ->
+
+    it 'should work', ->
+      now = Date.now()
+      store._now = -> now
+
+      expect( store.data                 ).to.eql({})
+      expect( store.get('searchResults') ).to.be(undefined)
+
+      store.set searchResults: 'none'
+      expectedData =
+        "Reactatron/searchResults": "[#{now},\"none\"]"
+      expect( store.data ).to.eql(expectedData)
+      expect( store.get('searchResults') ).to.be('none')
+
+      store.expire searchResults: now + 10
+      expect( store.data ).to.eql(expectedData)
+      expect( store.get('searchResults') ).to.be('none')
+
+      now += 5
+      expect( store.data ).to.eql(expectedData)
+      expect( store.get('searchResults') ).to.be('none')
+
+      now += 5
+      expect( store.data ).to.eql({})
+      expect( store.get('searchResults') ).to.be(undefined)
+
+
+
+
+

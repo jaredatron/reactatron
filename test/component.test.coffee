@@ -129,9 +129,10 @@ describe 'component', ->
 
     it 'should return a new component that wraps the original component', ->
 
-      BaseButton = component 'BaseButton',
-        render: ->
-          React.createElement('button', @props)
+      BaseButton = require('../DOM').button
+      # BaseButton = component 'BaseButton',
+      #   render: ->
+      #     React.createElement('button', @props)
 
       Button = BaseButton.withStyle 'Button',
         background: 'transparent'

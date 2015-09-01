@@ -1,6 +1,19 @@
 # Style
 
 
+
+
+
+## Flexbox tricks
+
+You can fix the width of a flex column by setting both `minWidth` and `flexBasis`
+
+```css
+minWidth:  20px
+flexBasis: 20px
+```
+
+
 StyledComponent
  - just styles and a component
 

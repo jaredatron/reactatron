@@ -25,9 +25,8 @@ module.exports = class Store
 
   data: global.localStorage || {}
 
-  constructor: (options={}) ->
+  constructor: ({@events, @app}) ->
     Object.bindAll(this)
-    @events = options.events
     @subscriptions = {}
     @changedKeys = {}
     @stats =
@@ -55,7 +54,11 @@ module.exports = class Store
   #
   #
   _get: (key) ->
+    @app.stats.storeGets++;
     # console.count('Store#_get')
+    # console.count("Store#get #{key}")
+    # console.trace()
+
     @stats.totalGets++
     @stats.gets[key] = (@stats.gets[key]||0) + 1
     key = "#{@prefix}#{key}"
@@ -68,6 +71,7 @@ module.exports = class Store
   #
   #
   _set: (changes) ->
+    @app.stats.storeSets++;
     # console.count('Store#_set')
     @stats.totalSets++
     @stats.sets[key] = (@stats.sets[key]||0) + 1
@@ -127,8 +131,10 @@ module.exports = class Store
 
   toObject: ->
     object = {}
+    console.groupCollapsed 'Store#toObject'
     for key in @keys()
       object[key] = @get(key)
+    console.groupEnd 'Store#toObject'
     object
 
 

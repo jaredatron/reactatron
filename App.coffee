@@ -17,9 +17,9 @@ class ReactatronApp
     @plugins = []
 
     @events = new Events
-    {@sub,@unsub,@pub} = @events
+    {@sub,@unsub,@pub,@onNext} = @events
 
-    @store = new Store(events: @events)
+    @store = new Store(events: @events, app: this)
     {@get,@set,@del} = @store
 
     @registerPlugin new LocationPlugin( window: options.window )
@@ -27,6 +27,8 @@ class ReactatronApp
     @registerPlugin new WindowSizePlugin( window: options.window ) # :D
 
     @stats =
+      storeGets: 0
+      storeSets: 0
       storeChangeEvents: 0
       storeChangeRerenders: 0
       fullRerender: 0

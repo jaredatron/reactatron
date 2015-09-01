@@ -28,6 +28,14 @@ class Events
           delete @subscriptions[event]
     this
 
+  onNext: (events, originalHandler) ->
+    unsub = @unsub
+    handler = ->
+      console.log('once',events, originalHandler)
+      unsub(events, handler)
+      originalHandler.apply(this, arguments)
+    @sub(events, handler)
+
   pub: (event, payload, done) ->
     @_schedulePublishing(event, payload, done)
     this

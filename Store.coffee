@@ -87,11 +87,8 @@ module.exports = class Store
   _get: (key) ->
     @stats.totalGets++
     @stats.gets[key] = (@stats.gets[key]||0) + 1
-    result = @__get(key)
-    if result
-      result[1]
-    else
-      undefined
+    entry = @__get(key)
+    if entry then entry[1] else undefined
 
 
   #
@@ -107,6 +104,19 @@ module.exports = class Store
       @events.pub("store:change:#{key}", key)
 
 
+  _expire: (key, silently=false) ->
+    expiresAt = @_expires[key]
+    return if !expiresAt?
+    entry = @_get(key)
+    return if !entry?
+    [setAt, value] = entry
+    return unless setAt <= expiresAt
+    delete @_expires[key]
+    if silently
+      @_del(key)
+    else
+      @_set(key, undefined)
+    return true
 
 
 
@@ -115,30 +125,34 @@ module.exports = class Store
   _loadExpires: ->
     @_expires = @__get('_expires') || {}
     now = @_now()
-    for key, expiresAt of @_expires
-      delta = expiresAt - now
-      if delta <= 0
-        @__del(key)
-        delete @_expires[key]
-      else
-        @_scheduleExpiration(key, delta)
-    @_saveExpires();
+    for key of @_expires
+      @_expire(key) || @_scheduleExpiration(key, expiresAt - now)
+    @_saveExpires()
 
   _saveExpires: ->
     @__set('_expires', @_expires)
 
 
 
+
+
   _scheduleExpiration: (key, delayFor) ->
     delay delayFor, =>
-      expiresAt = @_expires[key]
-      return unless expiresAt?
-      entry = @__get(key)
-      return unless entry?
-      [setAt, value] = entry
-      if !setAt? || setAt <= expiresAt
-        @del(key)
-        delete @_expires[key]
+      for key, expiresAt of @_expires
+        if setAt <= expiresAt
+          @__del(key)
+          delete @_expires[key]
+      @_saveExpires();
+
+
+      # expiresAt = @_expires[key]
+      # return unless expiresAt?
+      # entry = @__get(key)
+      # return unless entry?
+      # [setAt, value] = entry
+      # if !setAt? || setAt <= expiresAt
+      #   @del(key)
+      #   delete @_expires[key]
 
 
   #

@@ -181,11 +181,11 @@ describe 'component', ->
 
       element = BigRedButton
         style:
-          color:'blue'
+          background: 'blue'
         'PUSH'
 
       expect(element).to.render(
-        '<button style="background:red;border:1px solid grey;padding:0.25em;border-color:red;font-size:150%;color:blue;">PUSH</button>'
+        '<button style="background:blue;border:1px solid grey;padding:0.25em;border-color:red;font-size:150%;">PUSH</button>'
       )
 
 

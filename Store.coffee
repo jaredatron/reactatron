@@ -1,3 +1,4 @@
+require 'stdlibjs/Object.fromTwoArrays'
 require 'stdlibjs/Object.isObject'
 require 'stdlibjs/Object.bindAll'
 require 'stdlibjs/Array#remove'
@@ -57,7 +58,7 @@ module.exports = class Store
     @stats.totalGets++
     @stats.gets[key] = (@stats.gets[key]||0) + 1
     key = "#{@prefix}#{key}"
-    value = @_deserialize(@data[key]) if key of @data
+    [setAt, value] = @_deserialize(@data[key]) if key of @data
     value
 
 
@@ -72,7 +73,7 @@ module.exports = class Store
       if value == undefined
         delete @data["#{@prefix}#{key}"]
       else
-        @data["#{@prefix}#{key}"] = @_serialize(value)
+        @data["#{@prefix}#{key}"] = @_serialize([Date.now(), value])
       @events.pub("store:change:#{key}", key)
 
   #
@@ -124,9 +125,9 @@ module.exports = class Store
 
   toObject: ->
     object = {}
+    keys = @keys()
     console.groupCollapsed 'Store#toObject'
-    for key in @keys()
-      object[key] = @get(key)
+    object = Object.fromTwoArrays(keys, @get(keys))
     console.groupEnd 'Store#toObject'
     object
 

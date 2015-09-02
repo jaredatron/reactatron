@@ -24,6 +24,11 @@ class ReactatronApp
       styledComponentRerenders: 0
       styleAssigns: 0
 
+
+      componentsInitialized: 0
+      componentsMounted: 0
+      componentsUpdated: 0
+
     EventsPlugin(this)
     StorePlugin(this)
     LocationPlugin(this)
@@ -75,5 +80,5 @@ RootComponent = createFactory React.createClass
     app: @props.app
 
   render: ->
-    console.info('ReactatronApp.RootComponent render')
+    # console.info('ReactatronApp.RootComponent render') # this should render happen twice
     @props.Component()

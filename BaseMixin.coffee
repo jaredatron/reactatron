@@ -6,6 +6,7 @@ React = require './React'
 Style    = require './Style'
 Props    = require './Props'
 AppMixin = require './AppMixin'
+StatsMixin = require './StatsMixin'
 
 STYLE_PROPERTIES =
   grow:     'flexGrow'
@@ -17,7 +18,7 @@ STYLE_PROPERTIES =
 module.exports =
 
   # TODO remove this. Not all components need the AppMixin
-  mixins: [AppMixin]
+  mixins: [AppMixin, StatsMixin]
 
   style: ->
     Style(@defaultStyle)
@@ -54,3 +55,7 @@ module.exports =
     # console.count("rerender #{@constructor.displayName}")
     # console.info("rerender #{@constructor.displayName}", event, payload)
     @forceUpdate()
+
+
+
+

@@ -1,21 +1,16 @@
-module.exports = class WindowSizePlugin
+module.exports = (app) ->
 
-  constructor: (options) ->
-    Object.bindAll(this)
-    @window = options.window
+  window = app.config.window
 
-  start: ->
-    @update()
-    @window.addEventListener 'resize', @update
-    this
+  update = ->
+    app.set windowSize:
+      height: window.innerHeight
+      width:  window.innerWidth
 
-  stop: ->
-    @window.removeEventListener 'resize', @update
-    this
+  app.sub 'start', ->
+    update()
+    window.addEventListener 'resize', update
 
-  update: ->
-    @app.set windowSize: {
-      height: @window.innerHeight,
-      width:  @window.innerWidth,
-    }
-    this
+  app.sub 'stop', ->
+    window.removeEventListener 'resize', update
+

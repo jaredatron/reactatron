@@ -6,7 +6,6 @@
 
 ## TODO
 
-- remove plugins and make the actions patten and hooks the way
 
 
 ## thoughs
@@ -57,7 +56,7 @@ module.exports = div.withStyle 'RedBox',
 
 - starts and stops the global listeners like popstate
 - initializes the state of the app
-- do we need some sort of "plugin" system here?
+- do we need some sort of "plugin" system here? NO!!!
 
 
 #### State

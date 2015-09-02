@@ -27,7 +27,7 @@ module.exports = class Store
 
   data: global.localStorage || {}
 
-  constructor: ({@events, @app, @prefix}) ->
+  constructor: ({@events, @prefix}) ->
     Object.bindAll(this)
     @prefix ||= "Reactatron/"
     @subscriptions = {}

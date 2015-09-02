@@ -8,27 +8,26 @@ new ResponsiveSizePlugin
 
 ###
 
-module.exports = class ResponsiveSizePlugin
+module.exports = (app) ->
 
-  constructor: (options) ->
-    Object.bindAll(this)
-    @window = options.window
-    @widths = options.widths || [480, 768, 992, 1200]
+  window = app.config.window
 
-  start: ->
-    @window.addEventListener 'resize', @update
-    @update()
-    this
+  widths = app.config.responsiveWidths || [480, 768, 992, 1200]
 
-  stop: ->
-    @window.removeEventListener 'resize', @update
-    this
+  update = ->
+    # height = window.innerHeight,
+    width = window.innerWidth
+    horizontalSize = widths.findIndex (max) -> width < max
+    horizontalSize = widths.length if horizontalSize == -1
+    if horizontalSize != app.get('horizontalSize')
+      app.set horizontalSize: horizontalSize
 
-  update: ->
-    # height = @window.innerHeight,
-    width = @window.innerWidth
-    horizontalSize = @widths.findIndex (max) -> width < max
-    horizontalSize = @widths.length if horizontalSize == -1
-    if horizontalSize != @app.get('horizontalSize')
-      @app.set horizontalSize: horizontalSize
-    this
+
+  app.sub 'start', ->
+    update()
+    window.addEventListener 'resize', update
+
+  app.sub 'stop', ->
+    window.removeEventListener 'resize', update
+
+

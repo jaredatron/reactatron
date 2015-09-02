@@ -1,99 +1,47 @@
-require 'stdlibjs/Object.bindAll'
+Location = require './Location'
 
-module.exports = class LocationPlugin
+module.exports = (app) ->
 
-  constructor: (options) ->
-    Object.bindAll(this)
-    @window = options.window
+  window = app.config.window
 
-  init: ->
-    @app.locationFor = @for
-    @app.setLocation = @set
-    @app.setPath = @setPath
-    @app.setParams = @setParams
-    @app.clearHash = @clearHash
+  app.location = new Location window: window
+  Object.assign(app, mixin)
 
-  start: ->
-    @update()
-    @window.addEventListener 'popstate', @update
-    # @app.sub 'store:change:location', @update
+  update = ->
+    app.location.update()
+    app.updateLocation()
 
-  stop: ->
-    @window.removeEventListener 'popstate', @update
-    # @app.unsub 'store:change:location', @update
 
-  readLocation: ->
-    path:   @window.location.pathname
-    params: searchToObject(@window.location.search)
+  app.sub 'start', ->
+    update()
+    window.addEventListener 'popstate', update
 
-  update: ->
-    @location = @readLocation()
-    @app.set location: @location
+  app.sub 'stop', ->
+    window.removeEventListener 'popstate', update
+
+
+mixin =
+  locationFor: (path, params) ->
+    @location.for(path, params)
+
+  updateLocation: ->
+    @set location:
+      path:   @location.path
+      params: @location.params
     @app
 
-  for: (path, params) ->
-    path ||= @location.path
-    params ||= @location.params
-    path = '/'+path if path[0] != '/'
-    "#{path}#{objectToSearch(params)}"
+  setLocation: (path, replace) ->
+    @location.set(path, replace)
+    @updateLocation()
 
-  set: (value, replace) ->
-    value = "/#{value}" unless value[0] == '/'
-    if replace
-      history.replaceState({}, document.title, value)
-    else
-      history.pushState({}, document.title, value)
-    @update()
-    @app
-
-  setPath: (path, replace) ->
-    @set(@for(path), replace)
-    @app
+  setPath: (params, replace) ->
+    @location.setPath(params, replace)
+    @updateLocation()
 
   setParams: (params, replace) ->
-    @set(@for(null, params), replace)
-    @app
-
-  updateParams: (params, replace) ->
-    @setParams(assign({}, @params, params), replace)
-    @app
+    @location.setParams(params, replace)
+    @updateLocation()
 
   clearHash: ->
-    @location ||= @readLocation()
-    @set(@for(@location.path, @location.params))
-
-
-
-
-
-searchToObject = (search) ->
-  params = {}
-  search = search.substring(search.indexOf('?') + 1, search.length);
-  return {} if search.length == 0
-  search.split(/&+/).forEach (param) ->
-    [key, value] = param.split('=')
-    key = decodeURIComponent(key)
-    if value?
-      value = decodeURIComponent(value)
-    else
-      value = true
-    params[key] = value
-  params
-
-
-objectToQueryString = (params) ->
-  return undefined if !params?
-  pairs = []
-  Object.keys(params).forEach (key) ->
-    value = params[key]
-    switch value
-      when true
-        pairs.push "#{encodeURIComponent(key)}"
-      when false, null, undefined
-      else
-        pairs.push "#{encodeURIComponent(key)}=#{encodeURIComponent(value)}"
-  pairs.join('&')
-
-objectToSearch = (params) ->
-  search = objectToQueryString(params)
-  if search.length == 0 then '' else '?'+search
+    @location.clearHash()
+    @updateLocation()

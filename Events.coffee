@@ -5,6 +5,7 @@ require 'stdlibjs/Array#includes'
 isString = require 'stdlibjs/isString'
 
 class Events
+
   constructor: ->
     Object.bindAll(this)
     @publishingTimeout = null

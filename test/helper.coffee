@@ -19,13 +19,11 @@ global.assert = (result, message) ->
   return
 
 global.FakeWindow = ->
-  {
-    location:
-      pathname: '/'
-      search: ''
-    addEventListener: new CallLogger
-    removeEventListener: new CallLogger
-  }
+  location:
+    pathname: '/'
+    search: ''
+  addEventListener: new CallLogger
+  removeEventListener: new CallLogger
 
 global.CallLogger = ->
 

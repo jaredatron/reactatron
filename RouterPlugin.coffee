@@ -11,31 +11,24 @@ new ResponsiveSizePlugin
 
 ###
 
-module.exports = class RouterPlugin
+module.exports = (app, spec) ->
 
-  constructor: (spec) ->
-    Object.bindAll(this)
-    @router = new Router(spec)
+  app.router = new Router(spec)
 
-  init: ->
-    @app.router = @router
-    @app.RouteComponent = RouteComponent
+  app.MainComponent = RouteComponent
 
-  start: ->
-    @update()
-    @app.sub 'store:change:location', @update
-    this
-
-  stop: ->
-    @app.unsub 'store:change:location', @update
-    this
-
-  update: ->
-    if location = @app.get('location')
-      route = @router.routeFor(location)
-      currentRoute = @app.get('route')
+  update = ->
+    if location = app.get('location')
+      route = app.router.routeFor(location)
+      currentRoute = app.get('route')
       if !currentRoute || route.id != currentRoute.id
-        @app.set route: route
+        app.set route: route
+
+  app.sub 'start', ->
+    app.sub 'store:change:location', update
+
+  app.sub 'stop', ->
+    app.unsub 'store:change:location', update
 
 
 RouteComponent = component 'RouteComponent',

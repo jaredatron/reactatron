@@ -1,31 +1,20 @@
 require 'stdlibjs/Object.bindAll'
 
-React            = require './React'
-Events           = require './Events'
-Store            = require './Store'
-LocationPlugin   = require './LocationPlugin'
-WindowSizePlugin = require './WindowSizePlugin'
-Router           = require './Router'
-createFactory    = require './createFactory'
+React                = require './React'
+createFactory        = require './createFactory'
+EventsPlugin         = require './EventsPlugin'
+StorePlugin          = require './StorePlugin'
+LocationPlugin       = require './LocationPlugin'
+WindowSizePlugin     = require './WindowSizePlugin'
+ResponsiveSizePlugin = require './ResponsiveSizePlugin'
+
 
 class ReactatronApp
 
-  constructor: (options={}) ->
-    options.window ||= global.window
+  constructor: (@config={}) ->
+    @config.window ||= global.window
 
     Object.bindAll(this)
-    @plugins = []
-
-    @events = new Events
-    {@sub,@unsub,@pub,@onNext} = @events
-
-    @store = new Store(events: @events, app: this)
-    {@get,@set,@del} = @store
-
-    @registerPlugin new LocationPlugin( window: options.window )
-    # we need this to be responsive
-    @registerPlugin new WindowSizePlugin( window: options.window ) # :D
-
     @stats =
       storeGets: 0
       storeSets: 0
@@ -35,11 +24,11 @@ class ReactatronApp
       styledComponentRerenders: 0
       styleAssigns: 0
 
-  registerPlugin: (plugin) ->
-    plugin.app = this
-    plugin.init() if plugin.init?
-    @plugins.push plugin
-    this
+    EventsPlugin(this)
+    StorePlugin(this)
+    LocationPlugin(this)
+    WindowSizePlugin(this)
+    ResponsiveSizePlugin(this)
 
   getDOMNode: ->
     document.body
@@ -57,15 +46,15 @@ class ReactatronApp
   start: ->
     if @rootComponent
       throw new Error('app already started')
-    @plugins.forEach (plugin) -> plugin.start()
+    @pub 'start'
     @events.waitForClearQueue(@render)
     this
 
   stop: ->
-    # @DOMNode.innerHTML = ''
+    @DOMNode.innerHTML = ''
     delete @rootComponent
     delete @DOMNode
-    @plugins.forEach (plugin) -> plugin.stop()
+    @pub 'stop'
     this
 
 module.exports = ReactatronApp

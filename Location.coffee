@@ -4,6 +4,7 @@ module.exports = class Location
 
   constructor: ({@window}) ->
     Object.bindAll(this)
+    @update()
 
   update: ->
     @path   = @window.location.pathname
@@ -23,12 +24,10 @@ module.exports = class Location
     value = ensureSlashPrefix(value)
 
     if replace
-      history.replaceState({}, document.title, value)
+      @window.history.replaceState({}, @window.document.title, value)
     else
-      history.pushState({}, document.title, value)
-
+      @window.history.pushState({}, @window.document.title, value)
     @update()
-    @this
 
   setPath: (path, replace) ->
     @set(@for(path), replace)
@@ -40,7 +39,6 @@ module.exports = class Location
     @setParams(assign({}, @params, params), replace)
 
   clearHash: ->
-    @update() unless @path && @params
     @set(@for(), true)
 
 

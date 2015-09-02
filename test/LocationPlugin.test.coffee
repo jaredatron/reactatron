@@ -41,14 +41,15 @@ describe 'LocationPlugin', ->
     expect( stop[0] ).to.eql 'stop'
 
 
-    expect( app.location.path   ).to.be(undefined)
-    expect( app.location.params ).to.be(undefined)
+    expect( app.location.path   ).to.eql '/'
+    expect( app.location.params ).to.eql {}
 
+    window.location.pathname = '/posts'
+    window.location.search   = '?order=desc'
     start[1]() # pub 'start'
-
     expect( window.addEventListener.callCount ).to.be(1)
-    expect( app.location.path   ).to.eql('/')
-    expect( app.location.params ).to.eql({})
+    expect( app.location.path   ).to.eql '/posts'
+    expect( app.location.params ).to.eql order: 'desc'
 
     window.location.pathname = '/login'
     window.location.search   = '?username=Julia+Sanders&password=12345god'

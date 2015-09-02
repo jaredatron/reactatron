@@ -19,11 +19,16 @@ global.assert = (result, message) ->
   return
 
 global.FakeWindow = ->
+  addEventListener: new CallLogger
+  removeEventListener: new CallLogger
+  document:
+    title: 'Reactatron Tests'
   location:
     pathname: '/'
     search: ''
-  addEventListener: new CallLogger
-  removeEventListener: new CallLogger
+  history:
+    replaceState: new CallLogger
+    pushState: new CallLogger
 
 global.CallLogger = ->
 

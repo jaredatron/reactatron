@@ -11,6 +11,7 @@ module.exports = class Location
     this
 
   for: (path=@path, params=@params) ->
+    @path
     path = ensureSlashPrefix(path)
     "#{path}#{objectToSearch(params)}"
 
@@ -39,6 +40,7 @@ module.exports = class Location
     @setParams(assign({}, @params, params), replace)
 
   clearHash: ->
+    @update() unless @path && @params
     @set(@for(), true)
 
 

@@ -28,6 +28,7 @@ class ReactatronApp
       componentsInitialized: 0
       componentsMounted: 0
       componentsUpdated: 0
+      componentsUnmounted: 0
 
     EventsPlugin(this)
     StorePlugin(this)

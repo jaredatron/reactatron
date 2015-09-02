@@ -25,7 +25,6 @@ mixin =
     @location.for(path, params)
 
   updateLocation: ->
-    console.trace('updateLocation')
     @set location:
       path:   @location.path
       params: @location.params

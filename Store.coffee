@@ -241,9 +241,7 @@ module.exports = class Store
   toObject: ->
     object = {}
     keys = @keys()
-    console.groupCollapsed 'Store#toObject'
     object = Object.fromTwoArrays(keys, @get(keys))
-    console.groupEnd 'Store#toObject'
     object
 
 

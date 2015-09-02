@@ -12,3 +12,6 @@ module.exports =
 
   componentDidUpdate: ->
     @app?.stats?.componentsUpdated++
+
+  componentWillUnmount: ->
+    @app?.stats?.componentsUnmounted++

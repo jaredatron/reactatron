@@ -25,9 +25,7 @@ toArray = (object) ->
 #
 module.exports = class Store
 
-  data: global.localStorage || {}
-
-  constructor: ({@events, @prefix}) ->
+  constructor: ({@events, @prefix, @data}) ->
     Object.bindAll(this)
     @prefix ||= "Reactatron/"
     @subscriptions = {}

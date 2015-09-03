@@ -1,6 +1,6 @@
 module.exports = (app) ->
 
-  window = app.config.window
+  window = app.window
 
   update = ->
     app.set windowSize:

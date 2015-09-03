@@ -2,7 +2,7 @@ Location = require './Location'
 
 module.exports = (app) ->
 
-  window = app.config.window
+  window = app.window
 
   app.location = new Location window: window
   Object.assign(app, mixin)

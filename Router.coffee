@@ -1,5 +1,7 @@
 require 'stdlibjs/Object.bindAll'
 
+parseRouteExpression = require './parseRouteExpression'
+
 #
 # Usage:
 #
@@ -51,7 +53,7 @@ class Route
   constructor: (expression, page) ->
     @expression = expression
     @page = page
-    parseExpression.call(this, expression)
+    {@paramNames, @regexp} = parseRouteExpression(expression)
 
   match: (path, params) ->
     parts = path.match(@regexp)
@@ -65,16 +67,3 @@ class Route
     path: path
     params: params
 
-
-escapeRegExp  = /[\-{}\[\]+?.,\\\^$|#\s]/g
-namedParams   = /\/?(:|\*)([^\/?]+)/g
-parseExpression = (expression) ->
-  paramNames = []
-  expression = expression.replace(escapeRegExp, '\\$&')
-  expression = expression.replace namedParams, (_, type, paramName) ->
-    paramNames.push(paramName)
-    switch type
-      when ':' then '/([^/?]+)'
-      when '*' then '/(.*?)'
-  @paramNames = paramNames
-  @regexp = new RegExp("^#{expression}$")

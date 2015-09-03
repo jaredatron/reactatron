@@ -10,9 +10,9 @@ new ResponsiveSizePlugin
 
 module.exports = (app) ->
 
-  window = app.config.window
+  window = app.window
 
-  widths = app.config.responsiveWidths || [480, 768, 992, 1200]
+  widths = app.responsiveWidths ||= [480, 768, 992, 1200]
 
   update = ->
     # height = window.innerHeight,

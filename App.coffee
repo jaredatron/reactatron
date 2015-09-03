@@ -1,4 +1,5 @@
 require 'stdlibjs/Object.bindAll'
+require 'stdlibjs/Object.assign'
 
 React                = require './React'
 createFactory        = require './createFactory'
@@ -8,28 +9,27 @@ LocationPlugin       = require './LocationPlugin'
 WindowSizePlugin     = require './WindowSizePlugin'
 ResponsiveSizePlugin = require './ResponsiveSizePlugin'
 
+DEFAULT_STATS =
+  storeGets: 0
+  storeSets: 0
+  storeChangeEvents: 0
+  storeChangeRerenders: 0
+  fullRerender: 0
+  styledComponentRerenders: 0
+  styleAssigns: 0
+  componentsInitialized: 0
+  componentsMounted: 0
+  componentsUpdated: 0
+  componentsUnmounted: 0
 
-class ReactatronApp
+module.exports = class ReactatronApp
 
-  constructor: (@config={}) ->
-    @config.window ||= global.window
-
+  constructor: (extension) ->
     Object.bindAll(this)
-    @stats =
-      storeGets: 0
-      storeSets: 0
-      storeChangeEvents: 0
-      storeChangeRerenders: 0
-      fullRerender: 0
-      styledComponentRerenders: 0
-      styleAssigns: 0
-
-
-      componentsInitialized: 0
-      componentsMounted: 0
-      componentsUpdated: 0
-      componentsUnmounted: 0
-
+    Object.assign(this, extension)
+    @window ||= global.window
+    @stats ||= {}
+    Object.assign(@stats, DEFAULT_STATS)
     EventsPlugin(this)
     StorePlugin(this)
     LocationPlugin(this)
@@ -39,31 +39,29 @@ class ReactatronApp
   getDOMNode: ->
     document.body
 
-  MainComponent: -> React.DOM.div(null, 'you forgot to set app.MainComponent')
-
-  render: ->
-    @stats.fullRerender++
-    console.info('App#render', @store.toObject())
-    @rootComponent = React.render(
-      RootComponent(app: this, Component: @MainComponent),
-      @DOMNode = @getDOMNode()
-    )
-
   start: ->
-    if @rootComponent
-      throw new Error('app already started')
-    @pub 'start'
-    @events.waitForClearQueue(@render)
+    console.group 'ReactatronApp#start'
+    @pub 'start', null, =>
+      console.log('rendering')
+      @stats.fullRerender++
+      @rootComponent = React.render(
+        RootComponent(app: this, render: @render),
+        @DOMNode = @getDOMNode()
+      )
+      console.groupEnd 'ReactatronApp#start'
+      this
+
     this
 
   stop: ->
-    @DOMNode.innerHTML = ''
-    delete @rootComponent
-    delete @DOMNode
-    @pub 'stop'
+    @pub 'stop', null, =>
+      @DOMNode.innerHTML = ''
+      delete @rootComponent
+      delete @DOMNode
     this
 
-module.exports = ReactatronApp
+ReactatronApp
+
 
 
 
@@ -71,8 +69,8 @@ RootComponent = createFactory React.createClass
   displayName: 'ReactatronApp'
 
   propTypes:
-    app: React.PropTypes.instanceOf(ReactatronApp).isRequired
-    Component: React.PropTypes.func.isRequired
+    app:    React.PropTypes.instanceOf(ReactatronApp).isRequired
+    render: React.PropTypes.func.isRequired
 
   childContextTypes:
     app: React.PropTypes.instanceOf(ReactatronApp)
@@ -81,5 +79,8 @@ RootComponent = createFactory React.createClass
     app: @props.app
 
   render: ->
-    # console.info('ReactatronApp.RootComponent render') # this should render happen twice
-    @props.Component()
+    console.count('ReactatronApp render') # this should never happen twice
+    if @props.render?
+      @props.render()
+    else
+      React.DOM.div(null, 'you forgot to set app.render')

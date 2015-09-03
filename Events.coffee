@@ -60,12 +60,9 @@ class Events
     publishings = @publishings
     @publishings = []
 
-    clearQueueCallbacks = @_clearQueueCallbacks
-    @_clearQueueCallbacks = []
-
     keys = publishings.map (p) -> p[0]
 
-
+    # doneCallbacks = []
     calls = []
     for [event, payload, done] in publishings
       subscriptions = @subscriptions[event] || []
@@ -73,13 +70,17 @@ class Events
       for handler in subscriptions
         calls.push [handler, [event, payload]]
 
-      calls.push [done, [event, payload]] if done
+      # calls.push [done, [event, payload]] if done
+      @_clearQueueCallbacks.push done if done
 
-    for callback in clearQueueCallbacks
-      calls.push [callback, [publishings]]
-
+    # call all subscribed callbacks
     for [callback, args] in calls
       callback.apply(null, args)
+
+    if @publishings.length == 0
+      calls = []
+      while @_clearQueueCallbacks.length > 0
+        @_clearQueueCallbacks.shift()()
 
     this
 

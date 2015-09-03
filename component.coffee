@@ -99,9 +99,11 @@ createComponentWrapper = (wrapper) ->
 
 call_render = -> @_render.call(this, Props(@props))
 createComponent = (name, spec) ->
+  throw new Error('expected component name to be string') if 'string' != typeof name
   if isFunction(spec)
     render = spec
     spec = {_render: spec, render: call_render}
+  throw new Error('expected component spec to be object') if 'object' != typeof spec
   spec.displayName = name
   detectMixins(spec)
   component = createClass(spec)

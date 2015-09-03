@@ -1,6 +1,6 @@
 require 'stdlibjs/Object.bindAll'
 searchToObject = require './searchToObject'
-objectToSearch = require './objectToSearch'
+locationToString = require './locationToString'
 
 module.exports = class Location
 
@@ -14,9 +14,8 @@ module.exports = class Location
     this
 
   for: (path=@path, params=@params) ->
-    @path
     path = ensureSlashPrefix(path)
-    "#{path}#{objectToSearch(params)}"
+    locationToString { path, params }
 
   set: (value, replace) ->
     if 'object' == typeof value

@@ -18,5 +18,9 @@ match = (expression) ->
   parts.shift()
   @params = {}
   paramNames.forEach (paramName) =>
-    @params[paramName] = parts.shift()
+    @params[paramName] = decode(parts.shift())
   return true
+
+
+decode = (part) ->
+  decodeURIComponent(part.replace('+',' '))

@@ -22,6 +22,10 @@ module.exports = class Location
       {path, params} = value
       value = @for(path, params)
 
+    if value == @for()
+      console.warn('SAME LOCATION', value)
+      return false
+
     value = ensureSlashPrefix(value)
 
     if replace

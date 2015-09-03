@@ -31,17 +31,14 @@ mixin =
     @app
 
   setLocation: (path, replace) ->
-    @location.set(path, replace)
-    @updateLocation()
+    @updateLocation() if @location.set(path, replace)
 
   setPath: (params, replace) ->
-    @location.setPath(params, replace)
-    @updateLocation()
+    @updateLocation() if @location.setPath(params, replace)
 
   setParams: (params, replace) ->
-    @location.setParams(params, replace)
-    @updateLocation()
+    @updateLocation() if @location.setParams(params, replace)
 
   clearHash: ->
     @location.clearHash()
-    @updateLocation()
+    this

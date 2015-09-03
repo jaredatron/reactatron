@@ -1,4 +1,8 @@
 objectToSearch = require './objectToSearch'
 
-module.exports = ({path, params}) ->
-  "#{path}#{objectToSearch(params)}"
+module.exports = (location) ->
+  try
+    {path, params} = location
+    "#{path}#{objectToSearch(params)}"
+  catch
+    "[BAD URL]"

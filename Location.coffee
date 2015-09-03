@@ -1,4 +1,6 @@
 require 'stdlibjs/Object.bindAll'
+searchToObject = require './searchToObject'
+objectToSearch = require './objectToSearch'
 
 module.exports = class Location
 
@@ -50,35 +52,3 @@ ensureSlashPrefix = (string) ->
     "/#{string}"
 
 
-
-searchToObject = (search) ->
-  params = {}
-  search = search.substring(search.indexOf('?') + 1, search.length);
-  return {} if search.length == 0
-  search.split(/&+/).forEach (param) ->
-    [key, value] = param.split('=')
-    key = decodeURIComponent(key)
-    if value?
-      value = decodeURIComponent(value)
-    else
-      value = true
-    params[key] = value
-  params
-
-
-objectToQueryString = (params) ->
-  return undefined if !params?
-  pairs = []
-  Object.keys(params).forEach (key) ->
-    value = params[key]
-    switch value
-      when true
-        pairs.push "#{encodeURIComponent(key)}"
-      when false, null, undefined
-      else
-        pairs.push "#{encodeURIComponent(key)}=#{encodeURIComponent(value)}"
-  pairs.join('&')
-
-objectToSearch = (params) ->
-  search = objectToQueryString(params)
-  if search.length == 0 then '' else '?'+search

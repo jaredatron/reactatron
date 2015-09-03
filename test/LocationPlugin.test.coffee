@@ -12,8 +12,7 @@ describe 'LocationPlugin', ->
     app =
       set: new CallLogger
       sub: new CallLogger
-      config:
-        window: window
+      window: window
 
     LocationPlugin(app)
 

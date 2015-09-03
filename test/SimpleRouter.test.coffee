@@ -16,7 +16,7 @@ describe 'SimpleRouter', ->
         when @path == '/'             then setLocation '/home'
         when @path == '/home'         then renderPage 'home'
         when @match '/about'          then renderPage 'about'
-        when @match '/users/:userId'  then renderPage 'users', @pathParams
+        when @match '/users/:userId'  then renderPage 'users', @params
         else                               renderPage 'NotFound'
 
     expect(router).to.be.a(SimpleRouter)

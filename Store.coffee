@@ -28,6 +28,7 @@ module.exports = class Store
   constructor: ({@events, @prefix, @data}) ->
     Object.bindAll(this)
     @prefix ||= "Reactatron/"
+    @data ||= {}
     @subscriptions = {}
     @stats =
       totalGets: 0
@@ -122,14 +123,14 @@ module.exports = class Store
 
 
   _loadExpires: ->
-    @_expires = @__get('_expires') || {}
+    @_expires = @__get('__expires') || {}
     now = @_now()
     for key of @_expires
       @_expire(key, true) || @_scheduleExpiration(key, expiresAt - now)
     @_saveExpires()
 
   _saveExpires: ->
-    @__set('_expires', @_expires)
+    @__set('__expires', @_expires)
 
   _scheduleExpiration: (key, delayFor) ->
     delay delayFor, =>
@@ -229,7 +230,8 @@ module.exports = class Store
     keys = []
     Object.keys(@data).forEach (key) =>
       if key.startsWith(@prefix)
-        keys.push key.slice(@prefix.length)
+        key = key.slice(@prefix.length)
+        keys.push key unless key.startsWith('__')
     keys
 
   clear: ->

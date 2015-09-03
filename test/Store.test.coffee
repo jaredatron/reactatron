@@ -10,8 +10,11 @@ describe 'Store', ->
       pub: new CallLogger
     }
 
-    store = new Store events: events, prefix: 'test/'
-    store.data = data = {}
+    data = {}
+    store = new Store
+      events: events,
+      prefix: 'test/'
+      data: data
 
   it 'should CRUD complex objects', ->
 
@@ -97,7 +100,7 @@ describe 'Store', ->
       now = Date.now()
       store._now = -> now
 
-      expect( store.data                 ).to.eql({})
+      expect( store.keys()               ).to.eql([])
       expect( store.get('searchResults') ).to.be(undefined)
 
       store.set searchResults: 'none'

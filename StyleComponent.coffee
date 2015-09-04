@@ -23,26 +23,38 @@ module.exports = component 'StyleComponent',
     mousedown: false
 
   onMouseEnter: ->
+    return if @state.hover
+    # console.info('onMouseEnter', @getDOMNode().nodeName, @props.style)
     @setState hover: true
     @props.onMouseEnter?()
 
   onMouseLeave: ->
+    return if !@state.hover
+    # console.info('onMouseLeave', @getDOMNode().nodeName, @props.style)
     @setState hover: false
     @props.onMouseLeave?()
 
   onFocus: ->
+    return if @state.focus
+    # console.info('onFocus', @getDOMNode().nodeName, @props.style)
     @setState focus: true
     @props.onFocus?()
 
   onBlur: ->
+    return if !@state.focus
+    # console.info('onBlur', @getDOMNode().nodeName, @props.style)
     @setState focus: false
     @props.onBlur?()
 
   onMouseDown: ->
+    return if @state.mousedown
+    # console.info('onMouseDown', @state.mousedown, @getDOMNode().nodeName, @props.style)
     @setState mousedown: true
     @props.onMouseDown?()
 
   onMouseUp: ->
+    return if !@state.mousedown
+    # console.info('onMouseUp', @state.mousedown, @getDOMNode().nodeName, @props.style)
     @setState mousedown: false
     @props.onMouseUp?()
 
@@ -60,10 +72,16 @@ module.exports = component 'StyleComponent',
     if @props.onFocusOut
       node.addEventListener 'focusout', @props.onFocusOut
 
-  # shouldComponentUpdate: (nextProps, nextState) ->
-  #   # @app.stats.styledComponentRerenders++
-  #   console.log('STYLE UPDATE?', @state, nextState)
-  #   true
+  shouldComponentUpdate: (nextProps, nextState) ->
+    true
+    # console.info('StyleComponent shouldComponentUpdate?', @state, nextState, @props, nextProps)
+    # for key in @state
+    #   return true if @state[key] != nextState[key]
+
+    # for key in ['_type', 'children']
+    # @props._type != nextProps._type
+
+    # false
 
 
   componentWillUnmount: ->
@@ -82,6 +100,7 @@ module.exports = component 'StyleComponent',
     new Style(@props.style).compute(@state)
 
   render: ->
+    # console.log('StyleComponent render', @state, @props)
     style = @props.style || {}
     props = @extendProps
       _type: undefined

@@ -1,4 +1,4 @@
-require 'stdlibjs/Object.assign'
+require 'shouldhave/Object.assign'
 createFactory = require './createFactory'
 React = require './React'
 ReactTransitionChildMapping = require 'react/lib/ReactTransitionChildMapping'

@@ -1,4 +1,4 @@
-require 'stdlibjs/Array#findIndex'
+require 'shouldhave/Array#findIndex'
 ###
 
 new ResponsiveSizePlugin

@@ -1,6 +1,6 @@
-require 'stdlibjs/Object.assign'
-require 'stdlibjs/Array#unique'
-isUndefined = require 'stdlibjs/isUndefined'
+require 'shouldhave/Object.assign'
+require 'shouldhave/Array#unique'
+isUndefined = require 'shouldhave/isUndefined'
 
 
 mergeProps = require('react/lib/ReactPropTransferer').mergeProps

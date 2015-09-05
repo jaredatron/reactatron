@@ -1,4 +1,4 @@
-require 'stdlibjs/Number#times'
+require 'shouldhave/Number#times'
 {span} = require './DOM'
 
 module.exports = (n=1) ->

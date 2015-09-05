@@ -1,4 +1,4 @@
-require 'stdlibjs/Object.clone'
+require 'shouldhave/Object.clone'
 
 component = require './component'
 {a} = require './DOM'

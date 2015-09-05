@@ -1,6 +1,6 @@
-require 'stdlibjs/Object.values'
-require 'stdlibjs/Array#unique'
-require 'stdlibjs/Array#excludes'
+require 'shouldhave/Object.values'
+require 'shouldhave/Array#unique'
+require 'shouldhave/Array#excludes'
 
 React = require './React'
 ReactatronApp = require './App'

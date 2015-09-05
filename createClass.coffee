@@ -1,4 +1,4 @@
-require 'stdlibjs/Object.bindAll'
+require 'shouldhave/Object.bindAll'
 
 createClass   = require('react/lib/ReactClass').createClass
 createElement = require('react/lib/ReactElement').createElement

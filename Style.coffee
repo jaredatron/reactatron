@@ -1,6 +1,6 @@
-require 'stdlibjs/Object.assign'
-require 'stdlibjs/Array#unique'
-isObject = require 'stdlibjs/isObject'
+require 'shouldhave/Object.assign'
+require 'shouldhave/Array#unique'
+isObject = require 'shouldhave/isObject'
 
 
 

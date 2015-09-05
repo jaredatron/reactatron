@@ -1,4 +1,4 @@
-require 'stdlibjs/Array#flatten'
+require 'shouldhave/Array#flatten'
 
 mergeChildren = require './mergeChildren'
 

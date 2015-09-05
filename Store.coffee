@@ -1,12 +1,12 @@
-require 'stdlibjs/Object.fromTwoArrays'
-require 'stdlibjs/Object.isObject'
-require 'stdlibjs/Object.bindAll'
-require 'stdlibjs/Array#remove'
-require 'stdlibjs/Array#filter'
-require 'stdlibjs/String#startsWith'
+require 'shouldhave/Object.fromTwoArrays'
+require 'shouldhave/Object.isObject'
+require 'shouldhave/Object.bindAll'
+require 'shouldhave/Array#remove'
+require 'shouldhave/Array#filter'
+require 'shouldhave/String#startsWith'
 
-delay = require 'stdlibjs/delay'
-isArray = require 'stdlibjs/isArray'
+delay = require 'shouldhave/delay'
+isArray = require 'shouldhave/isArray'
 
 
 

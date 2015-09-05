@@ -1,6 +1,6 @@
-require 'stdlibjs/Object.assign'
+require 'shouldhave/Object.assign'
 
-global.delay = require 'stdlibjs/delay'
+global.delay = require 'shouldhave/delay'
 
 clear = require('clear')
 

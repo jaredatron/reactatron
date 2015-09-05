@@ -1,4 +1,4 @@
-require 'stdlibjs/Object.bindAll'
+require 'shouldhave/Object.bindAll'
 searchToObject = require './searchToObject'
 locationToString = require './locationToString'
 

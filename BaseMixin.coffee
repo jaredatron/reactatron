@@ -1,5 +1,5 @@
-require 'stdlibjs/Object.type'
-require 'stdlibjs/Array#excludes'
+require 'shouldhave/Object.type'
+require 'shouldhave/Array#excludes'
 
 React = require './React'
 

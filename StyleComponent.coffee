@@ -1,4 +1,4 @@
-require 'stdlibjs/Object.clone'
+require 'shouldhave/Object.clone'
 React = require './React'
 Style = require './Style'
 component = require './component'

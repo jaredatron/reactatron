@@ -1,5 +1,5 @@
-isArray = require 'stdlibjs/isArray'
-toArray = require 'stdlibjs/toArray'
+isArray = require 'shouldhave/isArray'
+toArray = require 'shouldhave/toArray'
 
 module.exports = (left, right) ->
   children = toArray(left).concat(toArray(right))

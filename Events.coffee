@@ -1,8 +1,8 @@
-require 'stdlibjs/Object.bindAll'
-require 'stdlibjs/Array.wrap'
-require 'stdlibjs/Array#remove'
-require 'stdlibjs/Array#includes'
-isString = require 'stdlibjs/isString'
+require 'shouldhave/Object.bindAll'
+require 'shouldhave/Array.wrap'
+require 'shouldhave/Array#remove'
+require 'shouldhave/Array#includes'
+isString = require 'shouldhave/isString'
 
 class Events
 

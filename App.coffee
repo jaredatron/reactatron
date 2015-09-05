@@ -1,5 +1,5 @@
-require 'stdlibjs/Object.bindAll'
-require 'stdlibjs/Object.assign'
+require 'shouldhave/Object.bindAll'
+require 'shouldhave/Object.assign'
 
 React                = require './React'
 createFactory        = require './createFactory'

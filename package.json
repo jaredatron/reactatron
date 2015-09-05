@@ -1,6 +1,6 @@
 {
   "name": "reactatron",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "React stuff",
   "main": "index.js",
   "scripts": {
@@ -20,10 +20,9 @@
     "coffee-loader": "^0.7.2",
     "coffee-script": "^1.9.3",
     "eventemitter3": "^1.1.1",
-    "expect.js": "^0.3.1",
     "object-assign": "^3.0.0",
     "react": "^0.13.3",
-    "shouldhave": "file:../shouldhave",
+    "shouldhave": "0.0.3",
     "uri-js": "^2.1.1"
   },
   "devDependencies": {

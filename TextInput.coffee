@@ -26,6 +26,7 @@ module.exports = component 'TextInput',
 
   render: ->
     props = @extendProps
+      type: 'text'
       ref: 'input'
       style: @inputStyle
 

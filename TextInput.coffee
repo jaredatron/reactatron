@@ -1,3 +1,4 @@
+require 'shouldhave/Object.clone'
 component = require './component'
 Block = require './Block'
 Columns = require './Columns'
@@ -28,7 +29,8 @@ module.exports = component 'TextInput',
     props = @extendProps
       type: 'text'
       ref: 'input'
-      style: @inputStyle
+
+    props.style = Object.clone(@inputStyle)
 
     Columns style: @style(),
       @props.beforeInput

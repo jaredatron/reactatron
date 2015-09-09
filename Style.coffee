@@ -4,6 +4,25 @@ isObject = require 'shouldhave/isObject'
 
 
 
+console.warn """
+
+
+You need to take a step back from Reactatron
+
+This is a brilliant spike
+
+Build something that
+- works on mobile, tablet and desktop
+- has a defined set of layout components
+- style and animation are easy and work everywhere
+
+
+build some tiny example apps. maybe in the docs app?
+
+
+"""
+
+
 module.exports = class Style
 
   ###*
@@ -70,21 +89,24 @@ module.exports = class Style
   reverseMerge: (style) ->
     Style(style).merge(this)
 
-  META_SELECTOR_KEY = /^:(.+)/
-
   ###*
   # Document me!
   #
   ###
   compute: (state) ->
-    style = {}
-    keys = Object.keys(this)
-    for key in keys
-      if key.match(META_SELECTOR_KEY)
-        Object.assign(style, this[key]) if state[RegExp.$1]
-      else
-        style[key] = this[key]
+    style = compressStates(this, state)
+    corssBrowserSupprt(style)
     style
+
+META_SELECTOR_KEY = /^:(.+)/
+compressStates = (style, state) ->
+  compressedStyle = {}
+  for key in Object.keys(style)
+    if key.match(META_SELECTOR_KEY)
+      Object.assign(compressedStyle, style[key]) if state[RegExp.$1]
+    else
+      compressedStyle[key] = style[key]
+  compressedStyle
 
 
 #
@@ -104,4 +126,10 @@ assign = (left, right, deep=true) ->
     else
       left[key] = rightValue
   left
+
+
+corssBrowserSupprt = (style) ->
+  # if style.display == 'flex'
+
+
 

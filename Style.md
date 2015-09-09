@@ -3,19 +3,36 @@
 
 
 
+## Layout Examples
+
+
+
+```coffee
+Layer
+  Rows
+    Header height: '100px'
+    Columns
+      Sidebar width: '200px'
+      MainContent
+```
+
+
+
+
 
 ## Flexbox tricks
 
 You can fix the width of a flex column by setting both `minWidth` and `flexBasis`
 
-```css
+```sass
 minWidth:  20px
 flexBasis: 20px
 ```
 
 
-StyledComponent
- - just styles and a component
+## StyledComponent
+
+- just styles and a component
 
 
 
@@ -30,18 +47,11 @@ not using 10x more react components
 
 
 
-
-what if we only inject the style wrapping component around
-"native" or "root" components by wrapping those in the DOM
-object?
-
-
-
 i think we only need inline-flex and inline-block
 wrapping should never be a default
 
 
-whats a gooe name for the difference between your children fitting or overflowing/scrolling?
+whats a good name for the difference between your children fitting or overflowing/scrolling?
 
 
 
@@ -52,6 +62,8 @@ Block
 Rows & Columns
 
 Scrollbox ?
+
+
 
 
 

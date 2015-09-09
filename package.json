@@ -22,7 +22,7 @@
     "eventemitter3": "^1.1.1",
     "object-assign": "^3.0.0",
     "react": "^0.13.3",
-    "shouldhave": "0.0.3",
+    "shouldhave": "deadlyicon/shouldhave.js#9b824be78ad008e5a779453ded38facea18d9696",
     "uri-js": "^2.1.1"
   },
   "devDependencies": {

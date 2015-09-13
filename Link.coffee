@@ -5,9 +5,8 @@ component = require './component'
 
 module.exports = component 'Link',
 
-
   location: ->
-    @app.locationFor(@props.path, @props.params)
+    @app.locationFor()
 
   onClick: (event) ->
     if event?
@@ -19,7 +18,7 @@ module.exports = component 'Link',
 
     if @props.path? || @props.params?
       event.preventDefault()
-      @app.setLocation @location()
+      @app.setLocation(@props)
       return
 
     event.preventDefault() unless @props.href?
@@ -32,6 +31,7 @@ module.exports = component 'Link',
   render: ->
     props = @cloneProps()
     props.onClick = @onClick
-    props.href = @location() if props.path? || props.params?
+    if @props.path? || @props.params?
+      props.href = @app.locationToString(@props)
     props.href ||= ''
     a(props)

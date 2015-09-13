@@ -5,9 +5,10 @@ React                = require './React'
 createFactory        = require './createFactory'
 EventsPlugin         = require './EventsPlugin'
 StorePlugin          = require './StorePlugin'
-LocationPlugin       = require './LocationPlugin'
-WindowSizePlugin     = require './WindowSizePlugin'
-ResponsiveSizePlugin = require './ResponsiveSizePlugin'
+RouterPlugin         = require './RouterPlugin'
+# LocationPlugin       = require './LocationPlugin'
+# WindowSizePlugin     = require './WindowSizePlugin'
+# ResponsiveSizePlugin = require './ResponsiveSizePlugin'
 
 DEFAULT_STATS =
   storeGets: 0
@@ -24,30 +25,25 @@ DEFAULT_STATS =
 
 module.exports = class ReactatronApp
 
-  constructor: (extension) ->
+  constructor: (@config) ->
     Object.bindAll(this)
-    Object.assign(this, extension)
-    @window ||= global.window
-    @stats ||= {}
-    Object.assign(@stats, DEFAULT_STATS)
+    @window = @config.window || global.window
+    @stats = Object.assign({}, DEFAULT_STATS, @config.stats||{})
     EventsPlugin(this)
     StorePlugin(this)
-    LocationPlugin(this)
-    WindowSizePlugin(this)
-    ResponsiveSizePlugin(this)
+    RouterPlugin(this) if @config.routes?
+    # ResponsivePlugin(this) if @config.responsive?
 
-  getDOMNode: ->
-    document.body
 
   start: ->
     console.group 'ReactatronApp#start'
+    throw new Error('already started') if @DOMNode?
     @pub 'start', null, =>
       console.log('rendering')
       @stats.fullRerender++
-      @rootComponent = React.render(
-        RootComponent(app: this, render: @render),
-        @DOMNode = @getDOMNode()
-      )
+      @DOMNode = @config.DOMNode || @window.document.body
+      @_rootCompnentInstance = RootComponent(app: this)
+      @rootComponent = React.render(@_rootCompnentInstance, @DOMNode)
       console.groupEnd 'ReactatronApp#start'
       this
 
@@ -60,6 +56,8 @@ module.exports = class ReactatronApp
       delete @DOMNode
     this
 
+  render: ->
+
 ReactatronApp
 
 
@@ -70,7 +68,6 @@ RootComponent = createFactory React.createClass
 
   propTypes:
     app:    React.PropTypes.instanceOf(ReactatronApp).isRequired
-    render: React.PropTypes.func.isRequired
 
   childContextTypes:
     app: React.PropTypes.instanceOf(ReactatronApp)
@@ -78,9 +75,26 @@ RootComponent = createFactory React.createClass
   getChildContext: ->
     app: @props.app
 
-  render: ->
-    console.count('ReactatronApp render') # this should never happen twice
-    if @props.render?
-      @props.render()
+  componentDidMount: ->
+    @props.app.sub('route:change', @routeChanged)
+
+  componentWillUnmount: ->
+    @props.app.unsub('route:change', @routeChanged)
+
+  routeChanged: (event, route) ->
+    if route.isARedirect
+      @props.app.setLocation(route.location)
     else
-      React.DOM.div(null, 'you forgot to set app.render')
+      @forceUpdate()
+
+  render: ->
+    route = @props.app.route
+    switch
+      when !route?
+        React.DOM.div {}, 'route undefined :('
+      when route.component?
+        route.component(route.params)
+      else
+        React.DOM.div {}, 'route component not found :('
+
+

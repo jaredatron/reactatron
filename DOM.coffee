@@ -9,6 +9,7 @@ Object.keys(React.DOM).forEach (type) ->
   DOM[type] = component (props={}) ->
     props._type = type
     StyleComponent(props)
+  DOM[type].displayName = type
 
 module.exports = DOM
 

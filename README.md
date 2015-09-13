@@ -6,7 +6,8 @@
 
 ## TODO
 
-
+- listen to the 'storage' event to respond to localStorage changes in other tabs
+- support localStorage and sessionStorage
 
 ## thoughs
 
@@ -22,6 +23,20 @@
 - we provide the start and stop level boilerplate code
 - maybe we prevent components from being defined dynanically because we know start/stop state
 
+#### Data
+
+- we need a way to get "data" that is stored in difference places
+- localStorage, sessionStorage and memoryStorage (3?)
+
+data caching should be in local storage
+UI state should be in sessionStorage
+and thinkgs like the current route should just be in memory
+
+it would be nice to be able to configure keys
+
+app.configKey 'route', storage: 'memory'
+app.configKey 'openDirectories', storage: 'session'
+app.configKey 'files', storage: 'local'
 
 ## Arcitecture
 
@@ -62,8 +77,7 @@ module.exports = div.withStyle 'RedBox',
 #### State
 
 
-- state is just a big plan object
-- IT IS NOT state a string key, value store !!!!!
+- state is a value store where the value must be a string so we use JSON
 
 
 
@@ -101,40 +115,6 @@ component 'FilesPage',
 
 
 
-
-```
-
-### The Cycle
-
-##### First render
-
-
-```coffee
-
-render: ->
-
-  DataQuery
-    keys:
-      'current_user.first_name'
-      'current_user.last_name'
-    loading: ->
-
-    loaded: (values) ->
-
-    error: (error) ->
-
-
-
-DataQuery = component
-  propTypes:
-    keys: queryKeySet
-
-
-
-  render: ->
-
-
-```
 
 
 

@@ -1,42 +1,63 @@
-Router = require './Router'
+# Router = require './Router'
 component = require './component'
 Block = require './Block'
+parseRouteExpression = require './parseRouteExpression'
+isString = require 'shouldhave/isString'
 
-###
 
-new ResponsiveSizePlugin
-  window: global.window
-  widths: [100, 400, 650, 800, 789, 1240, 2480]
-  heights: [100, 400, 650, 800, 789, 1240, 2480]
+LocationPlugin = require './LocationPlugin'
 
-###
+module.exports = (app) ->
 
-module.exports = (app, spec) ->
+  LocationPlugin(app)
 
-  app.router = new Router(spec)
-
-  app.MainComponent = RouteComponent
+  app.router = new Router(app.config.routes)
 
   update = ->
-    if location = app.get('location')
-      route = app.router.routeFor(location)
-      currentRoute = app.get('route')
-      if !currentRoute || route.id != currentRoute.id
-        app.set route: route
+    app.route = app.router.route(app.path, app.params)
+    app.pub 'route:change', app.route
 
-  app.sub 'start', ->
-    app.sub 'store:change:location', update
-
-  app.sub 'stop', ->
-    app.unsub 'store:change:location', update
+  update()
+  app.sub 'location:change', update
 
 
-RouteComponent = component 'RouteComponent',
-  dataBindings: ->
-    route: 'route'
+class Router
+  constructor: (routes) ->
+    @routes = for pattern, value of routes
+      new Route(pattern, value)
 
-  render: ->
-    route = @state.route
-    return Block {}, 'route undefined :(' if !route?
-    page = @app.router.pageForRoute(route)
-    page(route.params)
+  route: (path, params) ->
+    for route in @routes
+      match = route.match(path, params)
+      return match if match
+
+class Route
+  constructor: (@pattern, @value) ->
+    @isARedirect = isString(@value)
+    {@paramNames, @regexp} = parseRouteExpression(@pattern)
+
+
+  match: (path, params) ->
+    parts = path.match(@regexp)
+    return false unless parts
+    parts.shift()
+    params = Object.assign({}, params)
+    @paramNames.forEach (paramName) ->
+      params[paramName] = parts.shift()
+
+    if @isARedirect
+      {
+        isARedirect: true
+        path: path
+        params: params
+        location:
+          path: @value # complex pattens not supported yet
+          params: params
+          replace: true
+      }
+    else
+      {
+        path: path
+        params: params
+        component: @value
+      }

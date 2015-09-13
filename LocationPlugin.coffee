@@ -1,44 +1,58 @@
-Location = require './Location'
+searchToObject = require './searchToObject'
+objectToSearch = require './objectToSearch'
 
 module.exports = (app) ->
 
+  return if app.locationFor
+
   window = app.window
 
-  app.location = new Location window: window
-  Object.assign(app, mixin)
-
   update = ->
-    app.location.update()
-    app.updateLocation()
+    app.path   = app.window.location.pathname
+    app.params = searchToObject(app.window.location.search)
+    app.pub 'location:change'
 
+  update()
 
   app.sub 'start', ->
-    update()
     window.addEventListener 'popstate', update
 
   app.sub 'stop', ->
     window.removeEventListener 'popstate', update
 
+  app.locationToString = ({path, params}) ->
+    path = "/#{path}" unless path[0] == '/'
+    params ||= {}
+    "#{path}#{objectToSearch(params)}"
 
-mixin =
-  locationFor: (path, params) ->
-    @location.for(path, params)
+  app.locationFor = ({path, params}) ->
+    path   = @path   unless path?
+    params = @params unless params?
+    {path, params}
 
-  updateLocation: ->
-    @set location:
-      path:   @location.path
-      params: @location.params
-    @app
+  app.setLocation = ({path, params, replace}) ->
+    currentLocation =
+      path:   app.path
+      params: app.params
+    value = app.locationToString({path, params})
+    if value == app.locationToString(currentLocation)
+      return currentLocation
 
-  setLocation: (path, replace) ->
-    @updateLocation() if @location.set(path, replace)
+    if replace
+      window.history.replaceState({}, window.document.title, value)
+    else
+      window.history.pushState({}, window.document.title, value)
+    update()
+    location
 
-  setPath: (params, replace) ->
-    @updateLocation() if @location.setPath(params, replace)
+  app.setPath = (path, replace) ->
+    app.setLocation(path: path, params: @params, replace: replace)
 
-  setParams: (params, replace) ->
-    @updateLocation() if @location.setParams(params, replace)
+  app.setParams = (params, replace) ->
+    app.setLocation(path: @path, params: params, replace: replace)
 
-  clearHash: ->
-    @location.clearHash()
-    this
+  app.updateParams = (params, replace) ->
+    app.setParams(Object.assign({}, app.params, params), replace)
+
+  app.clearHash = ->
+    app.setLocation(app.locationFor({}), true)

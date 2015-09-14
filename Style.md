@@ -25,6 +25,10 @@ render the ones we need
 there is already presidence for css properties that
 override other css properties. For example:
 
+```coffee
+Object.keys(document.body.style).join(',')
+```
+
 ```css
 body{
   border: 1px solid black;
@@ -166,3 +170,50 @@ BlueButton = Button.style
 
 
 # do we need to wrap each core component with a styled component wrapper?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+what if everything is just a function wrapping
+another function?
+
+all the style mixins just become functions that
+expand properties into lower level properties
+
+some components wrap other components. I think
+react calls these composit components. Others
+are actual DOM nodes that need styling. We need
+to be able to wrap these components.
+
+
+```coffee
+Box = div.wrap (props) ->
+  if 'contentAs' of props
+    contentAs = props.contentAs
+    delete props.contentAs
+    props.display = 'inline-flex'
+
+
+  props
+```
+
+wrapping just lets you modify props inline at
+render time.
+
+

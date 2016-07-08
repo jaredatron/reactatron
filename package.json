@@ -6,6 +6,9 @@
   "engines": {
     "node": ">=6.3.0"
   },
+  "bin": {
+    "reactatron" : "./dist/bin/reactatron.js"
+  },
   "scripts": {
     "compile": "babel -d dist/ src/",
     "prepublish": "npm run compile",

@@ -7,6 +7,7 @@ const Reactatron = module.exports = {}
 
 Reactatron.VERSION = 'love muffin'
 
+Reactatron.publicDir = path.join(APP_ROOT, 'dist/client')
 
 Reactatron.PATH_TO_BABEL = path.join(APP_ROOT, 'node_modules/.bin/babel')
 
@@ -27,10 +28,13 @@ Reactatron.watch = () => {
 }
 
 Reactatron.server = () => {
+  Reactatron.compile()
   const Server = require(APP_ROOT+'/dist/server').default
-  Server.start()
+  // console.log('Server', Server)
+  const port = Server.get('port') || '3000'
+  Server.listen(port)
 
-  // console.log('http://localhost:'+Server.get('port'))
+  console.log('http://localhost:'+port)
 
   // if production
     // just exec APP_ROOT/dist/server
@@ -49,6 +53,10 @@ Reactatron.cli = () => {
   if (command === 'watch')   return Reactatron.watch()
   if (command === 'server')  return Reactatron.server()
   console.error('unknown command '+JSON.stringify(command))
+}
+
+Reactatron.middleware = (request, response) => {
+  response.sendFile(Reactatron.publicDir + '/index.html');
 }
 
 const exec = (cmd, args, callback) => {

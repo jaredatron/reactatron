@@ -1,4 +1,5 @@
-import Reactatron from '../'
+import expect from 'expect.js'
+import Reactatron from '..'
 
 describe('Reactatron', () => {
 

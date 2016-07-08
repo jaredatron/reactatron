@@ -1,3 +1,5 @@
+'use strict'
+
 const path = require('path')
 const childProcess = require('child_process')
 
@@ -7,19 +9,26 @@ const Reactatron = module.exports = {}
 
 Reactatron.VERSION = 'love muffin'
 
-Reactatron.publicDir = path.join(APP_ROOT, 'dist/client')
+Reactatron.srcDir     = path.join(APP_ROOT, 'src')
+Reactatron.clientSrcDir = Reactatron.srcDir+'/client'
+Reactatron.serverSrcDir = Reactatron.srcDir+'/server'
+Reactatron.distDir    = path.join(APP_ROOT, 'dist')
+Reactatron.publicDir  = path.join(APP_ROOT, 'dist/client')
+Reactatron.serverPath = path.join(APP_ROOT, 'dist/server')
 
 Reactatron.PATH_TO_BABEL = path.join(APP_ROOT, 'node_modules/.bin/babel')
 
+// TODO move to .bablerc
 Reactatron.BABEL_ARGS =  [
   '--no-babelrc',
-  // '--copy-files',
+  '--copy-files',
   '--presets', 'babel-preset-react,babel-preset-es2015',
   // '--only', 'src/server/index.js,src/client/index.js',
-  '-d', 'dist/', 'src/'
+  '-d', Reactatron.distDir, Reactatron.srcDir
 ]
 
 Reactatron.compile = (callback) => {
+  console.log('compiling')
   exec(Reactatron.PATH_TO_BABEL, Reactatron.BABEL_ARGS, callback)
 }
 
@@ -27,25 +36,7 @@ Reactatron.watch = () => {
   exec(Reactatron.PATH_TO_BABEL, ['--watch'].concat(Reactatron.BABEL_ARGS))
 }
 
-Reactatron.server = () => {
-  Reactatron.compile()
-  const Server = require(APP_ROOT+'/dist/server').default
-  // console.log('Server', Server)
-  const port = Server.get('port') || '3000'
-  Server.listen(port)
-
-  console.log('http://localhost:'+port)
-
-  // if production
-    // just exec APP_ROOT/dist/server
-
-  // if development
-    // start an http server that
-    //   - watches babel files
-    //   - proxies requests to the client app server process (sockets?)
-    // start watching and restart the app server if server.js ever changes
-    // proxy requests to external node server process
-}
+Reactatron.server = require('./server')
 
 Reactatron.cli = () => {
   const command = process.argv[2] || ''

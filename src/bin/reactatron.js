@@ -12,7 +12,8 @@ console.log('Reactatron', Reactatron)
 console.log('???', require.main)
 console.log('CWD', process.cwd())
 
-const PATH_TO_BABEL = path.join(__filename, '../../../node_modules/.bin/babel')
+// const PATH_TO_BABEL = path.join(__filename, '../../../node_modules/.bin/babel')
+const PATH_TO_BABEL = path.join(process.cwd(), 'node_modules/.bin/babel')
 
 
 const exec = (cmd, args) => {
@@ -31,7 +32,7 @@ if (process.argv[2] === 'compile'){
 
   exec(PATH_TO_BABEL, [
     '--no-babelrc',
-    '--presets', 'babel-preset-react', 'babel-preset-es2015-node',
+    '--presets', 'babel-preset-react', 'babel-preset-es2015',
     '-d', 'dist/', 'src/'
   ])
 

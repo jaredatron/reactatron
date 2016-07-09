@@ -10,7 +10,6 @@
     "reactatron": "./bin/reactatron"
   },
   "scripts": {
-    "test": "npm run compile && mocha"
   },
   "repository": {
     "type": "git",
@@ -23,14 +22,9 @@
   },
   "homepage": "https://github.com/deadlyicon/reactatron#readme",
   "dependencies": {
-    "body-parser": "^1.15.2",
-    "express": "^4.14.0"
   },
   "devDependencies": {
-    "chokidar": "^1.6.0",
-    "babel-runtime": "6.1.18",
-    "expect.js": "^0.3.1",
-    "mocha": "2.3.4"
+    "chokidar": "^1.6.0"
   },
   "peerDependencies": {
     "babel-cli": "6.1.18",

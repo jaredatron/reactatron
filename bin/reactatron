@@ -1,28 +1,3 @@
-#!/usr/bin/env bash
+#!/usr/bin/env node
 
-# TODO: look up the tree for a reactatron.js and then CD there
-node ./reactatron.js $*
-
-# // var Reactatron = require('../')
-
-# // console.log('Reactatron', Reactatron)
-
-# // console.log('CWD', process.cwd());
-
-# // var config = require(process.cwd()+'/reactatron.js')
-
-
-# // if (process.argv[2] === 'compile'){
-# //   Reactatron.compile()
-# // }
-
-# // if (process.argv[2] === 'watch'){
-# //   Reactatron.watch()
-# // }
-
-# // if (process.argv[2] === 'server'){
-# //   config.server.start(()=>{
-# //     console.log('http://localhost:'+Server.get('port'))
-# //   })
-# // }
-
+require(process.cwd()+'/reactatron.js').cli()

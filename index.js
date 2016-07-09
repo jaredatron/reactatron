@@ -9,37 +9,33 @@ const Reactatron = module.exports = {}
 
 Reactatron.VERSION = 'love muffin'
 
-Reactatron.srcDir     = path.join(APP_ROOT, 'src')
-Reactatron.clientSrcDir = Reactatron.srcDir+'/client'
-Reactatron.serverSrcDir = Reactatron.srcDir+'/server'
-Reactatron.distDir    = path.join(APP_ROOT, 'dist')
-Reactatron.publicDir  = path.join(APP_ROOT, 'dist/client')
-Reactatron.serverPath = path.join(APP_ROOT, 'dist/server')
+Reactatron.APP_ROOT      = APP_ROOT
+Reactatron.srcDir        = 'src'
+Reactatron.clientSrcDir  = Reactatron.srcDir+'/client'
+Reactatron.serverSrcDir  = Reactatron.srcDir+'/server'
+Reactatron.distDir       = 'dist'
+Reactatron.clientDistDir = Reactatron.distDir+'/client'
+Reactatron.serverDistDir = Reactatron.distDir+'/server'
+Reactatron.publicDir     = Reactatron.clientDistDir
+Reactatron.serverPath    = Reactatron.serverDistDir
 
-Reactatron.PATH_TO_BABEL = path.join(APP_ROOT, 'node_modules/.bin/babel')
-
-// TODO move to .bablerc
-Reactatron.BABEL_ARGS =  [
-  '--no-babelrc',
-  '--copy-files',
-  '--presets', 'babel-preset-react,babel-preset-es2015',
-  // '--only', 'src/server/index.js,src/client/index.js',
-  '-d', Reactatron.distDir, Reactatron.srcDir
-]
+Reactatron.babelPath = APP_ROOT+'/node_modules/.bin/babel'
+Reactatron.webpackPath = APP_ROOT+'/node_modules/.bin/webpack'
 
 Reactatron.compile = (callback) => {
   console.log('compiling')
-  exec(Reactatron.PATH_TO_BABEL, Reactatron.BABEL_ARGS, callback)
+  exec(Reactatron.babelPath, [])
 }
 
 Reactatron.watch = () => {
-  exec(Reactatron.PATH_TO_BABEL, ['--watch'].concat(Reactatron.BABEL_ARGS))
+  exec(Reactatron.babelPath, ['--watch'])
 }
 
 Reactatron.server = require('./server')
 
 Reactatron.cli = () => {
   const command = process.argv[2] || ''
+  if (command === 'info')    return console.log(Reactatron)
   if (command === 'compile') return Reactatron.compile()
   if (command === 'watch')   return Reactatron.watch()
   if (command === 'server')  return Reactatron.server()

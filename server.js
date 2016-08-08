@@ -18,7 +18,7 @@ module.exports = () => {
 
   const startServer = () => {
     console.log('starting server')
-    serverProcess = childProcess.execFile('node', [Reactatron.serverPath])
+    serverProcess = childProcess.execFile('node', [Reactatron.serverDistPath])
 
     serverProcess.stdout.on('data', (data) => {
       console.log(data)
@@ -38,7 +38,7 @@ module.exports = () => {
   restartServer()
 
 
-  const serverWatcher = watcher(Reactatron.serverSrcDir)
+  const serverWatcher = watcher(Reactatron.srcDir+'/server*')
 
   const serverSourceChange = (path) => {
     console.log('server source change', path)
@@ -51,7 +51,7 @@ module.exports = () => {
     .on('change', serverSourceChange)
 
 
-  const clientWatcher = watcher(Reactatron.clientSrcDir)
+  const clientWatcher = watcher(Reactatron.srcDir+'/client*')
 
   const clientSourceChange = (path) => {
     console.log('client source change', path)

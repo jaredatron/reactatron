@@ -1,5 +1,6 @@
 'use strict'
 
+const fs = require('fs')
 const path = require('path')
 const childProcess = require('child_process')
 
@@ -9,11 +10,11 @@ const Reactatron = module.exports = {}
 
 Reactatron.VERSION = 'love muffin'
 
-Reactatron.APP_ROOT = APP_ROOT
+Reactatron.root     = APP_ROOT
 Reactatron.srcDir   = 'src'
 Reactatron.distDir  = 'dist'
 
-Reactatron.publicDir      = APP_ROOT+'/public'
+Reactatron.publicPath     = APP_ROOT+'/public'
 Reactatron.serverSrcPath  = APP_ROOT+'/src/server.js'
 Reactatron.clientSrcPath  = APP_ROOT+'/src/client.js'
 Reactatron.styleSrcPath   = APP_ROOT+'/src/style.sass'
@@ -23,12 +24,28 @@ Reactatron.clientDistPath = APP_ROOT+'/public/client.js'
 Reactatron.styleDistPath  = APP_ROOT+'/public/style.css'
 
 Reactatron.compile = (callback) => {
-  console.log('compiling')
-  exec(Reactatron.babelPath, [])
-}
+  let serverDone = false
+  let webpackDone = false
 
-Reactatron.watch = () => {
-  exec(Reactatron.babelPath, ['--watch'])
+  Reactatron.babel.transformFile(Reactatron.serverSrcPath, {
+    presets: ["react", "es2015"],
+  }, (error, result) => {
+    if (error) throw error
+    console.log('writing', Reactatron.serverDistPath)
+    fs.writeFile(Reactatron.serverDistPath, result.code)
+    serverDone = true
+    if (webpackDone && callback) callback()
+  })
+
+  // returns a Compiler instance
+  const webpackConfig = Reactatron.webpackConfig || require('./default.webpack.config')(Reactatron)
+  Reactatron.webpack(webpackConfig, (err, stats) => {
+    for (var asset in stats.compilation.assets){
+      console.log('writing', stats.compilation.assets[asset].existsAt)
+    }
+    webpackDone = true
+    if (serverDone && callback) callback()
+  });
 }
 
 Reactatron.server = require('./server')
@@ -43,15 +60,6 @@ Reactatron.cli = () => {
 }
 
 Reactatron.middleware = (request, response) => {
-  response.sendFile(Reactatron.publicDir + '/index.html');
+  response.sendFile(Reactatron.publicPath + '/index.html');
 }
 
-const exec = (cmd, args, callback) => {
-  cmd = APP_ROOT+'/node_modules/.bin/'+cmd
-  console.log('EXEC', cmd, args)
-  childProcess.execFile(cmd, args, (error, stdout, stderr) => {
-    if (callback) return callback(error, stdout, stderr)
-    if (error) throw error
-    console.log(stdout)
-  })
-}
